@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json.schemastore.org/electron-builder",
+  "appId": "com.taichu.app",
+  "productName": "星构Astra",
+  "executableName": "astra",
+  "copyright": "Copyright © 2026 昆明新视野教育科技有限公司",
+  "electronVersion": "41.1.0",
+  "directories": {
+    "output": "release",
+    "buildResources": "public"
+  },
+  "files": [
+    "package.json",
+    "dist/**/*",
+    "dist-electron/**/*",
+    "!dist/**/*.map",
+    "!dist-electron/**/*.map",
+    "node_modules/node-pty/**/*",
+    "node_modules/zod/**/*",
+    "node_modules/sharp/**/*",
+    "node_modules/@img/**/*",
+    "node_modules/onnxruntime-node/**/*",
+    "node_modules/onnxruntime-common/**/*",
+    "node_modules/@huggingface/transformers/**/*",
+    "node_modules/@napi-rs/canvas/**/*",
+    "node_modules/@napi-rs/canvas-*/**/*",
+    "node_modules/pdfjs-dist/**/*",
+    "!node_modules/pdfjs-dist/types/**/*",
+    "!node_modules/pdfjs-dist/**/*.map",
+    "node_modules/@vscode/ripgrep/**/*",
+    "node_modules/@vscode/ripgrep-*/**/*",
+    "electron/plugins/builtin/**/*",
+    "!**/.claude/**/*"
+  ],
+  "extraResources": [
+    {
+      "from": "bundled-mcp/node_modules",
+      "to": "node_modules",
+      "filter": [
+        "**/*",
+        "!**/{test,tests,__tests__,__mocks__}/**",
+        "!**/{.github,.vscode,.idea}/**",
+        "!**/*.{map,md,markdown}",
+        "!**/CHANGELOG*",
+        "!**/README*"
+      ]
+    },
+    {
+      "from": "bundled-lsp/node_modules",
+      "to": "bundled-lsp/node_modules",
+      "filter": [
+        "**/*",
+        "!**/{test,tests,__tests__,__mocks__}/**",
+        "!**/{.github,.vscode,.idea}/**",
+        "!**/*.{map,md,markdown}",
+        "!**/CHANGELOG*",
+        "!**/LICENSE*",
+        "!**/README*",
+        "!**/.bin/**"
+      ]
+    },
+    {
+      "from": "resources/embeddings",
+      "to": "embeddings",
+      "filter": [
+        "**/*",
+        "!**/*.part",
+        "!**/.DS_Store",
+        "!**/Thumbs.db",
+        "!**/desktop.ini"
+      ]
+    },
+    {
+      "from": "electron/agents/bundles/presets",
+      "to": "bundles-presets",
+      "filter": [
+        "**/*.json",
+        "!**/.DS_Store",
+        "!**/Thumbs.db",
+        "!**/desktop.ini"
+      ]
+    },
+    {
+      "from": "dist-adapter",
+      "to": "adapter",
+      "filter": ["**/*.cjs"]
+    }
+  ],
+  "asar": true,
+  "asarUnpack": [
+    "**/*.node",
+    "**/*.dll",
+    "node_modules/node-pty/**/*",
+    "node_modules/sharp/**/*",
+    "node_modules/@img/**/*",
+    "node_modules/onnxruntime-node/**/*",
+    "node_modules/@huggingface/transformers/**/*",
+    "node_modules/@napi-rs/canvas/**/*",
+    "node_modules/@napi-rs/canvas-*/**/*",
+    "node_modules/@vscode/ripgrep/**/*",
+    "node_modules/@vscode/ripgrep-*/**/*"
+  ],
+  "npmRebuild": true,
+  "buildDependenciesFromSource": false,
+  "forceCodeSigning": false,
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "public/Astra_CZ_rounded_transparent.ico",
+    "artifactName": "星构Astra-${version}-setup.${ext}",
+    "signtoolOptions": {
+      "publisherName": "昆明新视野教育科技有限公司"
+    },
+    "verifyUpdateCodeSignature": false
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": true,
+    "allowElevation": true,
+    "allowToChangeInstallationDirectory": true,
+    "deleteAppDataOnUninstall": false,
+    "differentialPackage": false,
+    "runAfterFinish": true,
+    "include": "build/installer.nsh",
+    "shortcutName": "星构Astra",
+    "installerIcon": "public/Astra_CZ_rounded_transparent.ico",
+    "uninstallerIcon": "public/Astra_CZ_rounded_transparent.ico",
+    "installerHeaderIcon": "public/Astra_CZ_rounded_transparent.ico",
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "installerLanguages": ["zh_CN", "en_US"],
+    "language": "2052",
+    "unicode": true
+  },
+  "mac": {
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      }
+    ],
+    "icon": "public/Astra_CZ_rounded_transparent.png",
+    "artifactName": "星构Astra-${version}-${arch}.${ext}",
+    "category": "public.app-category.developer-tools"
+  },
+  "linux": {
+    "target": ["AppImage"],
+    "icon": "public/Astra_CZ_rounded_transparent.png",
+    "artifactName": "星构Astra-${version}.${ext}",
+    "category": "Development",
+    "maintainer": "星构Astra",
+    "synopsis": "AI-first code editor",
+    "description": "星构Astra — AI-first code editor (Electron)."
+  },
+  "compression": "maximum",
+  "electronDownload": {
+    "mirror": "https://npmmirror.com/mirrors/electron/"
+  }
+}
