@@ -1,0 +1,319 @@
+/**
+ * MultiSelectEditor 样式
+ */
+
+.multi-select-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  outline: none;
+}
+
+.multi-select-empty {
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-style: italic;
+  padding: 2px 0;
+}
+
+/* ─── 已选标签 ─────────────────────────────────────────────────── */
+
+.multi-select-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.multi-select-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px 2px 8px;
+  font-size: 11.5px;
+  color: var(--text-primary);
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.14);
+  border: 1px solid rgba(var(--accent-blue-rgb, 137, 180, 250), 0.28);
+  border-radius: 12px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  max-width: 100%;
+}
+
+.multi-select-tag.is-wildcard {
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.16);
+  border-color: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.38);
+  color: var(--accent-yellow, #f9e2af);
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.multi-select-tag.is-auto-injected {
+  background: rgba(var(--accent-green-rgb, 166, 227, 161), 0.12);
+  border-color: rgba(var(--accent-green-rgb, 166, 227, 161), 0.34);
+}
+.multi-select-tag-auto-icon {
+  color: var(--accent-green, #a6e3a1);
+  opacity: 0.85;
+  flex-shrink: 0;
+}
+
+.multi-select-tag-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 220px;
+}
+
+.multi-select-tag-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  opacity: 0.55;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    opacity 0.12s,
+    background 0.12s;
+  padding: 0;
+}
+.multi-select-tag-remove:hover {
+  opacity: 1;
+  background: rgba(var(--surface-tint-rgb), 0.12);
+}
+
+.multi-select-wildcard-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.multi-select-wildcard-hint {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ─── 控件行(触发按钮 / 下拉) ─────────────────────────────────── */
+
+.multi-select-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.multi-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px 3px 7px;
+  font: inherit;
+  font-size: 11px;
+  color: var(--accent-blue, #89b4fa);
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.08);
+  border: 1px dashed rgba(var(--accent-blue-rgb, 137, 180, 250), 0.38);
+  border-radius: 3px;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    border-color 0.12s,
+    opacity 0.12s;
+  outline: none;
+}
+.multi-select-trigger:hover:not(:disabled) {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.16);
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.6);
+}
+.multi-select-trigger:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.multi-select-trigger:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: 1px;
+}
+.multi-select-trigger-chevron {
+  opacity: 0.7;
+  margin-left: 2px;
+}
+
+.multi-select-wildcard-btn {
+  padding: 3px 8px;
+  font: inherit;
+  font-size: 11px;
+  color: var(--accent-yellow, #f9e2af);
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.1);
+  border: 1px dashed rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.38);
+  border-radius: 3px;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    border-color 0.12s;
+  outline: none;
+}
+.multi-select-wildcard-btn:hover {
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.18);
+  border-color: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.55);
+}
+
+/* ─── 下拉 ─────────────────────────────────────────────────────── */
+
+.multi-select-dropdown {
+  flex: 1;
+  min-width: 240px;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-input-soft-strong);
+  border: 1px solid rgba(var(--accent-blue-rgb, 137, 180, 250), 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  animation: ms-dropdown-in 0.12s ease-out;
+}
+
+@keyframes ms-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.multi-select-search {
+  padding: 5px 8px;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--text-primary);
+  background: rgba(var(--bg-base-rgb, 30, 30, 46), 0.6);
+  border: none;
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  outline: none;
+}
+.multi-select-search::placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.multi-select-dropdown-list {
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.multi-select-dropdown-loading,
+.multi-select-dropdown-empty {
+  padding: 8px 10px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.multi-select-dropdown-custom {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  color: var(--accent-blue, #89b4fa);
+  background: rgba(var(--surface-tint-rgb), 0.04);
+  padding: 0 4px;
+  border-radius: 2px;
+  font-style: normal;
+  margin-left: 3px;
+}
+
+.multi-select-dropdown-empty kbd {
+  display: inline-block;
+  padding: 0 4px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  background: rgba(var(--surface-tint-rgb), 0.08);
+  color: var(--text-primary);
+  border-radius: 2px;
+  margin: 0 2px;
+}
+
+.multi-select-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+  outline: none;
+}
+.multi-select-dropdown-item:hover,
+.multi-select-dropdown-item:focus-visible {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.14);
+}
+
+.multi-select-dropdown-item-name {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 11px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.multi-select-dropdown-item-plus {
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+.multi-select-dropdown-item:hover .multi-select-dropdown-item-plus {
+  opacity: 1;
+  color: var(--accent-blue, #89b4fa);
+}
+
+.multi-select-dropdown-item.is-auto-injected .multi-select-dropdown-item-name {
+  color: var(--accent-green, #a6e3a1);
+}
+.multi-select-dropdown-item-auto {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  font-size: 10px;
+  color: var(--accent-green, #a6e3a1);
+  background: rgba(var(--accent-green-rgb, 166, 227, 161), 0.14);
+  border: 1px solid rgba(var(--accent-green-rgb, 166, 227, 161), 0.32);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.multi-select-dropdown-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  background: rgba(var(--surface-tint-rgb), 0.02);
+  border: none;
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  cursor: pointer;
+  transition: color 0.12s;
+  outline: none;
+  align-self: stretch;
+}
+.multi-select-dropdown-refresh:hover {
+  color: var(--text-primary);
+}

@@ -1,0 +1,404 @@
+/**
+ * BundleSwitcher —— TitleBar 中间的工作包下拉切换器。
+ * 视觉低调,和 TitleBar 融为一体;展开后是紧凑的列表 popover。
+ */
+
+.bundle-switcher {
+  position: relative;
+  -webkit-app-region: no-drag;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* 触发器:当前 bundle 的"标签"形态 */
+.bundle-switcher-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 10px;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.04);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.bundle-switcher-trigger:hover {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  border-color: var(--border-color, rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08));
+}
+
+.bundle-switcher-trigger.is-open {
+  background: rgba(var(--accent-blue-rgb), 0.12);
+  border-color: rgba(var(--accent-blue-rgb), 0.35);
+  color: var(--accent-blue, #89b4fa);
+}
+
+.bundle-switcher-label {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bundle-switcher-chevron {
+  transition: transform var(--transition-fast);
+  opacity: 0.7;
+}
+
+.bundle-switcher-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+/* Popover —— 用 `position: fixed` 规避 `.app-container { overflow:hidden }`
+   对绝对定位后代的裁切。top/left 由 JS 计算并 inline 写入;CSS 不做任何
+   transform 位移,避免和 animation 耦合出 bug(之前 transform: translateX(-50%)
+   + keyframes 里改 transform 会导致意外偏移)。 */
+.bundle-switcher-popover {
+  position: fixed;
+  width: 340px;
+  max-height: calc(100vh - 60px);
+  background: var(--bg-overlay, var(--bg-surface1));
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+  padding: 4px;
+  z-index: 2100;
+  animation: bundle-switcher-in 0.1s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes bundle-switcher-in {
+  from {
+    opacity: 0;
+    /* 只动 opacity,不用 translate —— translate 会覆盖 inline 的 top
+       定位,导致动画期间 popover"跳位"。 */
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.bundle-switcher-popover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px 4px;
+  color: var(--text-muted);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bundle-switcher-popover-title {
+  font-weight: 600;
+}
+
+.bundle-switcher-popover-count {
+  opacity: 0.7;
+}
+
+/* 列表 */
+.bundle-switcher-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.bundle-switcher-row {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  border-radius: 4px;
+}
+
+.bundle-switcher-row:hover {
+  background: var(--hover-bg);
+}
+
+.bundle-switcher-row.is-active {
+  background: rgba(var(--accent-blue-rgb), 0.09);
+}
+
+.bundle-switcher-row-main {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 8px 7px 10px;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  color: var(--text-primary);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.bundle-switcher-row-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 1px;
+  color: var(--text-secondary);
+}
+
+.bundle-switcher-row.is-active .bundle-switcher-row-icon {
+  color: var(--accent-blue, #89b4fa);
+}
+
+.bundle-switcher-row-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bundle-switcher-row-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.bundle-switcher-row-name {
+  font-size: 12px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bundle-switcher-row-domain {
+  flex-shrink: 0;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.06);
+  font-size: 9.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.bundle-switcher-row-desc {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+.bundle-switcher-row-check {
+  flex-shrink: 0;
+  color: var(--accent-blue, #89b4fa);
+  align-self: center;
+}
+
+/* ⋯ 按钮 */
+.bundle-switcher-row-more {
+  width: 28px;
+  flex-shrink: 0;
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bundle-switcher-row:hover .bundle-switcher-row-more,
+.bundle-switcher-row .bundle-switcher-row-more:focus,
+.bundle-switcher-row .bundle-switcher-submenu ~ .bundle-switcher-row-more {
+  opacity: 1;
+}
+
+.bundle-switcher-row-more:hover {
+  color: var(--text-primary);
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.06);
+  border-radius: 3px;
+}
+
+/* 二级菜单 */
+.bundle-switcher-submenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 2px;
+  min-width: 120px;
+  background: var(--bg-overlay, var(--bg-surface1));
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 3px;
+  z-index: 2;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.32);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  animation: bundle-switcher-submenu-in 0.08s ease-out;
+}
+
+@keyframes bundle-switcher-submenu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bundle-switcher-submenu-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: transparent;
+  border: 0;
+  color: var(--text-primary);
+  font-size: 11.5px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.bundle-switcher-submenu-item:hover:not(:disabled) {
+  background: var(--hover-bg);
+}
+
+.bundle-switcher-submenu-item:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.bundle-switcher-submenu-item-danger {
+  color: var(--accent-red, #f38ba8);
+}
+
+.bundle-switcher-submenu-item-danger:hover:not(:disabled) {
+  background: rgba(var(--accent-red-rgb), 0.1);
+}
+
+/* 底部 "新建" */
+.bundle-switcher-create {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 3px;
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px dashed var(--border-color, rgba(255, 255, 255, 0.12));
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+
+.bundle-switcher-create:hover {
+  background: rgba(var(--accent-blue-rgb), 0.08);
+  border-color: rgba(var(--accent-blue-rgb), 0.4);
+  color: var(--accent-blue, #89b4fa);
+}
+
+/* ─── Popover footer:新建 + 导入 并排 ─────────────────────────── */
+
+.bundle-switcher-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.bundle-switcher-footer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 8px;
+  background: transparent;
+  border: 1px dashed var(--border-color, rgba(255, 255, 255, 0.12));
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.bundle-switcher-footer-btn:hover {
+  background: rgba(var(--accent-blue-rgb), 0.08);
+  border-color: rgba(var(--accent-blue-rgb), 0.4);
+  color: var(--accent-blue, #89b4fa);
+}
+
+.bundle-switcher-footer-btn-primary {
+  color: var(--accent-mauve, #cba6f7);
+  border-color: rgba(var(--accent-mauve-rgb), 0.35);
+  background: rgba(var(--accent-mauve-rgb), 0.08);
+}
+
+.bundle-switcher-footer-btn-primary:hover {
+  background: rgba(var(--accent-mauve-rgb), 0.18);
+  border-color: rgba(var(--accent-mauve-rgb), 0.55);
+  color: var(--accent-mauve, #cba6f7);
+}
+
+/* ─── 非阻塞 toast(替代原生 window.alert) ───────────────────────
+   固定在顶部居中,portal 到 body。`white-space: pre-line` 让导出路径里
+   带 \n 的"已导出到:\n<path>"正常换行。 */
+.bundle-switcher-notice {
+  position: fixed;
+  top: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  max-width: 460px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  white-space: pre-line;
+  word-break: break-word;
+  color: var(--text-primary, #f8fafc);
+  background: var(--surface-overlay, #1f2430);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+  animation: bundle-switcher-notice-in var(--transition-fast, 160ms) ease-out;
+}
+
+.bundle-switcher-notice[data-kind='error'] {
+  color: var(--accent-red, #f38ba8);
+  border-color: rgba(var(--accent-red-rgb, 243, 139, 168), 0.45);
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.12);
+}
+
+@keyframes bundle-switcher-notice-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}

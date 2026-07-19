@@ -1,0 +1,193 @@
+/**
+ * TeamPlanApprovalCard styles — upstream §6.2 + P0-2 follow-up.
+ *
+ * Visual language matches `PermissionPrompt.css` (yellow accent for
+ * "needs your decision") with a slight blue tint to signal "plan mode"
+ * specifically. Card lives in `.chat-inline-prompts` so layout, margins
+ * and stacking with other prompts (permission / ask) stay consistent.
+ */
+
+.team-plan-approval-card {
+  margin: 10px 12px;
+  border: 1px solid rgba(var(--accent-blue-rgb, 137, 180, 250), 0.4);
+  background: rgba(var(--bg-surface0-rgb, 49, 50, 68), 0.65);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.team-plan-approval-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(var(--accent-blue-rgb, 137, 180, 250), 0.22);
+}
+
+.team-plan-approval-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-blue, #89b4fa);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.team-plan-approval-mode {
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 2px 6px;
+  font-family: var(--font-mono);
+}
+
+.team-plan-approval-body {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.team-plan-approval-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.team-plan-approval-worker {
+  color: var(--accent-mauve, #cba6f7);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.team-plan-approval-team {
+  background: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.14);
+  border: 1px solid rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.28);
+  color: var(--accent-mauve, #cba6f7);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.team-plan-approval-team-none {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.team-plan-approval-elapsed {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.team-plan-approval-plan {
+  margin: 0;
+  /*
+   * Plan is markdown but we render verbatim — a true Markdown render
+   * would let a malicious teammate inject styled content into the
+   * leader's chat. Plain monospace is safer and matches how
+   * `permission-prompt-input` shows JSON.
+   */
+  max-height: 360px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 1.5;
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.85);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.team-plan-approval-prompts {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.team-plan-approval-prompts summary {
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 0;
+}
+
+.team-plan-approval-prompts pre {
+  margin: 4px 0 0 0;
+  padding: 8px 10px;
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  max-height: 180px;
+  overflow: auto;
+  font-family: var(--font-mono);
+}
+
+.team-plan-approval-deny-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.team-plan-approval-deny-detail label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.team-plan-approval-deny-detail textarea {
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.85);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 6px 8px;
+  resize: vertical;
+}
+
+.team-plan-approval-deny-detail textarea:focus {
+  border-color: var(--accent-red);
+  outline: none;
+}
+
+.team-plan-approval-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(var(--accent-blue-rgb, 137, 180, 250), 0.22);
+}
+
+.team-plan-approval-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.team-plan-approval-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.team-plan-approval-btn:not(:disabled):hover {
+  opacity: 0.88;
+}
+
+.team-plan-approval-btn.deny {
+  background: rgba(var(--accent-red-rgb), 0.14);
+  color: var(--accent-red);
+}
+
+.team-plan-approval-btn.approve {
+  background: rgba(var(--accent-green-rgb), 0.16);
+  color: var(--accent-green);
+}

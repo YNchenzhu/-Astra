@@ -1,0 +1,698 @@
+.tool-use-card {
+  margin: 6px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, var(--bg-surface0));
+  background: rgba(var(--bg-surface0-rgb, 49, 50, 68), 0.35);
+  overflow: hidden;
+  font-size: 12px;
+  transition: border-color 0.2s ease;
+  animation: block-slide-in 0.3s ease-out;
+}
+
+.tool-use-card.is-collapsed {
+  margin: 4px 0;
+}
+
+/* Compact mode — used inside ToolBlockGroup */
+.tool-use-card.tool-use-compact {
+  margin: 2px 0;
+  border-radius: 6px;
+  border: none;
+  border-bottom: 1px solid rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.3);
+  background: transparent;
+  animation: none;
+}
+
+.tool-use-card.tool-use-compact:last-child {
+  border-bottom: none;
+}
+
+.tool-use-card.tool-use-compact .tool-use-header {
+  padding: 5px 10px;
+}
+
+.tool-use-card.tool-use-compact .tool-use-body {
+  border-top: 1px solid rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.3);
+}
+
+.tool-use-card.tool-use-compact .tool-use-pre {
+  max-height: 200px;
+  font-size: 11px;
+}
+
+/* Agent / REPL: show full JSON result with scroll instead of hard character truncation */
+.tool-use-pre-scrollable {
+  max-height: min(70vh, 560px);
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tool-use-card.tool-use-running {
+  border-color: rgba(var(--accent-yellow-rgb), 0.5);
+  background: rgba(var(--accent-yellow-rgb), 0.04);
+}
+
+.tool-use-card.tool-use-completed {
+  border-color: var(--border-color, var(--bg-surface1));
+}
+
+.tool-use-card.tool-use-error {
+  border-color: rgba(var(--accent-red-rgb), 0.5);
+  background: rgba(var(--accent-red-rgb), 0.04);
+}
+
+.tool-use-card.tool-use-failed {
+  border-color: rgba(var(--accent-red-rgb), 0.5);
+  background: rgba(var(--accent-red-rgb), 0.04);
+}
+
+.tool-use-card.tool-use-stopped {
+  border-color: rgba(var(--accent-red-rgb), 0.5);
+  background: rgba(var(--accent-red-rgb), 0.04);
+}
+
+/* Header */
+.tool-use-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+
+.tool-use-card.is-collapsed .tool-use-header {
+  padding: 3px 10px;
+}
+
+.tool-use-card.tool-use-compact.is-collapsed .tool-use-header {
+  padding: 2px 8px;
+}
+
+.tool-use-header:hover {
+  background: rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.4);
+}
+
+.tool-use-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.tool-use-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Status icons */
+.tool-icon-running {
+  color: var(--accent-yellow);
+  animation: tool-spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes tool-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.tool-icon-success {
+  color: var(--accent-green);
+  flex-shrink: 0;
+}
+
+.tool-icon-error {
+  color: var(--accent-red);
+  flex-shrink: 0;
+}
+
+.tool-use-stop-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 5px;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--accent-red);
+  cursor: pointer;
+  font-size: 11px;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.tool-use-stop-btn:hover {
+  background: rgba(var(--accent-red-rgb), 0.2);
+  border-color: rgba(var(--accent-red-rgb), 0.6);
+  color: var(--text-primary);
+}
+
+.tool-use-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Status label */
+.tool-use-status {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.tool-use-card.is-collapsed .tool-use-status {
+  font-size: 10px;
+  letter-spacing: 0.4px;
+}
+
+.tool-status-running {
+  color: var(--accent-yellow);
+}
+
+.tool-status-completed {
+  color: var(--accent-green);
+}
+
+.tool-status-error {
+  color: var(--accent-red);
+}
+
+.tool-status-failed {
+  color: var(--accent-red);
+}
+
+.tool-status-stopped {
+  color: var(--accent-red);
+}
+
+/* Body */
+.tool-use-body {
+  padding: 0 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.5);
+}
+
+/* Section */
+.tool-use-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.tool-use-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tool-use-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.tool-use-copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tool-use-copy-btn:hover {
+  color: var(--text-primary);
+  background: rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.5);
+}
+
+/* Code/pre area */
+.tool-use-pre {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.8);
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 300px;
+  overflow-y: auto;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.tool-use-diff {
+  border: 1px solid var(--border-color, var(--bg-surface0));
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(var(--bg-overlay-rgb, 17, 17, 27), 0.55);
+  max-height: 320px;
+  overflow-y: auto;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.tool-use-diff-line {
+  padding: 3px 10px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.tool-use-diff-line.meta {
+  background: rgba(var(--accent-blue-rgb), 0.08);
+  color: var(--accent-blue, var(--accent-blue));
+}
+
+.tool-use-diff-line.context {
+  color: var(--text-secondary, var(--text-secondary));
+}
+
+.tool-use-diff-line.added {
+  background: rgba(var(--accent-green-rgb), 0.08);
+  color: var(--accent-green, var(--accent-green));
+}
+
+.tool-use-diff-line.removed {
+  background: rgba(var(--accent-red-rgb), 0.08);
+  color: var(--accent-red, var(--accent-red));
+}
+
+/* Real-time output */
+.tool-use-output {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  max-height: 400px;
+  overflow-y: auto;
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.8);
+  padding: 8px 10px;
+  border-radius: 6px;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.output-chunk {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.output-stdout {
+  color: var(--text-primary);
+}
+
+.output-stderr {
+  color: var(--accent-red);
+  font-weight: 500;
+}
+
+.output-meta {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 11px;
+}
+
+.output-text {
+  color: var(--text-primary);
+}
+
+/* Sub-agents nested inside tool */
+.tool-use-subagents {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.tool-use-subagents .agent-block {
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* MCP source badge */
+.tool-mcp-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--accent-mauve);
+  background: rgba(var(--accent-mauve-rgb), 0.12);
+  white-space: nowrap;
+  margin-left: 4px;
+}
+
+
+/* Sub-agents spawned by this tool — rendered below the card body so they
+   remain visible even when the user collapses the tool card. Mirrors the
+   orphan sub-agent layout in ChatMessage.css. */
+.tool-use-sub-agents {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 10px 10px 10px;
+  border-top: 1px solid var(--panel-border, rgba(255, 255, 255, 0.06));
+}
+
+.tool-use-card.is-collapsed .tool-use-sub-agents {
+  border-top: none;
+  padding-top: 10px;
+}
+
+/* ─── Status chip used inside BaseCard.meta (Phase 1 refactor) ─────────
+   The chip replaces the old `.tool-use-status` pill. It lives on the right
+   side of the unified card header and carries the status word + a small
+   icon when running. */
+
+.tool-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  line-height: 1.35;
+  background: rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.45);
+  color: var(--text-secondary, var(--text-muted));
+  white-space: nowrap;
+}
+
+.tool-status-chip-idle {
+  background: rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.35);
+  color: var(--text-muted);
+}
+
+.tool-status-chip-running {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.14);
+  color: var(--accent-blue, #89b4fa);
+}
+
+.tool-status-chip-success {
+  background: rgba(var(--accent-green-rgb, 166, 227, 161), 0.14);
+  color: var(--accent-green, #a6e3a1);
+}
+
+.tool-status-chip-error {
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.14);
+  color: var(--accent-red, #f38ba8);
+}
+
+.tool-status-chip-icon {
+  animation: tool-status-chip-spin 3s linear infinite;
+}
+
+@keyframes tool-status-chip-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ─── Streaming progress (upstream alignment stage 2) ─────────────────────
+   Live mid-run output emitted via `ctx.emitToolProgress(...)`. Rendered
+   inside `CommandChip` / `ActivityRow` details / `BaseCard` body while a
+   tool is running and has not yet returned a final result. */
+.tool-use-streaming {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 8px;
+  margin: 4px 0;
+  border-radius: 4px;
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.06);
+  border-left: 2px solid rgba(var(--accent-blue-rgb, 137, 180, 250), 0.35);
+}
+
+.tool-use-streaming-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--text-muted, #a6adc8);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tool-use-streaming-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-blue, #89b4fa);
+  animation: tool-streaming-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes tool-streaming-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50%      { opacity: 1;   transform: scale(1); }
+}
+
+.tool-use-streaming-text {
+  font-family: var(--font-family-mono, ui-monospace, SFMono-Regular, monospace);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary, #cdd6f4);
+  max-height: 220px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tool-use-streaming-events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tool-use-streaming-event {
+  display: flex;
+  gap: 8px;
+  font-size: 10.5px;
+  color: var(--text-muted, #a6adc8);
+  font-family: var(--font-family-mono, ui-monospace, SFMono-Regular, monospace);
+}
+
+.tool-use-streaming-event-type {
+  flex: 0 0 auto;
+  color: var(--accent-blue, #89b4fa);
+}
+
+.tool-use-streaming-event-data {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─── Structured tool-error view ──────────────────────────────────────
+ *
+ * Replaces the previous "dump the raw `error` string into a red <pre>"
+ * pattern. The new layout has three priorities:
+ *   1. The HEADLINE answers "what failed" in one line — typographic
+ *      emphasis, no scrolling required.
+ *   2. The NEXT section answers "what should I do about it" — rendered
+ *      as a real bulleted list because that's the actionable bit; for
+ *      agent-readable error contracts this is also exactly what the
+ *      model will read on its next turn.
+ *   3. TRIED / CONTEXT are diagnostic — kept on the surface as muted
+ *      single-line summaries so power users can verify the failure
+ *      without expanding anything.
+ * The raw error string the model sees is hidden behind a "Show raw"
+ * toggle — useful when debugging the model's recovery loop, but noise
+ * for the everyday user-facing transcript.
+ */
+.tool-error-structured {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.05);
+  border-left: 2px solid rgba(var(--accent-red-rgb, 243, 139, 168), 0.55);
+  font-size: 12px;
+  color: var(--text-color, #cdd6f4);
+}
+
+.tool-error-headline-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tool-error-class-badge {
+  flex: 0 0 auto;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.18);
+  color: var(--accent-red, #f38ba8);
+}
+
+/* `parallel_abort` is a "this tool didn't actually break" outcome — soften
+ * the badge so the user reads it as "skipped" rather than "failed". */
+.tool-error-class-parallel_abort,
+.tool-error-class-aborted {
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.18);
+  color: var(--accent-yellow, #f9e2af);
+}
+
+/* `shell` is "the command itself ran fine but exited non-zero". The
+ * answer is usually IN the stdout the agent already received (failed
+ * tests / grep no match / wrong cwd). Use a muted peach so the user
+ * reads it as "informational outcome", not "broken tool". */
+.tool-error-class-shell {
+  background: rgba(var(--accent-peach-rgb, 250, 179, 135), 0.18);
+  color: var(--accent-peach, #fab387);
+}
+
+/* Worker-runtime / spawn failures: blue/teal, distinct from a model-
+ * caused failure so the user knows it's infrastructure, not retry-able
+ * by the model itself. */
+.tool-error-class-worker_crashed,
+.tool-error-class-worker_error,
+.tool-error-class-spawn_failed,
+.tool-error-class-host_disposed,
+.tool-error-class-host_killed,
+.tool-error-class-post_failed {
+  background: rgba(var(--accent-teal-rgb, 148, 226, 213), 0.18);
+  color: var(--accent-teal, #94e2d5);
+}
+
+.tool-error-headline {
+  flex: 1 1 auto;
+  font-weight: 500;
+  color: var(--text-color, #cdd6f4);
+  word-break: break-word;
+}
+
+.tool-error-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted, #a6adc8);
+  margin-right: 6px;
+}
+
+.tool-error-next {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tool-error-next-list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: var(--text-color, #cdd6f4);
+}
+
+.tool-error-next-list li {
+  line-height: 1.4;
+}
+
+.tool-error-tried,
+.tool-error-context {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  flex-wrap: wrap;
+  color: var(--text-muted, #a6adc8);
+  font-size: 11px;
+  word-break: break-all;
+}
+
+.tool-error-tried-value,
+.tool-error-context-value {
+  flex: 1 1 auto;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+}
+
+.tool-error-raw-toggle {
+  margin-top: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tool-error-raw-button {
+  align-self: flex-start;
+  padding: 2px 8px;
+  border: 1px solid rgba(var(--accent-red-rgb, 243, 139, 168), 0.3);
+  background: transparent;
+  color: var(--text-muted, #a6adc8);
+  border-radius: 3px;
+  font-size: 10px;
+  font-family: inherit;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.tool-error-raw-button:hover {
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.1);
+  color: var(--text-color, #cdd6f4);
+}
+
+.tool-error-raw {
+  margin: 0;
+  padding: 6px 8px;
+  /* Was hardcoded rgba(0,0,0,.2) — invisible on dark themes, muddy on
+     light. Solid overlay matches the CommandChip output well. */
+  background: var(--bg-overlay, #11111b);
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 240px;
+  overflow: auto;
+}
+
+.tool-error-raw.is-error {
+  color: var(--accent-red, #f38ba8);
+}
+

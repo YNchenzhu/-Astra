@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "id": "general-assistant",
+    "name": "通用助手",
+    "description": "聊天为主的通用 AI 助手:适合日常咨询、研究问答、点子碰撞等纯对话场景。主界面聊天铺满,不打扰的精简工作台。",
+    "icon": "MessageSquare",
+    "domain": "通用",
+    "author": "星构Astra",
+    "version": "1.0.0",
+    "source": "preset",
+    "createdAt": 0,
+    "updatedAt": 0
+  },
+
+  "agents": [
+    {
+      "agentType": "general-purpose",
+      "displayName": "通用助手",
+      "tagline": "日常咨询、信息检索、建议生成",
+      "icon": "Bot",
+      "isPrimary": true,
+      "whenToUse": "General-purpose agent for day-to-day questions, research, brainstorming, and structured advice."
+    },
+    {
+      "agentType": "Explore",
+      "displayName": "研究员",
+      "tagline": "只读的信息探索与查找",
+      "icon": "Search",
+      "whenToUse": "Fast read-only research agent. Find information, gather context, answer lookup questions."
+    }
+  ],
+
+  "teams": [
+    {
+      "id": "solo",
+      "name": "单 Agent(默认)",
+      "description": "直接与通用助手对话",
+      "coordination": "solo",
+      "members": [
+        { "agentType": "general-purpose", "role": "worker" }
+      ]
+    }
+  ],
+
+  "defaultAgent": "general-purpose",
+
+  "capabilities": {
+    "enabledTools": "*",
+    "enabledSkills": [],
+    "enabledMcpServers": []
+  },
+
+  "layout": {
+    "type": "chat-centric",
+    "options": {
+      "sidebar": "none",
+      "secondaryPane": "chat",
+      "topBar": "bundle-selector"
+    }
+  },
+
+  "welcomeMessage": "你好!这里是通用助手工作台。告诉我你想做什么——咨询、研究、写大纲、整理思路,都可以直接开聊。"
+}

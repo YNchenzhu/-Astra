@@ -1,0 +1,61 @@
+.plan-tab-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.12);
+  border-bottom: 1px solid rgba(var(--accent-blue-rgb, 137, 180, 250), 0.32);
+}
+
+.plan-tab-banner-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plan-tab-banner-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.plan-tab-banner-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.plan-tab-banner-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.plan-tab-banner-btn:not(:disabled):hover {
+  opacity: 0.88;
+}
+
+.plan-tab-banner-btn.cancel {
+  background: rgba(var(--accent-red-rgb), 0.1);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
+.plan-tab-banner-btn.reject {
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.14);
+  color: var(--accent-yellow, #f9e2af);
+}
+
+.plan-tab-banner-btn.approve {
+  background: rgba(var(--accent-green-rgb), 0.16);
+  color: var(--accent-green);
+}

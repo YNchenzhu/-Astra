@@ -1,0 +1,79 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-electron
+dist-ssr
+release
+*.local
+
+# Runtime data root produced by the packaged app (logs / chromium-cache / memory).
+# In dev it sits next to the repo, but on Windows the OS sometimes drops a
+# stray "星构Astra-data/logs" inside the repo when the app is launched from
+# the workspace. Keep it out of source control.
+星构Astra-data/
+
+# Large ONNX model artifacts (either bundled or user-downloaded).
+# The binaries are tracked via HF — distribute via installer, not git.
+resources/embeddings/**/*.onnx
+resources/embeddings/**/*.bin
+resources/embeddings/**/*.safetensors
+
+# Ephemeral git worktrees created by EnterWorktree / the worktree allocator.
+# These are linked worktrees on throwaway branches; never commit them.
+.claude/worktrees/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+dist-adapter
+
+# Secrets and machine-local configuration
+.env
+.env.*
+!.env.example
+.claude/settings*.json
+
+# Local agent configuration, memory, and transient task state
+.agents/
+.claude/
+.cursor/
+.codex/
+AGENTS.md
+session-memory/
+.playwright-mcp/
+Pole Star-data/
+
+# Test, audit, and generated workspace artifacts
+.vitest-telemetry/
+test-results/
+tmp_wm/
+tools-out.txt
+tsc-output.log
+diff.tmp
+test_screenshot.png
+*.rar
+AICHAT_SMOOTHNESS_AUDIT.md
+cz.bundle.json
+docs/plans/
+docs/prompts/
+playwright-test-screenshot.png
+_rewrite_test.js
+scripts-tmp-audit.mjs
+/subdir
+/build/config.gypi

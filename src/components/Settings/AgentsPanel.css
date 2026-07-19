@@ -1,0 +1,1154 @@
+/* ==================== Agents Panel ==================== */
+
+.agents-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Tabs */
+.agents-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 12px 16px 0;
+  border-bottom: 1px solid var(--border, var(--bg-surface0));
+}
+
+.agents-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, var(--text-secondary));
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.15s;
+  font-family: inherit;
+  position: relative;
+}
+
+.agents-tab:hover {
+  color: var(--text-primary, var(--text-primary));
+  background: var(--bg-tertiary, #45475a22);
+}
+
+.agents-tab.active {
+  color: var(--text-primary, var(--text-primary));
+  background: var(--bg-secondary, var(--bg-base));
+}
+
+.agents-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent, var(--accent-blue));
+  border-radius: 1px;
+}
+
+.agents-tab-count {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: var(--bg-tertiary, var(--bg-surface1));
+  color: var(--text-secondary, var(--text-muted));
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.agents-tab.active .agents-tab-count {
+  background: rgba(var(--accent-blue-rgb), 0.15);
+  color: var(--accent, var(--accent-blue));
+}
+
+/* Toolbar */
+.agents-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border, var(--bg-surface0));
+}
+
+.agents-search {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.agents-search-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--text-secondary, var(--text-muted));
+  pointer-events: none;
+}
+
+.agents-search input {
+  width: 100%;
+  padding: 7px 32px 7px 32px;
+  border: 1px solid var(--border, var(--bg-surface0));
+  border-radius: 8px;
+  background: var(--bg-primary, var(--bg-surface));
+  color: var(--text-primary, var(--text-primary));
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.agents-search input::placeholder {
+  color: var(--text-secondary, var(--text-muted));
+}
+
+.agents-search input:focus {
+  border-color: var(--accent, var(--accent-blue));
+  box-shadow: 0 0 0 2px rgba(var(--accent-blue-rgb), 0.1);
+}
+
+.agents-search-clear {
+  position: absolute;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, var(--text-muted));
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0;
+}
+
+.agents-search-clear:hover {
+  background: var(--bg-tertiary, var(--bg-surface1));
+  color: var(--text-primary, var(--text-primary));
+}
+
+.agents-toolbar-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 14px;
+  border: 1px solid var(--border, var(--bg-surface0));
+  border-radius: 8px;
+  background: var(--bg-secondary, var(--bg-base));
+  color: var(--text-primary, var(--text-primary));
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.agents-toolbar-btn:hover {
+  background: var(--accent, var(--accent-blue));
+  color: var(--bg-base);
+  border-color: var(--accent, var(--accent-blue));
+}
+
+/* List */
+.agents-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px;
+}
+
+/* Agent Card */
+.agent-card {
+  border: 1px solid var(--border, var(--bg-surface0));
+  border-radius: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: all 0.15s;
+  background: var(--bg-secondary, var(--bg-base));
+}
+
+.agent-card:hover {
+  border-color: var(--border-hover, var(--text-subtext));
+}
+
+.agent-card.expanded {
+  border-color: var(--accent, var(--accent-blue));
+  box-shadow: 0 2px 12px rgba(var(--accent-blue-rgb), 0.06);
+}
+
+.agent-card.custom {
+  border-left: 3px solid #8b5cf6;
+}
+
+/**
+ * Hidden-from-main-AI state: muted card with a red accent so the user
+ * sees at a glance which custom agents won't be surfaced to the model.
+ * Works on both disk-backed and localStorage custom agent cards.
+ */
+.agent-card.agent-card--hidden {
+  opacity: 0.62;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(239, 68, 68, 0.04) 10px,
+    rgba(239, 68, 68, 0.04) 20px
+  );
+  border-left-color: var(--status-danger);
+}
+
+.agent-card.agent-card--hidden:hover {
+  opacity: 0.85;
+}
+
+.agent-card.agent-card--hidden .agent-card-name {
+  text-decoration: line-through;
+  text-decoration-color: rgba(239, 68, 68, 0.5);
+}
+
+/* ==================== Batch mode ==================== */
+
+/**
+ * Toolbar button "active" state when batch mode is engaged — same visual
+ * weight as the "新建" button so users see they're in a distinct mode.
+ */
+.agents-toolbar-btn.active {
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--accent-mauve);
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+/**
+ * Sticky action bar above the list. Kept compact (single row) so it
+ * doesn't eat vertical space; counts + primary actions on the left,
+ * destructive action on the right — matches common "selection mode"
+ * UX (Finder / Gmail).
+ */
+.agents-batch-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 16px;
+  margin: 0 16px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.agents-batch-bar-left,
+.agents-batch-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agents-batch-bar-count {
+  font-weight: 600;
+  color: var(--accent-mauve);
+  padding: 2px 8px;
+  background: rgba(139, 92, 246, 0.15);
+  border-radius: 4px;
+}
+
+.agents-batch-bar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid var(--border, var(--bg-surface0));
+  background: var(--bg, var(--bg-base));
+  color: var(--text, var(--text-primary));
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.15s;
+}
+
+.agents-batch-bar-btn:hover:not(:disabled) {
+  background: var(--bg-hover, var(--bg-surface0));
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.agents-batch-bar-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.agents-batch-bar-btn.danger {
+  color: var(--status-danger);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.agents-batch-bar-btn.danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+/**
+ * Inline checkbox next to the card icon. Clicking it or the card header
+ * while in batch mode both toggle selection; pointer-events on the span
+ * itself take priority via stopPropagation in the JSX.
+ */
+.agent-card-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: var(--text-secondary, var(--text-secondary));
+  cursor: pointer;
+}
+
+.agent-card-check:hover {
+  color: var(--accent-mauve);
+}
+
+.agent-card.agent-card--selected {
+  border-color: rgba(139, 92, 246, 0.55);
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.35) inset;
+}
+
+.agent-card.agent-card--selected .agent-card-check {
+  color: var(--accent-mauve);
+}
+
+/* When in batch mode, make the header look "clickable everywhere" and
+   disable the expand affordance visually so users know clicks select. */
+.agents-panel .agent-card:has(.agent-card-check) .agent-card-chevron {
+  opacity: 0.35;
+}
+
+/* Edit-target hint shown inside the form when editing a disk-backed agent. */
+.agent-form-edit-target {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 6px;
+  color: var(--accent-mauve);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.agent-form-edit-target code {
+  color: var(--text, var(--text-primary));
+  font-size: 11px;
+  word-break: break-all;
+}
+
+/* Agent Card Header */
+.agent-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.agent-card-header:hover {
+  background: var(--bg-tertiary, #45475a22);
+}
+
+.agent-card-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.agent-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.agent-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.agent-card-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 3px;
+}
+
+.agent-card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, var(--text-primary));
+}
+
+.agent-card-type {
+  font-size: 11px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--bg-tertiary, var(--bg-surface1));
+  color: var(--text-secondary, var(--text-secondary));
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+}
+
+.agent-card-model {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(var(--accent-blue-rgb), 0.1);
+  color: var(--accent, var(--accent-blue));
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+}
+
+.agent-card-brief {
+  font-size: 12px;
+  color: var(--text-secondary, var(--text-secondary));
+  line-height: 1.5;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agent-card-chevron {
+  color: var(--text-secondary, var(--text-muted));
+  flex-shrink: 0;
+  margin-top: 8px;
+  transition: transform 0.2s;
+}
+
+.agent-card.expanded .agent-card-chevron {
+  color: var(--accent, var(--accent-blue));
+}
+
+/* Agent Card Actions */
+.agent-card-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.agent-card-action-btn {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, var(--text-secondary));
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 11px;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.agent-card-action-btn:hover {
+  background: var(--bg-tertiary, var(--bg-surface1));
+  color: var(--text-primary, var(--text-primary));
+}
+
+.agent-card-action-btn.danger:hover {
+  background: rgba(var(--accent-red-rgb), 0.15);
+  color: var(--accent-red);
+}
+
+/* Agent Card Body */
+.agent-card-body {
+  padding: 0 14px 12px;
+  border-top: 1px solid var(--border, var(--bg-surface0));
+  padding-top: 12px;
+}
+
+.agent-card-desc {
+  font-size: 13px;
+  color: var(--text-primary, var(--text-primary));
+  line-height: 1.6;
+  margin: 0 0 12px 0;
+}
+
+/* Tool Tags */
+.agent-card-tools {
+  margin-bottom: 10px;
+}
+
+.agent-card-tools-label {
+  font-size: 11px;
+  color: var(--text-secondary, var(--text-muted));
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.agent-tool-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.agent-tool-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: var(--bg-tertiary, #45475a33);
+  color: var(--text-primary, var(--text-primary));
+  border: 1px solid var(--border, var(--bg-surface0));
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+}
+
+.agent-tool-tag.disallowed {
+  background: rgba(var(--accent-red-rgb), 0.08);
+  color: var(--accent-red);
+  border-color: rgba(var(--accent-red-rgb), 0.2);
+  text-decoration: line-through;
+}
+
+/* Card Footer */
+.agent-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border, #31324433);
+}
+
+.agent-card-footer-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid var(--border, var(--bg-surface0));
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary, var(--text-secondary));
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.agent-card-footer-btn:hover {
+  background: var(--bg-tertiary, var(--bg-surface1));
+  color: var(--text-primary, var(--text-primary));
+  border-color: var(--border-hover, var(--text-subtext));
+}
+
+/* Badges */
+.agent-badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.agent-badge.readonly {
+  background: rgba(234, 179, 8, 0.15);
+  color: var(--status-warning);
+}
+
+.agent-badge.full {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--status-success);
+}
+
+.agent-badge.custom-badge {
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--accent-mauve);
+}
+
+/* Empty */
+.agents-empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--text-secondary, var(--text-muted));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.agents-empty svg {
+  opacity: 0.4;
+}
+
+.agents-empty p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.agents-empty-hint {
+  font-size: 11px !important;
+  color: var(--text-tertiary, var(--text-subtext)) !important;
+}
+
+.agents-empty-hint code {
+  background: var(--bg-tertiary, var(--bg-surface1));
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+/* Form Overlay */
+.agent-form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+}
+
+.agent-form {
+  width: min(560px, 92vw);
+  max-height: 85vh;
+  background: var(--bg-secondary, var(--bg-base));
+  border: 1px solid var(--border, var(--bg-surface0));
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+}
+
+.agent-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border, var(--bg-surface0));
+}
+
+.agent-form-header h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary, var(--text-primary));
+}
+
+.agent-form-header h4 svg {
+  color: var(--accent, var(--accent-blue));
+}
+
+.agent-form-close {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, var(--text-secondary));
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.agent-form-close:hover {
+  background: var(--bg-tertiary, var(--bg-surface1));
+  color: var(--text-primary, var(--text-primary));
+}
+
+.agent-form-scroll {
+  overflow-y: auto;
+  padding: 16px 18px;
+  flex: 1;
+}
+
+.agent-form-group {
+  margin-bottom: 14px;
+}
+
+.agent-form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, var(--text-secondary));
+  margin-bottom: 6px;
+}
+
+.agent-form-required {
+  color: var(--accent-red);
+  margin-left: 2px;
+}
+
+.agent-form-group input,
+.agent-form-group select,
+.agent-form-group textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border, var(--bg-surface0));
+  border-radius: 8px;
+  background: var(--bg-primary, var(--bg-surface));
+  color: var(--text-primary, var(--text-primary));
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.agent-form-group input:focus,
+.agent-form-group select:focus,
+.agent-form-group textarea:focus {
+  border-color: var(--accent, var(--accent-blue));
+  box-shadow: 0 0 0 2px rgba(var(--accent-blue-rgb), 0.1);
+}
+
+.agent-form-group input::placeholder,
+.agent-form-group textarea::placeholder {
+  color: var(--text-tertiary, var(--text-subtext));
+}
+
+.agent-form-group textarea {
+  resize: vertical;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  line-height: 1.6;
+  font-size: 12px;
+}
+
+.agent-form-prompt {
+  min-height: 120px;
+}
+
+.agent-form-hint {
+  display: block;
+  font-size: 11px;
+  color: var(--text-tertiary, var(--text-subtext));
+  margin-top: 4px;
+}
+
+.agent-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Form Actions */
+.agent-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 18px;
+  border-top: 1px solid var(--border, var(--bg-surface0));
+}
+
+.agent-form-btn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border, var(--bg-surface0));
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.agent-form-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.agent-form-btn-cancel {
+  background: transparent;
+  color: var(--text-secondary, var(--text-secondary));
+}
+
+.agent-form-btn-cancel:hover:not(:disabled) {
+  background: var(--bg-tertiary, var(--bg-surface1));
+  color: var(--text-primary, var(--text-primary));
+}
+
+.agent-form-btn-primary {
+  background: var(--accent, var(--accent-blue));
+  color: var(--bg-base);
+  border-color: var(--accent, var(--accent-blue));
+}
+
+.agent-form-btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+/* Prompt Viewer Modal */
+.agent-prompt-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+  padding: 20px;
+}
+
+.agent-prompt-modal {
+  width: min(640px, 92vw);
+  max-height: 80vh;
+  background: var(--bg-secondary, var(--bg-base));
+  border: 1px solid var(--border, var(--bg-surface0));
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.5);
+}
+
+.agent-prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border, var(--bg-surface0));
+}
+
+.agent-prompt-header h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, var(--text-primary));
+}
+
+.agent-prompt-header h4 svg {
+  color: var(--accent, var(--accent-blue));
+}
+
+.agent-prompt-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.agent-prompt-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, var(--text-secondary));
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 11px;
+  transition: all 0.15s;
+}
+
+.agent-prompt-btn:hover {
+  background: var(--bg-tertiary, var(--bg-surface1));
+  color: var(--text-primary, var(--text-primary));
+}
+
+.agent-prompt-body {
+  padding: 16px 18px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-primary, var(--text-primary));
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  max-height: 60vh;
+}
+
+/* Scrollbar */
+.agents-list::-webkit-scrollbar,
+.agent-form-scroll::-webkit-scrollbar,
+.agent-prompt-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.agents-list::-webkit-scrollbar-track,
+.agent-form-scroll::-webkit-scrollbar-track,
+.agent-prompt-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.agents-list::-webkit-scrollbar-thumb,
+.agent-form-scroll::-webkit-scrollbar-thumb,
+.agent-prompt-body::-webkit-scrollbar-thumb {
+  background: var(--border, var(--bg-surface0));
+  border-radius: 3px;
+}
+
+.agents-list::-webkit-scrollbar-thumb:hover,
+.agent-form-scroll::-webkit-scrollbar-thumb:hover,
+.agent-prompt-body::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover, var(--text-subtext));
+}
+
+/* ==================== Scope sections (custom tab) ==================== */
+
+/* Each source layer (disk / localStorage / extra-dirs) gets its own card-
+   shaped section with a compact header so users can tell at a glance which
+   pile of agents they're looking at. */
+.agents-scope-section {
+  margin: 0 4px 16px;
+  border: 1px solid var(--border, var(--bg-surface0));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg-secondary, var(--bg-base)) 85%, transparent);
+  overflow: hidden;
+}
+
+.agents-scope-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary, var(--text-secondary));
+  background: var(--bg-tertiary, #45475a22);
+  border-bottom: 1px solid var(--border, var(--bg-surface0));
+}
+
+.agents-scope-section-header code {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--text-primary, var(--text-primary)) 8%, transparent);
+  color: var(--text-primary, var(--text-primary));
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.agents-scope-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  border: 1px solid var(--border, var(--bg-surface0));
+  background: transparent;
+  color: var(--text-secondary, var(--text-secondary));
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.agents-scope-refresh:hover {
+  color: var(--text-primary, var(--text-primary));
+  background: var(--bg-tertiary, var(--bg-surface1));
+}
+
+/* Cards inside a section flow naturally, no extra margin on the section-
+   level so they stay close to the header. */
+.agents-scope-section .agent-card {
+  margin: 0;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+}
+
+.agents-scope-section .agent-card:last-child {
+  border-bottom: 0;
+}
+
+/* ==================== Extra dirs list ==================== */
+
+.agents-extra-dirs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border, var(--bg-surface0));
+}
+
+.agents-extra-dir {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-secondary, var(--bg-base));
+  font-size: 12px;
+}
+
+.agents-extra-dir--builtin {
+  opacity: 0.88;
+}
+
+.agents-extra-dir-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.agents-extra-dir-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary, var(--text-secondary));
+}
+
+.agents-extra-dir-path {
+  font-size: 11px;
+  color: var(--text-primary, var(--text-primary));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 2px 5px;
+  background: color-mix(in srgb, var(--text-primary, var(--text-primary)) 6%, transparent);
+  border-radius: 3px;
+}
+
+.agents-extra-dir-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted, var(--text-muted));
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.agents-extra-dir-remove:hover {
+  background: color-mix(in srgb, var(--accent-red, var(--accent-red)) 15%, transparent);
+  color: var(--accent-red, var(--accent-red));
+}
+
+.agents-scope-default {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--border, var(--bg-surface0));
+  background: var(--bg-secondary, var(--bg-base));
+  font-size: 12px;
+}
+
+.agents-scope-default label {
+  color: var(--text-secondary, var(--text-secondary));
+  flex-shrink: 0;
+}
+
+.agents-scope-default select {
+  flex: 1;
+  padding: 5px 8px;
+  background: var(--bg-tertiary, var(--bg-surface1));
+  color: var(--text-primary, var(--text-primary));
+  border: 1px solid var(--border, var(--bg-surface0));
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.agents-empty-paths {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-secondary, var(--text-secondary));
+}
+
+.agents-empty-paths code {
+  font-size: 11px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--text-primary, var(--text-primary)) 8%, transparent);
+  color: var(--text-primary, var(--text-primary));
+}
+
+/* ==================== Scope selector inside the form ==================== */
+
+.agent-form-scope-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.agent-form-scope-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border, var(--bg-surface0));
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--bg-secondary, var(--bg-base));
+  transition: all 0.15s;
+}
+
+.agent-form-scope-option:hover {
+  border-color: var(--border-hover, var(--text-subtext));
+}
+
+.agent-form-scope-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.agent-form-scope-option input[type='radio'] {
+  margin-top: 3px;
+  accent-color: var(--accent-blue, var(--accent-blue));
+  flex-shrink: 0;
+}
+
+.agent-form-scope-option > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.agent-form-scope-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary, var(--text-primary));
+  margin-bottom: 2px;
+}
+
+.agent-form-scope-hint {
+  font-size: 11px;
+  color: var(--text-secondary, var(--text-secondary));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agent-form-scope-hint code {
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--text-primary, var(--text-primary)) 8%, transparent);
+  color: var(--text-primary, var(--text-primary));
+}
+

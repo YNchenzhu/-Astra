@@ -1,0 +1,53 @@
+/**
+ * TeamEditor 专属样式 —— 主要是底部的协调流程预览区。
+ */
+
+.team-flow-section {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.team-flow-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.team-flow-title {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.team-flow-hint {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.team-flow-empty {
+  padding: 14px 12px;
+  border: 1px dashed var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 4px;
+  background: rgba(var(--surface-tint-rgb), 0.02);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.55;
+}
+
+/* MermaidBlock 内部有自己的暗色主题和 padding,但是工作台是窄栏
+ * (中间~800px),这里给它限定最大高度防止图过高把编辑区挤没。
+ * 图太大时用户可以点 MermaidBlock 右上角的"放大"。 */
+.team-flow-section .chat-mermaid-block {
+  max-height: 360px;
+  overflow: auto;
+}

@@ -1,0 +1,381 @@
+.thinking-block {
+  margin: 6px 0 10px;
+  border: 0.5px solid var(--border-color, var(--bg-surface0));
+  border-radius: 12px;
+  background: rgba(120, 128, 255, 0.04);
+  overflow: hidden;
+  animation: block-slide-in 0.3s ease-out;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.thinking-block.is-streaming {
+  border-color: rgba(247, 201, 72, 0.25);
+  background: rgba(247, 201, 72, 0.04);
+}
+
+.thinking-block.is-complete {
+  border-color: rgba(120, 128, 255, 0.15);
+  background: rgba(120, 128, 255, 0.03);
+}
+
+/* Header */
+.thinking-header {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  min-height: 38px;
+  max-height: 75px;
+  overflow: hidden;
+  transition: background 0.15s;
+}
+
+.thinking-block.is-collapsed {
+  margin: 4px 0 6px;
+}
+
+.thinking-block.is-collapsed .thinking-header {
+  padding: 4px 10px;
+  min-height: 22px;
+  max-height: 34px;
+  gap: 8px;
+}
+
+.thinking-block.is-collapsed .thinking-title {
+  font-size: 11px;
+}
+
+.thinking-header:hover {
+  background: rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.2);
+}
+
+.thinking-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Bulb icon — Cherry Studio style breathing animation (opacity cycle) */
+.thinking-bulb {
+  color: var(--accent-yellow);
+  flex-shrink: 0;
+}
+
+.is-streaming .thinking-bulb {
+  animation: thinking-breathe 1.2s ease-in-out infinite;
+}
+
+.is-complete .thinking-bulb {
+  animation: none;
+  opacity: 0.7;
+}
+
+.thinking-title {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.is-streaming .thinking-title {
+  color: var(--text-primary);
+}
+
+/* Preview area — collapsed content preview */
+.thinking-preview-wrap {
+  position: relative;
+  height: 18px;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.thinking-block.is-collapsed .thinking-preview-wrap {
+  height: 12px;
+}
+
+.thinking-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: thinking-scroll 12s linear infinite;
+}
+
+.thinking-preview-line {
+  font-size: 11px;
+  line-height: 18px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.thinking-block.is-collapsed .thinking-preview-line {
+  font-size: 10px;
+  line-height: 12px;
+}
+
+.thinking-chevron {
+  transition: transform 0.2s ease;
+  color: var(--text-tertiary);
+}
+
+.is-expanded .thinking-chevron {
+  transform: rotate(90deg);
+}
+
+/* Body — expanded content */
+.thinking-body {
+  position: relative;
+  border-top: 0.5px solid var(--border-color);
+  background: rgba(0, 0, 0, 0.08);
+  padding: 14px 12px 12px;
+  animation: block-expand-content 0.25s ease-out;
+}
+
+.thinking-copy {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.04);
+  color: var(--text-secondary);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.15s, color 0.15s;
+}
+
+.thinking-body:hover .thinking-copy {
+  opacity: 1;
+}
+
+.thinking-copy:hover {
+  color: var(--text-primary);
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+}
+
+.thinking-markdown {
+  /* The old chrome reserved 36px on the right for a copy button; the
+     ActivityRow-based ThinkingBlock no longer has that affordance. */
+  color: var(--text-secondary);
+  font-size: 13px;
+  /* When expanded after streaming ends, the user wants to read the whole
+     thing — do not clip. Streaming state adds its own clipping class. */
+  max-height: none;
+  overflow: visible;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  /* Prevent each word from appearing on a separate line during streaming */
+  white-space: normal;
+}
+
+.thinking-markdown p {
+  margin: 0 0 8px;
+  white-space: normal;
+}
+
+.thinking-markdown p:last-child {
+  margin-bottom: 0;
+}
+
+.thinking-markdown pre,
+.thinking-markdown code {
+  white-space: pre-wrap;
+}
+
+/* ─── Streaming viewport ─────────────────────────────────────────────
+   While the model is still emitting thoughts we clip the reasoning area
+   to a fixed height and auto-scroll-to-bottom from React. Otherwise the
+   live content would keep pushing the rest of the chat transcript down
+   and the reply input would drift off-screen — a UX regression the IDE
+   explicitly avoids.
+
+   `overscroll-behavior: contain` stops a wheel event hitting the
+   viewport's top/bottom edge from bubbling up and scrolling the entire
+   chat pane (otherwise the user's mouse wheel "jumps" the whole thread
+   when the thinking feed is shorter than a page).
+*/
+.thinking-markdown-streaming {
+  max-height: 240px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Subtle fade at the top so long scrolling content doesn't look flat-
+     cut. Mask only activates when there's overflow. */
+  mask-image: linear-gradient(to bottom, transparent 0, #000 12px, #000 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12px, #000 100%);
+}
+
+/* Breathing animation — Cherry Studio style opacity cycle */
+@keyframes thinking-breathe {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+}
+
+@keyframes thinking-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes block-expand-content {
+  from {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+/* ─── Structured sections (H: long-reasoning navigation) ─────────────
+   Activated only when streaming has ended AND content carries ≥2
+   `##` / `###` headings AND is long enough (see
+   MIN_CONTENT_LENGTH_FOR_SECTIONS in ThinkingBlock.tsx). Each section is
+   a native `<details>` element so the browser owns the open/closed
+   state — zero React state to drift on remount.
+*/
+.thinking-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.thinking-section {
+  border-top: 0.5px solid var(--border-color, rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08));
+  /* First section gets no top border to keep the seam clean against the
+     parent `.thinking-body` chrome. */
+}
+
+.thinking-section:first-child {
+  border-top: 0;
+}
+
+.thinking-section-summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 4px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  font-size: 12px;
+  color: var(--text-secondary);
+  transition: color 0.15s;
+}
+
+.thinking-section-summary:hover {
+  color: var(--text-primary);
+}
+
+/* Hide the browser-default disclosure triangle so our own marker drives
+   the visual; we still want the underlying `<details>` semantics + native
+   open/closed state, so `display: list-item` toggle is just hidden. */
+.thinking-section-summary::-webkit-details-marker {
+  display: none;
+}
+
+.thinking-section-marker {
+  display: inline-block;
+  width: 0.9em;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  transition: transform 0.15s ease;
+}
+
+.thinking-section[open] > .thinking-section-summary .thinking-section-marker {
+  transform: rotate(90deg);
+}
+
+.thinking-section-heading {
+  font-weight: 500;
+  /* H3 sub-sections are slightly de-emphasised so the visual hierarchy
+     reads correctly when both levels appear in the same block. */
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.thinking-section-h3 .thinking-section-heading {
+  font-weight: 400;
+  padding-left: 14px;
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+}
+
+.thinking-section-meta {
+  flex-shrink: 0;
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.thinking-section-body {
+  padding: 4px 4px 8px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.thinking-section-body p {
+  margin: 0 0 8px;
+}
+
+.thinking-section-body p:last-child {
+  margin-bottom: 0;
+}
+
+.thinking-section-body pre,
+.thinking-section-body code {
+  white-space: pre-wrap;
+}
+
+/* ─── Reasoning summary (B: OpenAI Responses summary[]) ──────────────
+   Distinct from `<ThinkingBlock>` chrome — summaries are short, safe-to-
+   show TL;DRs, presented as a finished informational artifact rather than
+   a live process trace. Different border + background tints than the
+   raw-thinking row so users can visually distinguish "the model's summary
+   of what it reasoned about" from "the model's actual chain of thought".
+*/
+.reasoning-summary-block {
+  margin: 4px 0 6px;
+}
+
+.reasoning-summary-block .activity-row {
+  /* Slightly lighter accent than the thinking block — summaries are not
+     mid-stream events, they're polished artifacts. */
+  border-color: rgba(120, 168, 255, 0.18);
+  background: rgba(120, 168, 255, 0.04);
+}
+
+.reasoning-summary-markdown {
+  /* Override the thinking-markdown streaming clip — summaries are short
+     enough to render in full without a fixed-height viewport, and the
+     content is final-state (no auto-scroll-to-bottom semantics). */
+  max-height: none;
+  overflow: visible;
+}
+

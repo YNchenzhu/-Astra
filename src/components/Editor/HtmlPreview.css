@@ -1,0 +1,62 @@
+.html-preview-pane {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  background: var(--bg-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.html-preview-toolbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 10px;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.02);
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  font-size: 11px;
+}
+
+.html-preview-label {
+  color: var(--text-muted);
+  font-family: var(--font-mono, 'Cascadia Code', monospace);
+  letter-spacing: 0.04em;
+}
+
+.html-preview-reload {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.html-preview-reload:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color, rgba(255, 255, 255, 0.08));
+}
+
+.html-preview-iframe {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  border: 0;
+  background: #ffffff;
+}
+
+/* SVG 模式:wrapper 自己提供深色棋盘底纹,iframe 不需要白底 */
+.html-preview-pane.is-svg .html-preview-iframe {
+  background: transparent;
+}

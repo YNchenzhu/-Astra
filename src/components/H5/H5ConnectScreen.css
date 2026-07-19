@@ -1,0 +1,85 @@
+.h5-connect-root {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  /* Use dynamic viewport height + safe areas so it fits on mobile browsers. */
+  min-height: 100dvh;
+  background: var(--bg-primary, #1e1e2e);
+  color: var(--text-primary, #cdd6f4);
+}
+
+.h5-connect-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-secondary, #181825);
+  border: 1px solid var(--border, #313244);
+  border-radius: 14px;
+  padding: 28px 24px calc(28px + env(safe-area-inset-bottom));
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.h5-connect-title {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.h5-connect-sub {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary, #a6adc8);
+}
+
+.h5-connect-label {
+  display: block;
+  margin: 14px 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary, #a6adc8);
+}
+
+.h5-connect-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  font-size: 16px; /* >=16px avoids iOS zoom-on-focus */
+  border-radius: 10px;
+  border: 1px solid var(--border, #313244);
+  background: var(--bg-tertiary, #11111b);
+  color: var(--text-primary, #cdd6f4);
+  outline: none;
+}
+
+.h5-connect-input:focus {
+  border-color: var(--accent, #89b4fa);
+}
+
+.h5-connect-error {
+  margin: 14px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--error, #f38ba8);
+}
+
+.h5-connect-btn {
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent, #89b4fa);
+  color: var(--bg-primary, #1e1e2e);
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.h5-connect-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

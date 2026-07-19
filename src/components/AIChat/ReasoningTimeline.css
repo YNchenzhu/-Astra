@@ -1,0 +1,192 @@
+/* Reasoning timeline popover — sits below the chat header actions row,
+   anchored to the right edge to align with the action button that
+   toggles it. Borrows the visual language of `ConversationList` (small
+   panel, soft shadow, scrollable body) so the chrome feels consistent
+   with the existing chat-panel pop-overs. */
+.reasoning-timeline {
+  position: absolute;
+  top: 38px;
+  right: 8px;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  max-height: 520px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-elevated, #1e1e1e);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 10px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.38);
+  z-index: 100;
+  overflow: hidden;
+  animation: reasoning-timeline-pop-in 0.12s ease-out;
+}
+
+@keyframes reasoning-timeline-pop-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reasoning-timeline-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  flex-shrink: 0;
+}
+
+.reasoning-timeline-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.reasoning-timeline-title svg {
+  color: var(--accent-yellow);
+}
+
+.reasoning-timeline-close {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.reasoning-timeline-close:hover {
+  color: var(--text-primary);
+  background: rgba(var(--surface-tint-rgb), 0.06);
+}
+
+.reasoning-timeline-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.04));
+  background: rgba(var(--accent-blue-rgb), 0.06);
+  flex-shrink: 0;
+}
+
+.reasoning-timeline-summary-empty {
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+.reasoning-timeline-summary-count {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.reasoning-timeline-summary-meta {
+  font-variant-numeric: tabular-nums;
+}
+
+.reasoning-timeline-list {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 4px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.reasoning-timeline-empty-hint {
+  padding: 16px 14px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-tertiary);
+}
+
+.reasoning-timeline-entry {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+  border-radius: 6px;
+  transition: background 0.12s, color 0.12s;
+}
+
+.reasoning-timeline-entry:hover {
+  background: rgba(var(--surface-tint-rgb), 0.04);
+  color: var(--text-primary);
+}
+
+.reasoning-timeline-entry-turn {
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  /* Turn pill — keeps the row left-edge tidy across entries with
+     very long or very short previews. */
+  padding: 1px 6px;
+  border: 0.5px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 999px;
+  align-self: center;
+}
+
+.reasoning-timeline-entry-reasoning_summary .reasoning-timeline-entry-turn {
+  border-color: rgba(var(--accent-blue-rgb), 0.4);
+  color: var(--accent-blue);
+}
+
+.reasoning-timeline-entry-preview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.reasoning-timeline-entry-meta {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.reasoning-timeline-entry-kind {
+  padding: 0 5px;
+  border-radius: 3px;
+  background: rgba(var(--accent-blue-rgb), 0.18);
+  color: var(--accent-blue);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.reasoning-timeline-entry-compacted {
+  padding: 0 5px;
+  border-radius: 3px;
+  background: rgba(var(--accent-yellow-rgb), 0.18);
+  color: var(--accent-yellow);
+  font-size: 10px;
+}
+
+.reasoning-timeline-entry-time,
+.reasoning-timeline-entry-tokens {
+  color: var(--text-tertiary);
+}

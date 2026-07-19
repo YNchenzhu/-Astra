@@ -1,0 +1,111 @@
+.editor-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg-base);
+  overflow: hidden;
+}
+
+.editor-container {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ─── Sprint 9.2+: Markdown 感知编辑器的工具条 + 分屏 ─────────── */
+
+.md-view-toolbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.02);
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  font-size: 11px;
+}
+
+.md-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.md-view-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.md-view-btn.is-active {
+  background: rgba(var(--accent-blue-rgb), 0.12);
+  border-color: rgba(var(--accent-blue-rgb), 0.35);
+  color: var(--accent-blue, #89b4fa);
+}
+
+/* split 模式:编辑器 / 预览 之间的可拖动分隔条 */
+.md-split-handle {
+  flex: 0 0 4px;
+  background: var(--border-color, rgba(255, 255, 255, 0.08));
+  cursor: col-resize;
+  position: relative;
+  transition: background 120ms ease;
+  user-select: none;
+}
+.md-split-handle::before {
+  /* 一个横向对齐的热区,向两边扩展 4px 以提升命中率 */
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -4px;
+  right: -4px;
+  z-index: 2;
+}
+.md-split-handle:hover,
+.md-split-handle:active {
+  background: var(--accent-blue, #89b4fa);
+  opacity: 0.75;
+}
+
+.editor-container-md .markdown-preview-split,
+.editor-container-html .html-preview-split,
+.editor-container-svg .html-preview-split {
+  flex: 1;
+  min-width: 0;
+}
+
+/* HTML / SVG 预览容器:与 Markdown 容器走同一套 split / toolbar 样式,
+ * 只是预览面板内容由 <HtmlPreview> 接管(自带 iframe + reload)。 */
+.editor-container-html,
+.editor-container-svg {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Monaco editor 自定义主题覆盖 */
+.editor-container .monaco-editor {
+  background: var(--bg-base) !important;
+}
+
+.editor-container .monaco-editor .margin {
+  background: var(--bg-base) !important;
+}
+
+/*
+ * `.editor-welcome` and the `.welcome-*` rule family moved to
+ * `./EditorWelcome.css`, which is the new single source of truth and
+ * must load on the synchronous cold-start path (the welcome screen
+ * appears before this lazy `EditorArea` chunk resolves). `EditorArea.tsx`
+ * imports `EditorWelcome.css` directly so the inline welcome fallback
+ * inside this file's JSX still styles correctly when the chunk IS
+ * mounted (e.g. opened a file then closed all tabs).
+ */

@@ -1,0 +1,310 @@
+/**
+ * CreateBundleDialog 样式 —— 嵌套模态。工作台的 z-index 是 1200,
+ * 这个对话框需要叠在其上,用 1210。
+ */
+
+.cbd-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1210;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: cbd-overlay-in 0.12s ease-out;
+  /* Electron TitleBar 整条都是 `-webkit-app-region: drag`(窗口拖动把手)。
+     本对话框如果被渲染成 TitleBar 的 DOM 后代(走 BundleSwitcher 入口时
+     就是这种情况),里面的 input 会被 drag 区吞掉事件。这里显式设
+     no-drag,和 Portal 到 body 的做法一起,保证无论挂在哪,输入框都可点可打字。 */
+  -webkit-app-region: no-drag;
+}
+.cbd-backdrop {
+  position: absolute;
+  inset: 0;
+  /* 原先用了 backdrop-filter: blur(2px),但在 Windows 下的 Electron 里,
+     鼠标每动一下 Chromium 都会重新 GPU 合成整片模糊,导致整个对话框
+     的 hover / 输入响应跟不上鼠标。同样问题 AgentWorkbench 的遮罩已
+     经踩过一次坑(见 AgentWorkbench.css 里的注释)。这里采用相同策略:
+     用稍深一点的半透明黑保留 "遮罩" 视觉,性能提升一个数量级。 */
+  background: var(--bg-backdrop);
+}
+
+.cbd-surface {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* 同步瘦身:原 520px → 420px(约 -20%) */
+  width: min(420px, 100%);
+  max-height: 88vh;
+  background: var(--bg-base, #1e1e2e);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: 6px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  animation: cbd-surface-in 0.14s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes cbd-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes cbd-surface-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ─── Header ─────────────────────────────────────────────────── */
+
+.cbd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 11px;
+  border-bottom: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.06));
+  flex-shrink: 0;
+}
+
+.cbd-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cbd-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.cbd-close:hover {
+  background: rgba(var(--surface-tint-rgb), 0.05);
+  color: var(--accent-red, #f38ba8);
+}
+
+/* ─── Mode buttons ─────────────────────────────────────────── */
+
+.cbd-mode-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  padding: 9px 11px 0;
+  flex-shrink: 0;
+}
+
+.cbd-mode-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 8px 9px;
+  background: rgba(var(--surface-tint-rgb), 0.025);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 4px;
+  color: var(--text-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.14s,
+    background 0.14s;
+  outline: none;
+}
+.cbd-mode-btn:hover:not(:disabled) {
+  background: rgba(var(--surface-tint-rgb), 0.05);
+  border-color: var(--border-hover);
+}
+.cbd-mode-btn.is-active {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.12);
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.4);
+}
+.cbd-mode-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.cbd-mode-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.cbd-mode-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cbd-mode-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ─── Fields ───────────────────────────────────────────────── */
+
+.cbd-fields {
+  padding: 10px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.cbd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cbd-field-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.cbd-input {
+  padding: 4px 7px;
+  font: inherit;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-primary);
+  background: var(--bg-input-soft);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.12s;
+  box-sizing: border-box;
+  width: 100%;
+}
+.cbd-input:hover {
+  border-color: var(--border-hover);
+}
+.cbd-input:focus {
+  border-color: var(--accent-blue, #89b4fa);
+}
+
+.cbd-textarea {
+  resize: vertical;
+  min-height: 44px;
+  line-height: 1.5;
+}
+
+.cbd-select {
+  cursor: pointer;
+}
+
+.cbd-field-hint {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.cbd-field-hint code {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 10.5px;
+  background: rgba(var(--surface-tint-rgb), 0.06);
+  padding: 0 4px;
+  border-radius: 2px;
+  color: var(--text-primary);
+}
+.cbd-field-hint-err {
+  color: var(--accent-red, #f38ba8);
+}
+
+.cbd-field-hint-auto {
+  color: var(--accent-green, #a6e3a1);
+  font-weight: 500;
+}
+
+/* ─── Error + Footer ──────────────────────────────────────── */
+
+.cbd-error {
+  margin: 0 14px 10px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--accent-red, #f38ba8);
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.12);
+  border: 1px solid rgba(var(--accent-red-rgb, 243, 139, 168), 0.28);
+  border-radius: 4px;
+}
+
+.cbd-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+  padding: 7px 11px;
+  border-top: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.06));
+  background: rgba(var(--surface-tint-rgb), 0.02);
+  flex-shrink: 0;
+}
+
+.cbd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 11.5px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    border-color 0.12s,
+    opacity 0.12s;
+  outline: none;
+}
+.cbd-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.cbd-btn-ghost {
+  background: transparent;
+  border-color: var(--border-color, rgba(255, 255, 255, 0.08));
+  color: var(--text-secondary);
+}
+.cbd-btn-ghost:hover {
+  background: rgba(var(--surface-tint-rgb), 0.04);
+  color: var(--text-primary);
+}
+.cbd-btn-primary {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.2);
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.4);
+  color: var(--accent-blue, #89b4fa);
+  font-weight: 500;
+}
+.cbd-btn-primary:hover:not(:disabled) {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.3);
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.55);
+}
+
+.is-spinning {
+  animation: cbd-spin 0.9s linear infinite;
+}
+@keyframes cbd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

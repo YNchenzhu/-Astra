@@ -1,0 +1,507 @@
+.problems-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.problems-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  height: 28px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.problems-toolbar-left,
+.problems-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.problems-filter-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.problems-filter-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.problems-filter-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.problems-filter-btn.active {
+  color: var(--text-primary);
+  background: var(--active-bg);
+}
+
+.problems-counts {
+  display: flex;
+  gap: 6px;
+  margin-right: 4px;
+}
+
+.problems-count {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+}
+
+.count-error { color: var(--text-error); }
+.count-warning { color: var(--text-warning); }
+.count-information { color: var(--text-info); }
+
+.problems-clear-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+}
+
+.problems-clear-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.problems-severity-filter {
+  display: flex;
+  padding: 2px 8px;
+  gap: 2px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.problems-severity-btn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 10px;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.problems-severity-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.problems-severity-btn.active {
+  color: var(--text-primary);
+  background: var(--active-bg);
+}
+
+.problems-item-block {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.problems-item-block:last-child {
+  border-bottom: none;
+}
+
+.problems-related {
+  padding: 0 8px 6px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.problems-related-row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1.35;
+  color: var(--text-muted);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+/* Virtualized variant: fills the slot height exactly, still single-line. */
+.problems-related-row-virtual {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 8px 0 44px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.problems-related-row-virtual:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.problems-related-row:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.problems-related-label {
+  opacity: 0.7;
+  margin-right: 4px;
+}
+
+.problems-related-text {
+  word-break: break-word;
+}
+
+.problems-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* The virtualized list manages its own scrolling — don't double-scroll. */
+.problems-list.problems-list-virtual {
+  overflow: hidden;
+  position: relative;
+}
+
+.problems-file-group {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.problems-file-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-secondary);
+  height: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.problems-file-header:hover {
+  background: var(--hover-bg);
+}
+
+.problems-expand-icon {
+  font-size: 9px;
+  width: 12px;
+  display: inline-flex;
+  justify-content: center;
+  transition: transform 0.15s;
+}
+
+.problems-expand-icon.expanded {
+  transform: rotate(0deg);
+}
+
+.problems-file-name {
+  font-weight: 500;
+}
+
+.problems-file-count {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.problems-copy-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 2px 4px;
+  cursor: pointer;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  margin-left: 4px;
+}
+
+.problems-copy-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.problems-copy-btn.copied {
+  color: var(--accent-green, var(--accent-green));
+}
+
+.problems-items {
+  background: rgba(0, 0, 0, 0.1);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.problems-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px 0 24px;
+  cursor: pointer;
+  font-size: 12px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.problems-item:hover {
+  background: var(--hover-bg);
+}
+
+.problems-item:hover .problems-item-qf {
+  opacity: 1;
+}
+
+.problems-item-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.problems-item-message {
+  flex: 1;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* LSP DiagnosticTag = 1 (Unnecessary): VS Code renders these with reduced opacity.
+   Applying to the row conveys the intent whether the user is scanning or clicking. */
+.problems-item-unnecessary .problems-item-message,
+.problems-item-unnecessary .problems-item-source {
+  opacity: 0.55;
+}
+
+/* LSP DiagnosticTag = 2 (Deprecated): strikethrough matches VS Code. */
+.problems-item-deprecated .problems-item-message {
+  text-decoration: line-through;
+  text-decoration-color: var(--text-muted);
+}
+
+.problems-item-source {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(127, 127, 140, 0.14);
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.problems-item-rule-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.problems-item-rule-link:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+.problems-item-qf {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--accent-blue, var(--accent-blue));
+  padding: 2px;
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.12s, background 0.12s;
+}
+
+.problems-item-qf:hover {
+  background: var(--hover-bg);
+}
+
+.problems-item-qf:focus-visible {
+  opacity: 1;
+  outline: 1px solid var(--accent-blue, var(--accent-blue));
+  outline-offset: 1px;
+}
+
+.problems-item-location {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-size: 10px;
+  margin-left: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.problems-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* (`.problems-row-cap-button` removed — superseded by react-window virtualization
+ * which now renders every row without the cap/extend strategy.) */
+
+/* ----------------------------- Quick Fix popover ----------------------------- */
+
+.problems-quickfix-popover {
+  position: fixed;
+  width: 320px;
+  max-height: 320px;
+  overflow: hidden;
+  z-index: 100;
+  background: var(--bg-surface, var(--bg-base));
+  border: 1px solid var(--border-color, rgba(127, 127, 140, 0.35));
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+}
+
+.problems-quickfix-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color, rgba(127, 127, 140, 0.2));
+}
+
+.problems-quickfix-header > span {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.problems-quickfix-close {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.problems-quickfix-close:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.problems-quickfix-banner {
+  padding: 6px 10px;
+  font-size: 11px;
+  line-height: 1.45;
+  border-bottom: 1px solid var(--border-color, rgba(127, 127, 140, 0.2));
+}
+
+.problems-quickfix-banner-info {
+  background: rgba(var(--accent-blue-rgb), 0.12);
+  color: var(--text-primary);
+}
+
+.problems-quickfix-banner-error {
+  background: rgba(var(--accent-red-rgb), 0.15);
+  color: var(--text-primary);
+}
+
+.problems-quickfix-status {
+  padding: 14px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.problems-quickfix-status-error {
+  color: var(--text-error, var(--accent-red));
+}
+
+.problems-quickfix-list {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  overflow-y: auto;
+  max-height: 256px;
+}
+
+.problems-quickfix-action {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 6px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-primary);
+  font-family: inherit;
+}
+
+.problems-quickfix-action:hover:not(:disabled) {
+  background: var(--hover-bg);
+}
+
+.problems-quickfix-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.problems-quickfix-action.preferred {
+  font-weight: 600;
+}
+
+.problems-quickfix-action-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.problems-quickfix-action-kind {
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(127, 127, 140, 0.14);
+}
+
+

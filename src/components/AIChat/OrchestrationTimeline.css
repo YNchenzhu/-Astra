@@ -1,0 +1,192 @@
+/**
+ * Stage 4.1 — Orchestration kernel activity timeline (IDE-style).
+ *
+ * Visual conventions:
+ *   - Compact horizontal pill, matches chat-session-memory-indicator dimensions
+ *   - Uses theme tokens (no hardcoded light/dark colors) so it adapts to the
+ *     active VS Code-like theme.
+ *   - The "..." menu opens a small dropdown anchored to the right of the pill.
+ */
+
+.orchestration-timeline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--ui-bg-hover, rgba(120, 120, 120, 0.08));
+  border: 1px solid var(--ui-border, rgba(120, 120, 120, 0.2));
+  font-size: 11px;
+  color: var(--ui-fg-secondary, #888);
+  position: relative;
+  user-select: none;
+  /* Let the pill shrink when the chat panel is narrow rather than pushing
+   * past the right edge of the header. Content trimming is handled by the
+   * @container rules below (they hide passed phases / labels). We do NOT
+   * use `overflow: hidden` here — that would clip the absolutely-positioned
+   * `.orchestration-timeline-menu` dropdown when it opens. */
+  min-width: 0;
+  max-width: 100%;
+  flex-shrink: 1;
+  white-space: nowrap;
+}
+
+.orchestration-timeline-icon {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.8;
+}
+
+.orchestration-timeline-node {
+  padding: 0 4px;
+  border-radius: 4px;
+  transition: color 120ms ease, background 120ms ease;
+}
+
+.orchestration-timeline-node--passed {
+  color: var(--ui-fg-tertiary, #666);
+  opacity: 0.7;
+}
+
+.orchestration-timeline-node--active {
+  color: var(--ui-fg-primary, #fff);
+  background: var(--ui-accent-bg, rgba(64, 128, 240, 0.18));
+  font-weight: 500;
+}
+
+.orchestration-timeline-node--paused {
+  background: rgba(240, 180, 40, 0.22);
+  color: rgba(240, 180, 40, 1);
+  animation: orchestration-timeline-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes orchestration-timeline-pulse {
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
+}
+
+.orchestration-timeline-arrow {
+  color: var(--ui-fg-tertiary, #666);
+  opacity: 0.55;
+  margin: 0 2px;
+}
+
+.orchestration-timeline-counter {
+  color: var(--ui-fg-tertiary, #666);
+  font-variant-numeric: tabular-nums;
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+.orchestration-timeline-menu-btn {
+  background: transparent;
+  border: none;
+  color: var(--ui-fg-secondary, #888);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  padding: 0 4px;
+  border-radius: 3px;
+  margin-left: 2px;
+}
+
+.orchestration-timeline-menu-btn:hover {
+  background: var(--ui-bg-hover, rgba(120, 120, 120, 0.15));
+  color: var(--ui-fg-primary, #fff);
+}
+
+.orchestration-timeline-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 220px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--ui-bg-elevated, #2a2a2a);
+  border: 1px solid var(--ui-border, rgba(120, 120, 120, 0.3));
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  z-index: 1000;
+}
+
+.orchestration-timeline-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  color: var(--ui-fg-primary, #fff);
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.orchestration-timeline-menu-item:hover {
+  background: var(--ui-bg-hover, rgba(120, 120, 120, 0.15));
+}
+
+.orchestration-timeline-menu-tag {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.orchestration-timeline-menu-time {
+  color: var(--ui-fg-tertiary, #666);
+  font-variant-numeric: tabular-nums;
+  font-size: 10px;
+}
+
+.orchestration-timeline-menu-divider {
+  height: 1px;
+  background: var(--ui-border, rgba(120, 120, 120, 0.2));
+  margin: 4px 0;
+}
+
+.orchestration-timeline-menu-empty {
+  padding: 8px;
+  color: var(--ui-fg-tertiary, #666);
+  font-size: 11px;
+  text-align: center;
+  font-style: italic;
+}
+
+/* ========== Responsive: collapse non-essential bits when chat panel is narrow ==========
+ *
+ * Tier 1 (~< 520px): hide phases that have already been passed; only the
+ *   active phase + the upcoming phase(s) remain. Arrows around hidden
+ *   nodes are hidden in the same rule using the adjacent-sibling combinator.
+ * Tier 2 (~< 380px): hide every phase label and inter-phase arrow; keep the
+ *   icon + the active phase pill + the iteration counter. The "…" menu
+ *   stays accessible so snapshot/rewind is still reachable.
+ * Tier 3 (~< 280px): drop the counter too; show only icon + active phase.
+ *
+ * The container is `.chat-panel` (declared in ChatPanel.css with
+ * `container-name: chat-panel`), so widths are measured against the actual
+ * chat column, not the viewport. */
+
+@container chat-panel (max-width: 520px) {
+  .orchestration-timeline-node--passed,
+  .orchestration-timeline-node--passed + .orchestration-timeline-arrow {
+    display: none;
+  }
+}
+
+@container chat-panel (max-width: 380px) {
+  .orchestration-timeline-node:not(.orchestration-timeline-node--active),
+  .orchestration-timeline-arrow {
+    display: none;
+  }
+}
+
+@container chat-panel (max-width: 280px) {
+  .orchestration-timeline-counter {
+    display: none;
+  }
+}

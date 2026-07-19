@@ -1,0 +1,311 @@
+/**
+ * BaseCard visual tokens.
+ *
+ * We re-use the catppuccin-ish accent palette already defined at the app
+ * root (`--accent-*`, `--text-*`, `--bg-surface*`). Nothing here introduces
+ * a new colour — only a new shape / layering language.
+ *
+ * The card is designed to be quiet when idle (low-contrast border, no
+ * background tint) and to announce state by a 2px left accent bar only.
+ * Keep the body panel desaturated so long chat transcripts don't become
+ * a kaleidoscope of coloured rectangles.
+ */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 6px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  background: rgba(var(--bg-surface0-rgb, 49, 50, 68), 0.28);
+  overflow: hidden;
+  font-size: 12px;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease;
+  animation: card-slide-in 0.22s ease-out;
+}
+
+.card.is-collapsed {
+  margin: 4px 0;
+}
+
+.card.card-compact {
+  margin: 2px 0;
+  border-radius: 6px;
+  border: none;
+  border-bottom: 1px solid rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.3);
+  background: transparent;
+  animation: none;
+}
+.card.card-compact:last-child {
+  border-bottom: none;
+}
+
+@keyframes card-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Left status accent bar ─────────────────────────────────────────── */
+
+.card-accent-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 2px;
+  background: transparent;
+  pointer-events: none;
+  transition: background 0.18s ease;
+}
+
+.card.card-status-idle .card-accent-bar {
+  background: var(--border-color, rgba(255, 255, 255, 0.1));
+}
+.card.card-status-running .card-accent-bar {
+  background: var(--accent-blue, #89b4fa);
+  animation: card-accent-pulse 1.6s ease-in-out infinite;
+}
+.card.card-status-success .card-accent-bar {
+  background: var(--accent-green, #a6e3a1);
+}
+.card.card-status-error .card-accent-bar {
+  background: var(--accent-red, #f38ba8);
+}
+
+@keyframes card-accent-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Subtle border tint reinforces state without flooding the transcript. */
+.card.card-status-running {
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.35);
+}
+.card.card-status-error {
+  border-color: rgba(var(--accent-red-rgb, 243, 139, 168), 0.35);
+}
+.card.card-status-success {
+  border-color: var(--border-color, rgba(255, 255, 255, 0.08));
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────── */
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px 7px 14px; /* +2px on the left to clear the accent bar */
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.12s ease;
+  outline: none;
+}
+
+.card-header:focus-visible {
+  background: rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.45);
+  box-shadow: inset 0 0 0 1px var(--accent-blue, #89b4fa);
+}
+.card-header:hover {
+  background: rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.32);
+}
+
+.card.is-collapsed .card-header {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.card.card-compact .card-header {
+  padding: 5px 10px 5px 12px;
+}
+
+/* `role="button"` on a div — strip the button-ish look that some UA default
+   stylesheets apply to keyboard focus. `.card-header:focus-visible` owns it. */
+.card-header[role='button'] {
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.card-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.card-icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+.card.card-status-running .card-icon {
+  color: var(--accent-blue, #89b4fa);
+}
+.card.card-status-success .card-icon {
+  color: var(--accent-green, #a6e3a1);
+}
+.card.card-status-error .card-icon {
+  color: var(--accent-red, #f38ba8);
+}
+
+.card-title {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.card-subtitle {
+  color: var(--text-secondary, var(--text-muted));
+  font-size: 11.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+}
+
+.card-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Chevron rotates from ▶ (0deg) to ▼ (90deg) on expand — single glyph, no
+   layout reflow compared to swapping ChevronRight/ChevronDown. */
+.card-chevron {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.18s ease;
+}
+.card-chevron.is-open {
+  transform: rotate(90deg);
+}
+
+/* ─── Body ───────────────────────────────────────────────────────────── */
+
+.card-body {
+  padding: 0 12px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.45);
+}
+
+.card.card-compact .card-body {
+  padding: 0 10px 8px 12px;
+}
+
+/* ─── Footer (non-collapsible, sits under body) ──────────────────────── */
+
+.card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 10px 10px 12px;
+  border-top: 1px solid var(--panel-border, rgba(255, 255, 255, 0.06));
+}
+.card.is-collapsed .card-footer {
+  border-top: none;
+  padding-top: 10px;
+}
+
+/* ─── CardSection ────────────────────────────────────────────────────── */
+
+.card-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+.card-section:first-child {
+  margin-top: 6px;
+}
+
+.card-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.card-section-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.card-section-header-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.card-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition:
+    color 0.12s ease,
+    background 0.12s ease;
+}
+.card-copy-btn:hover {
+  color: var(--text-primary);
+  background: rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.55);
+}
+.card-copy-btn:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: 1px;
+}

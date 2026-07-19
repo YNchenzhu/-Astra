@@ -1,0 +1,121 @@
+.inline-add-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 4px 6px 4px 8px;
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.06);
+  border: 1px dashed rgba(var(--accent-blue-rgb, 137, 180, 250), 0.35);
+  border-radius: 3px;
+  margin: 2px 0;
+  animation: inline-add-in 0.12s ease-out;
+}
+
+@keyframes inline-add-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.inline-add-row-fields {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.inline-add-input {
+  flex: 1;
+  min-width: 0;
+  padding: 3px 6px;
+  font: inherit;
+  font-size: 11px;
+  color: var(--text-primary);
+  background: var(--bg-input-soft);
+  border: 1px solid transparent;
+  border-radius: 2px;
+  outline: none;
+  box-sizing: border-box;
+  min-height: 22px;
+}
+/* 第 1 个 input 是名称(中文/混合),用常规字体;
+   第 2 个 input 是 ID(纯 ASCII 拼音),用等宽字体突出"这是代码标识符"。 */
+.inline-add-input:nth-child(2) {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+}
+.inline-add-input:hover {
+  border-color: rgba(var(--surface-tint-rgb), 0.14);
+}
+.inline-add-input:focus {
+  border-color: var(--accent-blue, #89b4fa);
+}
+
+.inline-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 2px;
+  cursor: pointer;
+  transition:
+    background 0.1s,
+    color 0.1s,
+    opacity 0.1s;
+  outline: none;
+  flex-shrink: 0;
+}
+.inline-add-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.inline-add-btn:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: 1px;
+}
+
+.inline-add-btn-ok:hover:not(:disabled) {
+  background: rgba(var(--accent-green-rgb, 166, 227, 161), 0.18);
+  color: var(--accent-green, #a6e3a1);
+}
+.inline-add-btn-cancel:hover:not(:disabled) {
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.14);
+  color: var(--accent-red, #f38ba8);
+}
+
+.inline-add-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  padding-left: 2px;
+  line-height: 1.4;
+}
+.inline-add-hint code {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  background: rgba(var(--surface-tint-rgb), 0.06);
+  padding: 0 4px;
+  border-radius: 2px;
+  color: var(--text-primary);
+}
+.inline-add-hint-err {
+  color: var(--accent-red, #f38ba8);
+}
+
+.inline-add-hint-auto {
+  color: var(--accent-green, #a6e3a1);
+}
+
+.is-spinning {
+  animation: inline-add-spin 0.9s linear infinite;
+}
+@keyframes inline-add-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

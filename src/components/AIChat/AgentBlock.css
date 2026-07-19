@@ -1,0 +1,420 @@
+.agent-block {
+  margin: 4px 0;
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.agent-block.status-running {
+  border-color: var(--accent-blue);
+}
+
+.agent-block.status-completed {
+  border-color: var(--accent-green);
+}
+
+.agent-block.status-failed {
+  border-color: var(--accent-red);
+}
+
+/* Header */
+.agent-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.02);
+  transition: background 0.15s;
+}
+
+.agent-block.is-collapsed .agent-block-header {
+  padding: 3px 8px;
+}
+
+.agent-block-header:hover {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.04);
+}
+
+/* One-line preview when body is collapsed — makes sub-agent text visible without expanding */
+.agent-output-preview-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 4px 10px 6px;
+  border: none;
+  border-top: 1px solid var(--border-secondary);
+  background: rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.agent-output-preview-strip:hover {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.04);
+}
+
+.agent-output-preview-label {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-tertiary);
+  padding-top: 1px;
+}
+
+.agent-output-preview-text {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.agent-block-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.agent-icon {
+  color: var(--accent-blue);
+  flex-shrink: 0;
+}
+
+.agent-type {
+  font-weight: 600;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.agent-description {
+  color: var(--text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 300px;
+}
+
+.agent-name {
+  color: var(--text-secondary);
+  font-style: italic;
+  flex-shrink: 0;
+}
+
+.agent-block-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+.agent-block-summary {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.04);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.agent-block.is-collapsed .agent-block-summary {
+  font-size: 10px;
+  padding: 1px 5px;
+}
+
+.agent-duration,
+.agent-tokens {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* Status icons */
+.agent-status-spin {
+  animation: agent-spin 1s linear infinite;
+  color: var(--accent-blue);
+}
+
+.agent-status-success {
+  color: var(--accent-green);
+}
+
+.agent-status-error {
+  color: var(--accent-red);
+}
+
+@keyframes agent-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Body — collapse / expand animation */
+.agent-block-body {
+  overflow: hidden;
+  transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.25s ease;
+}
+
+.agent-block-body.expanded {
+  max-height: 600px;
+  opacity: 1;
+  padding: 0 10px 6px;
+}
+
+.agent-block-body.collapsed {
+  max-height: 0;
+  opacity: 0;
+  padding: 0 10px;
+}
+
+.agent-structured-summary {
+  margin: 4px 0 6px;
+  padding: 6px 8px;
+  border: 1px solid var(--border-secondary);
+  border-radius: 6px;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.02);
+}
+
+.agent-structured-section + .agent-structured-section {
+  margin-top: 6px;
+}
+
+.agent-structured-title {
+  font-size: 11px;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.agent-structured-item {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.agent-structured-next {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* Tool list */
+.agent-tool-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 4px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.agent-tool-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.02);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.agent-tool-item.running {
+  color: var(--text-secondary);
+}
+
+.agent-tool-item.completed {
+  color: var(--text-tertiary);
+}
+
+.agent-tool-item.error {
+  color: var(--accent-red);
+}
+
+.agent-tool-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Output */
+.agent-output {
+  margin-top: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+  border-top: 1px solid var(--border-secondary);
+  padding-top: 4px;
+}
+
+.agent-output-text {
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--font-mono);
+  line-height: 1.5;
+}
+
+/* Running pulse animation */
+.agent-block.status-running {
+  animation: agent-pulse 2s ease-in-out infinite;
+}
+
+@keyframes agent-pulse {
+  0%, 100% { border-color: var(--accent-blue); }
+  50% { border-color: rgba(var(--accent-blue-rgb), 0.3); }
+}
+
+/* ─── Phase 3: ActivityRow-based sub-agent rendering ──────────────────
+   Every selector below drives the new single-line aggregate surface
+   (see `AgentBlock.tsx`). The old `.agent-block*` rules above are kept
+   dead on purpose — if some other path ever re-mounts the previous
+   chrome it still looks sensible; new rendering is fully controlled
+   from here.
+*/
+
+.agent-activity-row {
+  /* Inherits all chrome from ActivityRow. We only add outer breathing
+     room so consecutive sub-agent rows don't visually merge with
+     sibling tool-use rows. */
+  margin: 2px 0;
+}
+
+.agent-expand-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Description line: [type badge] description (name) ------------------- */
+
+.agent-expand-description {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-secondary, var(--text-muted));
+}
+
+.agent-expand-description-type {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.12);
+  color: var(--accent-mauve, #cba6f7);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.agent-expand-description-text {
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.agent-expand-description-name {
+  color: var(--text-muted);
+  font-size: 10.5px;
+  opacity: 0.8;
+}
+
+/* Nested tool feed: each tool use is an ActivityRow / CommandChip on
+   its own. We indent the whole group by a small amount and draw a thin
+   vertical guideline so the hierarchy "these tools belong to the
+   sub-agent above" is visible without being loud.
+
+   Viewport cap is ALWAYS ON (not just while streaming). A 40-file
+   Explore that finished an hour ago expands to the same 2000px mess
+   as one that's finishing right now — both pin the user's input box
+   off-screen if we let them. Internal scroll + a top fade keeps the
+   outer chat message to a predictable height while preserving full
+     access to every tool call the sub-agent performed. 160px fits
+     ~7 rows comfortably; anything more scrolls inside the viewport.
+
+   `overscroll-behavior: contain` stops a wheel event hitting the
+   viewport's top/bottom edge from bubbling up and jerking the whole
+   chat pane. Matches the `.thinking-markdown` viewport treatment.
+*/
+.agent-tool-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-left: 10px;
+  border-left: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  min-width: 0;
+  max-height: 160px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+/* Keep the normal sub-agent tool list compact, but do not trap an expanded
+   Read / Bash / PowerShell result inside the 160px summary viewport. Chromium
+   on Windows can also render masked nested scroll text as horizontal streaks,
+   so the old mask-based top fade was removed above. */
+.agent-tool-feed:has(.activity-row.is-expanded),
+.agent-tool-feed:has(.command-chip.is-expanded),
+.agent-tool-feed:has(.card.is-expanded) {
+  max-height: min(70vh, 520px);
+}
+
+/* Marker class used by `AgentBlock.tsx` as an effect-dependency hook:
+   while the sub-agent is actively running we auto-pin scrollTop to
+   scrollHeight on every new tool use so the newest arrival stays
+   visible. No visual styling is attached here — the viewport cap
+   above already covers both running and completed states. */
+.agent-tool-feed-streaming {
+  /* intentionally empty: behavioural marker only */
+}
+
+/* Output block: same shape as ActivityRow's own `pre`, but appears
+   *inside* the expand body, not inside a row details drawer — keep
+   padding and radius consistent with sibling sections.
+*/
+.agent-expand-output {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.agent-expand-output pre {
+  margin: 0;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.7);
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 280px;
+  overflow-y: auto;
+  user-select: text;
+  -webkit-user-select: text;
+}

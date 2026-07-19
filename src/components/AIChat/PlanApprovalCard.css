@@ -1,0 +1,157 @@
+/**
+ * PlanApprovalCard styles — slim single-row plan approval bar.
+ *
+ * The bar stays one row tall so it never covers the chat input. The full
+ * plan content lives in an editor tab (see src/services/planTab.ts), not
+ * here. Lives in `.chat-inline-prompts` so it stacks with permission /
+ * ask-user / team-plan cards.
+ */
+
+.plan-approval-bar {
+  margin: 8px 12px;
+  border: 1px solid rgba(var(--accent-blue-rgb, 137, 180, 250), 0.4);
+  background: rgba(var(--bg-surface0-rgb, 49, 50, 68), 0.65);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.plan-approval-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  min-width: 0;
+}
+
+.plan-approval-mode {
+  flex: 0 0 auto;
+  font-size: 10px;
+  color: var(--text-secondary);
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.plan-approval-title {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-blue, #89b4fa);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Overview is the flexible, truncating middle — gives away width first. */
+.plan-approval-overview {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plan-approval-count {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.plan-approval-elapsed {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.plan-approval-view {
+  flex: 0 0 auto;
+  border: 1px solid rgba(var(--accent-blue-rgb, 137, 180, 250), 0.4);
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.12);
+  color: var(--accent-blue, #89b4fa);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.plan-approval-view:hover {
+  opacity: 0.85;
+}
+
+.plan-approval-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 2px;
+}
+
+.plan-approval-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.plan-approval-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.plan-approval-btn:not(:disabled):hover {
+  opacity: 0.88;
+}
+
+.plan-approval-btn.cancel {
+  background: rgba(var(--accent-red-rgb), 0.1);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
+.plan-approval-btn.reject {
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.14);
+  color: var(--accent-yellow, #f9e2af);
+}
+
+.plan-approval-btn.approve {
+  background: rgba(var(--accent-green-rgb), 0.16);
+  color: var(--accent-green);
+}
+
+/* Reject reason expands ABOVE the row; the bar is one line until then. */
+.plan-approval-reject-detail {
+  padding: 8px 10px 0 10px;
+}
+
+.plan-approval-reject-detail textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.85);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 6px 8px;
+  resize: vertical;
+}
+
+.plan-approval-reject-detail textarea:focus {
+  border-color: var(--accent-yellow, #f9e2af);
+  outline: none;
+}

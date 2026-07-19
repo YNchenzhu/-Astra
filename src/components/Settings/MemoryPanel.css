@@ -1,0 +1,815 @@
+.memory-panel {
+  padding: 12px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.memory-settings-section {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface, var(--bg-base));
+}
+
+.memory-settings-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.memory-settings-hint {
+  margin: 0 0 10px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-muted, var(--text-secondary));
+}
+
+.memory-settings-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.memory-settings-row input[type='checkbox'] {
+  cursor: pointer;
+}
+
+.memory-settings-dir-row {
+  flex-direction: column;
+  align-items: stretch;
+  cursor: default;
+}
+
+.memory-settings-dir-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.memory-settings-dir-inputs {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.memory-settings-input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-base);
+  color: var(--text-primary);
+}
+
+.memory-recall-snapshot .memory-recall-toolbar {
+  margin-bottom: 8px;
+}
+
+.memory-recall-empty {
+  margin-bottom: 0 !important;
+}
+
+.memory-recall-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.memory-recall-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 11px;
+}
+
+.memory-recall-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.memory-recall-type {
+  color: var(--accent-blue, var(--accent-blue));
+}
+
+.memory-recall-snippet {
+  flex-basis: 100%;
+  color: var(--text-muted, var(--text-secondary));
+  line-height: 1.35;
+}
+
+/* ── Recall tuning section ────────────────────────────────────────────── */
+
+.memory-tuning-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.memory-tuning-title-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.memory-tuning-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.memory-tuning-reset-btn:hover {
+  background: var(--bg-hover, rgba(127, 127, 127, 0.08));
+  color: var(--text-primary);
+}
+
+.memory-tuning-subhead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted, var(--text-secondary));
+}
+
+.memory-tuning-subhead::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+  opacity: 0.5;
+}
+
+.memory-tuning-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-bottom: 6px;
+}
+
+.memory-tuning-toggle-row input[type='checkbox'] {
+  cursor: pointer;
+}
+
+.memory-tuning-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.memory-tuning-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 36%) 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.memory-tuning-row.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.memory-tuning-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: default;
+}
+
+.memory-tuning-sublabel {
+  font-size: 10.5px;
+  color: var(--text-muted, var(--text-secondary));
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.memory-tuning-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.memory-tuning-control input[type='range'] {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--accent-blue, #89b4fa);
+  cursor: pointer;
+}
+
+.memory-tuning-number {
+  width: 72px;
+  padding: 3px 6px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.memory-tuning-suffix {
+  font-size: 11px;
+  color: var(--text-muted, var(--text-secondary));
+  min-width: 26px;
+  text-align: left;
+}
+
+@keyframes memory-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.memory-spin {
+  animation: memory-spin 0.8s linear infinite;
+}
+
+.memory-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 12px;
+  min-width: 0;
+  width: 100%;
+}
+
+.memory-panel-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  width: 100%;
+  flex-shrink: 0;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+
+.memory-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-base);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  box-sizing: border-box;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 「全选」/「取消全选」字数不同，固定最小宽度避免工具条整体左右跳动 */
+.memory-action-btn-selectall {
+  min-width: 4.5em;
+}
+
+/* 「团队同步」/「同步中...」长度不同，统一占位 */
+.memory-action-btn-team-sync {
+  min-width: 6.5em;
+}
+
+/* 仅图标的刷新按钮固定为正方形，避免与相邻文字按钮对齐抖动 */
+.memory-action-btn-icon {
+  width: 30px;
+  min-width: 30px;
+  padding-left: 0;
+  padding-right: 0;
+  justify-content: center;
+}
+
+.memory-action-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+  border-color: var(--accent-blue);
+}
+
+.memory-sync-status {
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(var(--accent-blue-rgb), 0.25);
+  background: rgba(var(--accent-blue-rgb), 0.08);
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.memory-no-workspace {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(var(--accent-yellow-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-yellow-rgb), 0.2);
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.memory-loading {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.memory-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.memory-empty-hint {
+  color: var(--text-muted);
+  opacity: 0.7;
+  margin-top: 8px;
+  font-size: 11px;
+}
+
+.memory-form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.memory-form {
+  width: min(500px, 90vw);
+  max-height: 80vh;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.memory-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.memory-form-header h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.memory-form-close {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.memory-form-close:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.memory-form-group {
+  padding: 10px 16px;
+}
+
+.memory-form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.memory-form-group input,
+.memory-form-group select,
+.memory-form-group textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.memory-form-group input:focus,
+.memory-form-group select:focus,
+.memory-form-group textarea:focus {
+  border-color: var(--accent-blue);
+  outline: none;
+}
+
+.memory-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.memory-form-save {
+  padding: 6px 16px;
+  border-radius: 6px;
+  border: none;
+  background: var(--accent-blue);
+  color: var(--bg-surface);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.memory-form-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.memory-form-cancel {
+  padding: 6px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.memory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.memory-type-header {
+  margin-bottom: 6px;
+}
+
+.memory-type-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.memory-type-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.memory-item {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.15s;
+}
+
+.memory-item:hover {
+  border-color: rgba(var(--accent-blue-rgb), 0.3);
+}
+
+.memory-item.stale {
+  opacity: 0.7;
+}
+
+.memory-item.expanded {
+  border-color: var(--accent-blue);
+}
+
+.memory-item-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.memory-item-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  gap: 8px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+}
+
+.memory-item-main:hover {
+  background: var(--hover-bg);
+}
+
+.memory-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.memory-item-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.memory-item-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.memory-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.memory-item-age {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.memory-stale-badge {
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(var(--accent-red-rgb), 0.2);
+  color: var(--accent-red);
+}
+
+.memory-source-badge {
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(var(--accent-teal-rgb), 0.2);
+  color: var(--accent-teal);
+}
+
+.memory-item-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.memory-btn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.memory-btn:hover:not(:disabled) {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.memory-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.memory-btn.memory-delete:hover:not(:disabled) {
+  background: rgba(var(--accent-red-rgb), 0.15);
+  color: var(--accent-red);
+}
+
+.memory-item-content {
+  border-top: 1px solid var(--border-color);
+  padding: 8px 10px;
+  background: var(--bg-base);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.memory-source-path {
+  margin-bottom: 8px;
+  font-size: 10px;
+  color: var(--text-muted);
+  word-break: break-all;
+}
+
+.memory-item-content pre {
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  font-family: var(--font-mono);
+  line-height: 1.5;
+}
+
+/* Group mode toggle */
+
+.memory-group-toggle {
+  display: flex;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.memory-group-btn {
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.memory-group-btn:first-child {
+  border-right: 1px solid var(--border-color);
+}
+
+.memory-group-btn.active {
+  background: rgba(var(--accent-blue-rgb), 0.12);
+  color: var(--accent-blue, var(--accent-blue));
+}
+
+.memory-group-btn:hover:not(.active) {
+  background: var(--hover-bg);
+  color: var(--text-secondary);
+}
+
+/* Scope tag */
+
+.memory-scope-tag {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+/* Disabled badge */
+
+.memory-disabled-badge {
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(108, 112, 134, 0.2);
+  color: var(--text-muted);
+}
+
+/* Disabled memory item */
+
+.memory-item.disabled {
+  opacity: 0.55;
+}
+
+/* Toggle button */
+
+.memory-toggle-btn {
+  width: 26px !important;
+}
+
+.memory-toggle-btn .toggle-on {
+  color: var(--accent-green);
+}
+
+.memory-toggle-btn .toggle-off {
+  color: var(--text-muted);
+}
+
+/* Inline form row */
+
+.memory-form-row-inline {
+  display: flex;
+  gap: 8px;
+}
+
+.memory-form-half {
+  flex: 1;
+}
+
+/* Batch actions */
+
+.memory-batch-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.memory-selected-count {
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.memory-batch-delete-btn {
+  background: rgba(var(--accent-red-rgb), 0.1) !important;
+  color: var(--accent-red) !important;
+  border-color: rgba(var(--accent-red-rgb), 0.3) !important;
+}
+
+.memory-batch-delete-btn:hover {
+  background: rgba(var(--accent-red-rgb), 0.2) !important;
+  border-color: var(--accent-red) !important;
+}
+
+/* Checkbox */
+
+.memory-item-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  padding: 0 8px 0 10px;
+}
+
+.memory-item-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent-blue);
+  flex-shrink: 0;
+}
+
+.memory-item-checkbox input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Selected item */
+
+.memory-item.selected {
+  background: rgba(var(--accent-blue-rgb), 0.08);
+  border-color: rgba(var(--accent-blue-rgb), 0.3);
+}
+
+.memory-item.selected .memory-item-main {
+  background: rgba(var(--accent-blue-rgb), 0.04);
+}
+

@@ -1,0 +1,165 @@
+/* ── Inline Edit Input Bar (appears in editor as overlay) ── */
+
+.inline-edit-overlay {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: min(500px, calc(100% - 48px));
+}
+
+.inline-edit-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--bg-surface, var(--bg-base));
+  border: 1px solid var(--border-color, rgba(147, 130, 219, 0.2));
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(96, 165, 250, 0.15);
+  backdrop-filter: blur(12px);
+}
+
+.inline-edit-input-bar input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary, var(--text-primary));
+  font-size: 13px;
+  font-family: var(--font-sans);
+  min-width: 0;
+}
+
+.inline-edit-input-bar input::placeholder {
+  color: var(--text-muted, rgba(166, 173, 200, 0.5));
+}
+
+.inline-edit-submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border: none;
+  border-radius: 5px;
+  background: rgba(var(--accent-blue-rgb), 0.25);
+  color: var(--accent-blue);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.inline-edit-submit-btn:hover {
+  background: rgba(var(--accent-blue-rgb), 0.4);
+}
+
+.inline-edit-submit-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.inline-edit-cancel-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.inline-edit-cancel-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--status-danger);
+}
+
+/* ── Inline Edit Action Bar (below diff) ── */
+
+.inline-edit-action-bar {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bg-surface, var(--bg-base));
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.inline-edit-action-bar button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-sans);
+}
+
+.inline-edit-action-bar .ie-accept {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--status-success);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.inline-edit-action-bar .ie-accept:hover {
+  background: rgba(34, 197, 94, 0.3);
+}
+
+.inline-edit-action-bar .ie-reject {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--status-danger);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.inline-edit-action-bar .ie-reject:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.inline-edit-action-bar .ie-retry {
+  background: rgba(var(--accent-blue-rgb), 0.15);
+  color: var(--accent-blue);
+  border-color: rgba(var(--accent-blue-rgb), 0.3);
+}
+
+.inline-edit-action-bar .ie-retry:hover {
+  background: rgba(var(--accent-blue-rgb), 0.3);
+}
+
+/* ── Loading spinner ── */
+
+.inline-edit-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.inline-edit-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(147, 197, 253, 0.3);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+  animation: ie-spin 0.6s linear infinite;
+}
+
+@keyframes ie-spin {
+  to { transform: rotate(360deg); }
+}
+

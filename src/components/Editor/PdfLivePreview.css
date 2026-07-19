@@ -1,0 +1,14 @@
+/**
+ * PdfLivePreview 样式:iframe 充满编辑区。
+ * 父级 .editor-area 是 flex 列,用 flex: 1 + min-height: 0 拿到有界高度
+ * (与 .office-preview-scroll 的注释同理)。
+ */
+
+.pdf-live-preview-frame {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  border: none;
+  /* PDFium 查看器自带深灰背景;兜底用应用底色避免加载瞬间白闪。 */
+  background: var(--bg-base);
+}

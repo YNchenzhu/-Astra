@@ -1,0 +1,120 @@
+/*
+ * H5 / mobile shell.
+ *
+ * Only active when running in browser mode (`.h5-browser` on <html>) AND the
+ * viewport is phone-sized. Desktop Electron layout is never touched. First
+ * version: collapse the IDE to a single-column chat surface — editor, terminal,
+ * sidebar rail and activity bar are hidden; the chat panel fills the screen.
+ */
+/* `--h5-app-height` is set by mobileViewport.ts to the live `visualViewport`
+   height so the shell shrinks when the soft keyboard opens (keeping the input
+   row visible). Falls back to `100dvh` before the script runs / on browsers
+   without `visualViewport`. */
+.h5-browser,
+.h5-browser body,
+.h5-browser #root {
+  height: var(--h5-app-height, 100dvh);
+  max-height: var(--h5-app-height, 100dvh);
+  overflow: hidden;
+}
+
+/* Browser (H5) mode has no real filesystem / terminal / editor backend over
+   the wire, so collapse to a chat-first shell at EVERY width (not just phone
+   viewports). Desktop Electron is never `.h5-browser`, so this is scoped.
+
+   The shell is `position: fixed` and anchored to the *visible* area: when the
+   soft keyboard opens, iOS shrinks `visualViewport.height` AND offsets it by
+   `offsetTop`; `mobileViewport.ts` publishes both so the chat (and its input
+   row) stay pinned above the keyboard with no blank gap / forced scroll. */
+.h5-browser .app-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--h5-app-offset-top, 0px);
+  height: var(--h5-app-height, 100dvh);
+  max-height: var(--h5-app-height, 100dvh);
+  overflow: hidden;
+}
+
+/* The chat must fill the fixed shell so its input row sits at the bottom edge
+   (right above the keyboard), with only the message list scrolling. */
+.h5-browser .app-main,
+.h5-browser .chat-panel {
+  height: 100%;
+  min-height: 0;
+}
+
+/* Critical flexbox fix: a `flex: 1` scroll area WITHOUT `min-height: 0` refuses
+   to shrink below its content, overflowing the column and pushing the input row
+   off-screen (the reported "must swipe to find the input" bug). Pin the message
+   list to shrink+scroll and keep the composer at a fixed bottom. */
+.h5-browser .chat-messages {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.h5-browser .chat-input-container {
+  flex-shrink: 0;
+}
+
+.h5-browser .app-center,
+.h5-browser .app-editor-area,
+.h5-browser .activity-bar,
+.h5-browser .sidebar {
+  display: none !important;
+}
+
+.h5-browser .app-main {
+  width: 100%;
+}
+
+/* iOS Safari auto-zooms when a focused text control has a computed font-size
+   below 16px — and on iOS 16.4+ it ignores `user-scalable=no` / `maximum-scale`,
+   so 16px is the ONLY reliable suppressant. Apply it to every focusable control
+   in H5 mode at ALL widths (landscape phones can exceed 768px, which is why this
+   is NOT inside the phone media query). */
+.h5-browser input,
+.h5-browser textarea,
+.h5-browser select,
+.h5-browser [contenteditable='true'] {
+  font-size: 16px !important;
+}
+
+.h5-browser .chat-panel {
+  width: 100% !important;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  border-left: none;
+}
+
+/* The chat panel's drag-to-resize handle is meaningless when it owns the
+   whole width. */
+.h5-browser .chat-panel-resize-handle,
+.h5-browser .chat-resize-handle {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .h5-browser .app-main {
+    flex-direction: column;
+  }
+
+  /* Touch-friendly hit targets for primary chat controls. */
+  .h5-browser .chat-panel-action {
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  /* Respect the on-screen keyboard / notches at the bottom of the input. */
+  .h5-browser .chat-input-container,
+  .h5-browser .chat-input-wrapper {
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  }
+
+  /* Keep the title bar slim and drop desktop window controls if present. */
+  .h5-browser .title-bar-window-controls,
+  .h5-browser .titlebar-window-controls {
+    display: none !important;
+  }
+}

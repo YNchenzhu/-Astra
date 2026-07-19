@@ -1,0 +1,329 @@
+/* ── Composer Panel Layout ────────────────────────────────── */
+
+.composer-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-base);
+  color: var(--text-primary);
+}
+
+.composer-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.composer-panel-header h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.composer-panel-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.composer-panel-close:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+/* ── Composer body: sidebar + main ── */
+
+.composer-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── File change list sidebar ── */
+
+.composer-sidebar {
+  width: 180px;
+  border-right: 1px solid var(--border-color);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.composer-sidebar-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 8px 10px 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.composer-file-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: none;
+  background: none;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.composer-file-item:hover {
+  background: var(--hover-bg);
+}
+
+.composer-file-item.active {
+  background: rgba(var(--accent-blue-rgb), 0.12);
+  color: var(--accent-blue);
+}
+
+.composer-file-item-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.composer-file-item-stats {
+  font-size: 10px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ── Main content area ── */
+
+.composer-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Input Panel ── */
+
+.composer-input-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.composer-file-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-height: 26px;
+}
+
+.composer-file-tag {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(var(--accent-blue-rgb), 0.15);
+  color: var(--accent-blue);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  border: none;
+  cursor: default;
+}
+
+.composer-file-tag-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border: none;
+  border-radius: 2px;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.composer-file-tag-remove:hover {
+  opacity: 1;
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.composer-input-row {
+  display: flex;
+  gap: 6px;
+}
+
+.composer-input-row textarea {
+  flex: 1;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  padding: 8px 10px;
+  resize: none;
+  outline: none;
+  min-height: 36px;
+  max-height: 120px;
+}
+
+.composer-input-row textarea:focus {
+  border-color: rgba(96, 165, 250, 0.5);
+}
+
+.composer-submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(var(--accent-blue-rgb), 0.3);
+  color: var(--accent-blue);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  align-self: flex-end;
+  white-space: nowrap;
+}
+
+.composer-submit-btn:hover {
+  background: rgba(var(--accent-blue-rgb), 0.45);
+}
+
+.composer-submit-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ── Diff Preview Area ── */
+
+.composer-diff-area {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 8px;
+}
+
+.composer-diff-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ── Action Bar (bottom) ── */
+
+.composer-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.composer-action-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.composer-action-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.composer-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm, 4px);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-sans);
+  white-space: nowrap;
+}
+
+.composer-action-btn.accept {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--status-success);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.composer-action-btn.accept:hover {
+  background: rgba(34, 197, 94, 0.3);
+}
+
+.composer-action-btn.reject {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--status-danger);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.composer-action-btn.reject:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.composer-file-progress {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ── Spinner ── */
+
+.composer-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.composer-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(147, 197, 253, 0.3);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+  animation: composer-spin 0.6s linear infinite;
+}
+
+@keyframes composer-spin {
+  to { transform: rotate(360deg); }
+}
+

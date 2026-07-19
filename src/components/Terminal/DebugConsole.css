@@ -1,0 +1,188 @@
+.debug-console {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.debug-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  height: 28px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.debug-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.debug-repl-select {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.debug-repl-select:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
+.debug-action-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.debug-action-btn:hover,
+.debug-action-btn.active {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.debug-filter-row {
+  display: flex;
+  gap: 2px;
+  padding: 2px 8px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.debug-filter-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 10px;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.debug-filter-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.debug-filter-btn.active {
+  color: var(--text-primary);
+  background: var(--active-bg);
+}
+
+.debug-history {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 4px 8px;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.debug-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 1px 0;
+}
+
+.debug-prompt {
+  color: var(--accent-blue);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-top: 1px;
+}
+
+.debug-input .debug-entry-text {
+  color: var(--text-primary);
+}
+
+.debug-output .debug-entry-text {
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.debug-error .debug-entry-text {
+  color: var(--text-error);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.debug-warning .debug-entry-text {
+  color: var(--text-warning);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.debug-info .debug-entry-text {
+  color: var(--text-muted);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.debug-expandable {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.debug-expand-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.debug-expand-btn:hover {
+  color: var(--text-primary);
+}
+
+.debug-input-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.debug-input-icon {
+  color: var(--accent-blue);
+  flex-shrink: 0;
+}
+
+.debug-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  outline: none;
+}
+
+.debug-input::placeholder {
+  color: var(--text-muted);
+}

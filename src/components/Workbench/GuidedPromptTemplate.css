@@ -1,0 +1,430 @@
+/**
+ * GuidedPromptTemplate —— 填空式提示词模板编辑器(简洁紧凑版)。
+ *
+ * 设计语言:
+ *   - 克制装饰:去掉渐变条/阴影/动画,和 Settings 面板视觉一致
+ *   - 紧凑间距:内边距整体收紧约 25%,不浪费竖向空间
+ *   - 信息优先:完成度 / tab 状态 / 当前 tab 正文三层结构清晰
+ */
+
+.guided-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ─── 顶部:一行提示 + 完成度 ──────────────────────────────────── */
+
+.guided-prompt-intro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 5px;
+  background: rgba(var(--surface-tint-rgb), 0.03);
+  border: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.06));
+  color: var(--text-primary);
+}
+
+.guided-prompt-intro-icon {
+  flex-shrink: 0;
+  color: var(--accent-blue, #89b4fa);
+}
+
+.guided-prompt-intro-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.guided-prompt-intro-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.guided-prompt-intro-body {
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* 完成度进度条(右侧) */
+
+.guided-prompt-progress {
+  flex-shrink: 0;
+  min-width: 68px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-end;
+}
+
+.guided-prompt-progress-label {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.guided-prompt-progress-num {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--accent-blue, #89b4fa);
+  font-variant-numeric: tabular-nums;
+}
+
+.guided-prompt-progress-hint {
+  font-size: 9.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
+
+.guided-prompt-progress-bar {
+  width: 100%;
+  min-width: 60px;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(var(--surface-tint-rgb), 0.08);
+  overflow: hidden;
+}
+
+.guided-prompt-progress-fill {
+  height: 100%;
+  background: var(--accent-blue, #89b4fa);
+  border-radius: 1px;
+  transition: width 0.18s linear;
+}
+
+/* ─── 横向标签栏 ──────────────────────────────────────────────── */
+
+.guided-prompt-tabs {
+  display: flex;
+  gap: 1px;
+  padding: 2px;
+  border-radius: 5px;
+  background: rgba(var(--surface-tint-rgb), 0.03);
+  border: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.06));
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.guided-prompt-tabs::-webkit-scrollbar {
+  height: 3px;
+}
+
+.guided-prompt-tabs::-webkit-scrollbar-thumb {
+  background: rgba(var(--surface-tint-rgb), 0.12);
+  border-radius: 2px;
+}
+
+.guided-prompt-tab {
+  flex: 1;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 11px;
+  line-height: 1.3;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+  transition:
+    background var(--transition-fast, 0.12s),
+    color var(--transition-fast, 0.12s);
+}
+
+.guided-prompt-tab:hover:not(.is-active) {
+  color: var(--text-primary);
+  background: rgba(var(--surface-tint-rgb), 0.04);
+}
+
+.guided-prompt-tab.is-active {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.18);
+  color: var(--accent-blue, #89b4fa);
+  font-weight: 500;
+}
+
+.guided-prompt-tab.is-filled:not(.is-active) {
+  color: var(--text-primary);
+}
+
+.guided-prompt-tab.is-active.is-filled {
+  background: rgba(var(--accent-green-rgb, 166, 227, 161), 0.18);
+  color: var(--accent-green, #a6e3a1);
+}
+
+.guided-prompt-tab:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: 1px;
+}
+
+/* tab 编号圆圈 */
+
+.guided-prompt-tab-index {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(var(--surface-tint-rgb), 0.06);
+  color: currentColor;
+  font-size: 9.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.guided-prompt-tab.is-active .guided-prompt-tab-index {
+  background: currentColor;
+  color: var(--bg-base, #1e1e2e);
+}
+
+.guided-prompt-tab-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.guided-prompt-tab-check {
+  flex-shrink: 0;
+  color: var(--accent-green, #a6e3a1);
+}
+
+.guided-prompt-tab-dot {
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(var(--surface-tint-rgb), 0.16);
+}
+
+.guided-prompt-tab.is-active .guided-prompt-tab-dot {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.55);
+}
+
+/* ─── 当前 tab 面板 ───────────────────────────────────────────── */
+
+.guided-prompt-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.08));
+  background: rgba(var(--surface-tint-rgb), 0.015);
+}
+
+.guided-prompt-pane-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.guided-prompt-pane-titles {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+
+.guided-prompt-pane-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.guided-prompt-pane-title-en {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  letter-spacing: 0.3px;
+}
+
+.guided-prompt-pane-badge {
+  padding: 1px 6px;
+  border-radius: 8px;
+  background: rgba(var(--surface-tint-rgb), 0.05);
+  color: var(--text-muted);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.guided-prompt-pane-badge.is-recommended {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.14);
+  color: var(--accent-blue, #89b4fa);
+}
+
+.guided-prompt-pane-status {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background: rgba(var(--surface-tint-rgb), 0.04);
+  color: var(--text-muted);
+  font-size: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.guided-prompt-pane-status.is-filled {
+  background: rgba(var(--accent-green-rgb, 166, 227, 161), 0.14);
+  color: var(--accent-green, #a6e3a1);
+}
+
+.guided-prompt-pane-hint {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.guided-prompt-pane-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  font-family: var(
+    --font-sans,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'PingFang SC',
+    'Microsoft YaHei',
+    system-ui,
+    sans-serif
+  );
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-input-soft);
+  border: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.08));
+  border-radius: 4px;
+  outline: none;
+  resize: vertical;
+  min-height: 140px;
+  transition: border-color var(--transition-fast, 0.12s);
+}
+
+.guided-prompt-pane-input:hover {
+  border-color: rgba(var(--surface-tint-rgb), 0.16);
+}
+
+.guided-prompt-pane-input:focus {
+  border-color: var(--accent-blue, #89b4fa);
+}
+
+.guided-prompt-pane-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.55;
+  font-style: normal;
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* ─── 自定义段落提示区(紧凑) ────────────────────────────────── */
+
+.guided-prompt-extras {
+  margin-top: 2px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.06);
+  border: 1px solid rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.guided-prompt-extras-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.guided-prompt-extras-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--accent-yellow, #f9e2af);
+}
+
+.guided-prompt-extras-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1px;
+}
+
+.guided-prompt-extras-body {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.guided-prompt-extras-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.guided-prompt-extras-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 3px 6px;
+  background: rgba(var(--surface-tint-rgb), 0.03);
+  border-radius: 3px;
+  font-size: 10.5px;
+}
+
+.guided-prompt-extras-item-title {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  color: var(--text-primary);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.guided-prompt-extras-item-hint {
+  color: var(--text-muted);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.guided-prompt-extras-action {
+  align-self: flex-start;
+  padding: 3px 9px;
+  border: 1px solid rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.3);
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.08);
+  color: var(--accent-yellow, #f9e2af);
+  border-radius: 3px;
+  font: inherit;
+  font-size: 10.5px;
+  cursor: pointer;
+  transition:
+    background var(--transition-fast, 0.12s),
+    border-color var(--transition-fast, 0.12s);
+}
+
+.guided-prompt-extras-action:hover {
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.16);
+  border-color: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.5);
+}

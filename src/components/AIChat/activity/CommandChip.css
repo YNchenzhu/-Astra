@@ -1,0 +1,183 @@
+/**
+ * CommandChip — minimal bordered container, the only feed entry with
+ * visual chrome. Intentionally understated so the chip reads as an
+ * affordance ("click me to see the output"), not as "look at me".
+ */
+
+.command-chip {
+  display: flex;
+  flex-direction: column;
+  margin: 3px 0;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-primary);
+  border: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.12);
+  /* Theme audit (2026-07, pass 2) — the previous overlay-based tint
+     (rgba(--bg-overlay-rgb, .35)) darkened the chip on dark themes, where
+     the chat panel is already near-black: chip, output well and panel
+     collapsed into three indistinguishable dark layers. `--surface-tint-rgb`
+     flips per theme (white on dark, cool gray on light), so the chip now
+     lifts OFF the panel in every theme instead of sinking into it. */
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.04);
+  border-radius: 5px;
+  overflow: hidden;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.command-chip.command-status-running {
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.25);
+}
+.command-chip.command-status-error {
+  border-color: rgba(var(--accent-red-rgb, 243, 139, 168), 0.25);
+}
+
+.command-chip-line {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 9px;
+  min-width: 0;
+  transition: background 0.12s ease;
+  outline: none;
+  user-select: none;
+}
+
+.command-interactive .command-chip-line {
+  cursor: pointer;
+}
+
+.command-interactive .command-chip-line:hover {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.025);
+}
+
+.command-interactive .command-chip-line:focus-visible {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.045);
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-blue-rgb, 137, 180, 250), 0.5);
+}
+
+.command-chip-glyph {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* ─── Status dot (same language as ActivityRow) ──────────────────────── */
+
+.command-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+.command-dot-running {
+  background: var(--accent-blue, #89b4fa);
+  animation: command-dot-pulse 1.4s ease-in-out infinite;
+}
+.command-dot-success {
+  background: var(--accent-green, #a6e3a1);
+}
+.command-dot-error {
+  background: var(--accent-red, #f38ba8);
+}
+@keyframes command-dot-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ─── Command text ───────────────────────────────────────────────────── */
+
+.command-chip-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11.5px;
+  color: var(--text-primary);
+  background: transparent;
+  padding: 0;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.command-chip-meta {
+  color: var(--text-muted);
+  font-size: 10.5px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+.command-chip-chevron {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  opacity: 0.55;
+  transition: transform 0.18s ease;
+}
+.command-chip-chevron.is-open {
+  transform: rotate(90deg);
+  opacity: 0.85;
+}
+
+/* ─── Expanded body ──────────────────────────────────────────────────── */
+
+.command-chip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 6px 9px 8px;
+  border-top: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  animation: command-body-fade 0.14s ease-out;
+}
+
+@keyframes command-body-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.command-chip-full {
+  margin: 0;
+  padding: 6px 8px;
+  border-radius: 4px;
+  /* Solid overlay well: reads as an inset "terminal screen" against the
+     tint-lifted chip in every theme (the old translucent overlay blended
+     into the chip on dark themes — no visible separation). */
+  background: var(--bg-overlay, #11111b);
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.command-chip-output {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--bg-overlay, #11111b);
+  padding: 6px 8px;
+  border-radius: 4px;
+  color: var(--text-primary);
+  user-select: text;
+  -webkit-user-select: text;
+}

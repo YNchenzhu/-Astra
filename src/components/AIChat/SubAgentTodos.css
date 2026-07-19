@@ -1,0 +1,118 @@
+/* SubAgentTodos — minimal per-sub-agent task list.
+ *
+ * Lives inside the sub-agent block (AgentBlock) directly below the aggregate
+ * summary and above the tool feed. Designed to read like a small checklist,
+ * not like the main TodoPanel: no filter bar, no collapse button, no heavy
+ * chrome — just a header line + tight rows.
+ */
+
+.sub-agent-todos {
+  margin: 4px 0 6px;
+  padding: 6px 10px 6px 8px;
+  border-left: 2px solid rgba(var(--accent-blue-rgb, 137, 180, 250), 0.4);
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.05);
+  border-radius: 0 4px 4px 0;
+}
+
+.sub-agent-todos-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10.5px;
+  color: var(--text-muted, var(--text-subtext));
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 4px;
+}
+
+.sub-agent-todos-title {
+  font-weight: 600;
+  color: var(--text-secondary, var(--text-secondary));
+  letter-spacing: 0.3px;
+  text-transform: none;
+}
+
+.sub-agent-todos-count {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-blue, #89b4fa);
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.14);
+  padding: 1px 6px;
+  border-radius: 8px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.sub-agent-todos-active {
+  font-size: 10px;
+  color: var(--accent-yellow, #f9e2af);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.sub-agent-todos-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.sub-agent-todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 1px 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+.sub-agent-todo-status {
+  flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sub-agent-todo-status svg {
+  width: 13px;
+  height: 13px;
+}
+
+.sub-agent-todo-text {
+  flex: 1;
+  word-break: break-word;
+}
+
+.sub-agent-todo-item.status-completed {
+  opacity: 0.55;
+}
+.sub-agent-todo-item.status-completed .sub-agent-todo-text {
+  text-decoration: line-through;
+}
+
+.sub-agent-todo-item.status-in_progress .sub-agent-todo-status {
+  color: var(--accent-yellow, #f9e2af);
+}
+.sub-agent-todo-item.status-pending .sub-agent-todo-status {
+  color: var(--text-muted, var(--text-subtext));
+}
+.sub-agent-todo-item.status-completed .sub-agent-todo-status {
+  color: var(--accent-green, #a6e3a1);
+}
+
+@keyframes sub-agent-todo-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sub-agent-todo-spinner {
+  animation: sub-agent-todo-spin 1s linear infinite;
+  transform-origin: center;
+}

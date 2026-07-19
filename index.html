@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="/Astra_CZ_rounded_transparent.ico" />
+    <!-- `viewport-fit=cover` enables the `env(safe-area-inset-*)` used by the H5
+         mobile shell; `interactive-widget=resizes-content` asks mobile browsers
+         to resize the layout when the soft keyboard opens; `maximum-scale=1.0,
+         user-scalable=no` suppress the focus-zoom on browsers that still honor
+         them (the 16px input font-size in h5-mobile.css covers iOS, which does
+         not). All ignored by desktop Electron. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <!--
+      Content Security Policy.
+
+      Silences Electron's "Insecure CSP" console warning in dev AND tightens
+      what the renderer is allowed to load in production. We intentionally
+      allow 'unsafe-eval' + 'unsafe-inline' because:
+        - Vite HMR evaluates modules at runtime via `new Function(...)` / eval,
+          and its error overlay injects inline styles.
+        - Monaco Editor spawns web workers via blob: URLs and uses inline
+          styles extensively; removing `unsafe-inline` breaks the editor.
+        - `react-markdown` and several code-block highlighters also emit
+          inline styles.
+      Everything else is locked down: no remote scripts, only local + blob/data
+      assets. `frame-src` allows blob: / data: / file: so the PDF preview iframe
+      (`<iframe src="blob:..."/>`) can render inside the editor tab; no remote
+      frames are permitted. `connect-src` is wide because the agent layer talks
+      to Anthropic / OpenAI / Bedrock / Vertex / custom endpoints
+      (user-configurable in Settings), and the MCP client opens arbitrary HTTP
+      / WebSocket servers.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:;
+        style-src 'self' 'unsafe-inline';
+        font-src 'self' data:;
+        img-src 'self' data: blob: file: https:;
+        media-src 'self' blob: data: file:;
+        connect-src 'self' data: blob: ws: wss: http: https:;
+        worker-src 'self' blob:;
+        child-src 'self' blob:;
+        frame-src 'self' blob: data: file:;
+        object-src 'none';
+        base-uri 'self';
+        form-action 'none';
+      "
+    />
+    <title>星构Astra</title>
+    <style>
+      /* 首屏骨架屏：React 挂载前窗口就能看到"在加载"。
+       * 背景 #1e1e2e 与 Electron BrowserWindow 的 backgroundColor 精确匹配，无闪烁。
+       * 关键：splash 放在 #root 外面，React 接管后再由 useLayoutEffect 移除，
+       * 保证 splash → 真正 UI 之间没有白/空窗期。 */
+      html, body { margin: 0; height: 100%; background: #1e1e2e; overflow: hidden; }
+      #initial-splash {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        background: #1e1e2e;
+        color: #cdd6f4;
+        font: 13px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+        user-select: none;
+        -webkit-user-select: none;
+        z-index: 9999;
+        transition: opacity 160ms ease-out;
+      }
+      #initial-splash.splash-hiding { opacity: 0; pointer-events: none; }
+      #initial-splash .splash-spinner {
+        width: 32px;
+        height: 32px;
+        border: 2.5px solid rgba(205, 214, 244, 0.16);
+        border-top-color: #89b4fa;
+        border-radius: 50%;
+        animation: splash-spin 0.8s linear infinite;
+      }
+      #initial-splash .splash-text { opacity: 0.72; letter-spacing: 0.02em; }
+      @keyframes splash-spin { to { transform: rotate(360deg); } }
+    </style>
+  </head>
+  <body>
+    <!-- 放在 #root 外面：React 不会在 createRoot 里清掉它，也就不会出现
+         "splash 先被清 → React 还没渲染 → 空白一段" 的断层。 -->
+    <div id="initial-splash">
+      <div class="splash-spinner" aria-hidden="true"></div>
+      <div class="splash-text">正在启动 星构Astra…</div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

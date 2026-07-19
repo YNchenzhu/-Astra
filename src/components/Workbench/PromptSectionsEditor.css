@@ -1,0 +1,208 @@
+/**
+ * PromptSectionsEditor 样式
+ *
+ * 每个段落用一张"卡片"呈现,方便从视觉上区分多个段落；
+ * 标题是单行 input(紧凑),正文是 auto-grow textarea(多行)。
+ * 按钮组固定在右上角,避免随正文高度滑动。
+ */
+
+.prompt-sections-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 4px;
+}
+
+.prompt-sections-empty {
+  padding: 14px 12px;
+  margin-bottom: 8px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-style: italic;
+  background: rgba(var(--surface-tint-rgb), 0.02);
+  border: 1px dashed var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 4px;
+}
+
+/* ─── 单个段落卡片 ─────────────────────────────────────────────── */
+
+.prompt-section-card {
+  background: rgba(var(--surface-tint-rgb), 0.025);
+  border: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.06));
+  border-radius: 5px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.18s ease;
+}
+.prompt-section-card:focus-within {
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.35);
+}
+.prompt-section-card.is-new {
+  animation: prompt-section-flash 0.8s ease-out;
+}
+@keyframes prompt-section-flash {
+  from {
+    background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.15);
+    border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.5);
+  }
+  to {
+    background: rgba(var(--surface-tint-rgb), 0.025);
+  }
+}
+
+.prompt-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prompt-section-index {
+  flex-shrink: 0;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  min-width: 22px;
+  text-align: right;
+}
+
+.prompt-section-title-input {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 7px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: var(--bg-input-soft);
+  border: 1px solid transparent;
+  border-radius: 3px;
+  outline: none;
+  transition: border-color 0.12s;
+}
+.prompt-section-title-input:hover:not(:disabled) {
+  border-color: rgba(var(--surface-tint-rgb), 0.12);
+}
+.prompt-section-title-input:focus:not(:disabled) {
+  border-color: var(--accent-blue, #89b4fa);
+}
+.prompt-section-title-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.prompt-section-required-badge {
+  flex-shrink: 0;
+  font-size: 9.5px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.12);
+  color: var(--accent-red, #f38ba8);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.prompt-section-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.prompt-section-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 3px;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    color 0.12s,
+    opacity 0.12s;
+  outline: none;
+}
+.prompt-section-icon-btn:hover:not(:disabled) {
+  background: rgba(var(--surface-tint-rgb), 0.06);
+  color: var(--text-primary);
+}
+.prompt-section-icon-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.prompt-section-icon-btn:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: 1px;
+}
+.prompt-section-icon-btn-danger:hover:not(:disabled) {
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.14);
+  color: var(--accent-red, #f38ba8);
+}
+
+.prompt-section-hint {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 0 2px;
+}
+
+.prompt-section-body {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-primary);
+  background: var(--bg-input-soft);
+  border: 1px solid rgba(var(--surface-tint-rgb), 0.05);
+  border-radius: 3px;
+  outline: none;
+  resize: vertical;
+  min-height: 62px;
+  transition: border-color 0.12s;
+}
+.prompt-section-body:hover:not(:disabled) {
+  border-color: rgba(var(--surface-tint-rgb), 0.14);
+}
+.prompt-section-body:focus:not(:disabled) {
+  border-color: var(--accent-blue, #89b4fa);
+}
+.prompt-section-body:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ─── 添加按钮 ───────────────────────────────────────────────────── */
+
+.prompt-sections-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--accent-blue, #89b4fa);
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.1);
+  border: 1px dashed rgba(var(--accent-blue-rgb, 137, 180, 250), 0.4);
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition:
+    background 0.12s,
+    border-color 0.12s;
+  outline: none;
+}
+.prompt-sections-add:hover {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.18);
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.6);
+}
+.prompt-sections-add:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: 1px;
+}

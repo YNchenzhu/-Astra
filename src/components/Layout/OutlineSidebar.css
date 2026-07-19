@@ -1,0 +1,112 @@
+/**
+ * OutlineSidebar styles —— 复用 `.sidebar` / `.sidebar-header` /
+ * `.sidebar-content` 基础骨架,只在 `.outline-*` scope 下添加大纲专属
+ * 样式(item 缩进、level 字色、空态)。
+ */
+
+.outline-sidebar-file {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--text-muted);
+  opacity: 0.75;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.outline-sidebar-content {
+  padding: 4px 0;
+}
+
+.outline-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.outline-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 3px 8px 3px 8px;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-primary);
+  transition: background 120ms ease, color 120ms ease;
+  user-select: none;
+}
+
+.outline-item:hover {
+  background: var(--hover-bg);
+  color: var(--accent-blue, #89b4fa);
+}
+
+/* Sprint 9.2+: 当前视口中的章节自动高亮 —— 在左侧加一条细竖条 */
+.outline-item.is-active {
+  background: rgba(var(--accent-blue-rgb), 0.1);
+  color: var(--accent-blue, #89b4fa);
+  box-shadow: inset 2px 0 0 0 var(--accent-blue, #89b4fa);
+}
+.outline-item.is-active .outline-item-marker {
+  color: var(--accent-blue, #89b4fa);
+  opacity: 0.75;
+}
+
+.outline-item-marker {
+  flex-shrink: 0;
+  font-family: var(--font-mono, 'JetBrains Mono', Consolas, monospace);
+  font-size: 10px;
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.outline-item-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Level-specific treatment —— h1 字色最强,越深越弱 */
+.outline-item.outline-level-1 {
+  font-weight: 600;
+}
+.outline-item.outline-level-2 {
+  font-weight: 500;
+}
+.outline-item.outline-level-3 {
+  font-weight: 400;
+}
+.outline-item.outline-level-4,
+.outline-item.outline-level-5,
+.outline-item.outline-level-6 {
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 11.5px;
+}
+
+/* 空态 */
+.outline-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 32px 16px;
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+.outline-empty svg {
+  color: var(--accent-mauve, #cba6f7);
+  opacity: 0.5;
+  margin-bottom: 2px;
+}
+.outline-empty-hint {
+  font-size: 10.5px;
+  font-style: italic;
+  opacity: 0.75;
+}

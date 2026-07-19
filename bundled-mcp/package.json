@@ -1,0 +1,18 @@
+{
+  "name": "bundled-mcp",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Vendored MCP preset servers shipped via electron-builder extraResources (→ resources/node_modules). Packaged builds cannot rely on the user having Node/npx installed: electron/mcp/transport.ts#resolvePackagedNpxStdio rewrites `npx <pkg>` to Electron-as-Node + the package entry under resources/node_modules. Keep this dependency list in sync with MCP_PRESETS in electron/mcp/presets.ts. Versions are pinned (no caret/tilde) so packaged installers are byte-reproducible across machines.",
+  "dependencies": {
+    "@modelcontextprotocol/server-brave-search": "0.6.2",
+    "@modelcontextprotocol/server-filesystem": "2026.1.14",
+    "@modelcontextprotocol/server-github": "2025.4.8",
+    "@modelcontextprotocol/server-memory": "2026.1.26",
+    "@playwright/mcp": "0.0.77",
+    "@upstash/context7-mcp": "3.2.2",
+    "figma-mcp": "0.1.4",
+    "mcp-remote": "0.1.38",
+    "mcp-server-fetch-typescript": "0.1.1",
+    "mcp-sqlite-server": "1.0.1"
+  }
+}

@@ -1,0 +1,346 @@
+.titlebar {
+  height: var(--titlebar-height);
+  background: var(--bg-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  -webkit-app-region: drag;
+  flex-shrink: 0;
+}
+
+.titlebar-drag-region {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.titlebar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 12px;
+  -webkit-app-region: no-drag;
+}
+
+.titlebar-icon {
+  flex-shrink: 0;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.titlebar-menus {
+  display: flex;
+  gap: 0;
+}
+
+.titlebar-menu-wrapper {
+  position: relative;
+}
+
+.titlebar-menu-item {
+  padding: 2px 8px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.titlebar-menu-item:hover,
+.titlebar-menu-item.active {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.titlebar-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 240px;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  z-index: 2000;
+  animation: fadeIn 0.08s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.titlebar-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 12px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+  text-align: left;
+}
+
+.titlebar-dropdown-item:hover {
+  background: var(--accent-blue);
+  color: var(--text-on-accent);
+}
+
+.titlebar-dropdown-item:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.titlebar-dropdown-item:disabled:hover {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.titlebar-dropdown-item:hover .titlebar-dropdown-shortcut {
+  color: var(--text-secondary);
+}
+
+.titlebar-dropdown-label {
+  flex: 1;
+}
+
+.titlebar-dropdown-shortcut {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 24px;
+}
+
+.titlebar-dropdown-separator {
+  height: 1px;
+  background: var(--border-color);
+  margin: 4px 8px;
+}
+
+.titlebar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-app-region: no-drag;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.titlebar-title {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ─── BundleSelector (D1) ──────────────────────────────────────────
+   Minimal dropdown trigger in the center of the title bar. Anchored
+   relative so the popover below can absolutely-position itself under
+   the trigger without breaking out of the title bar's drag region. */
+
+.bundle-selector {
+  position: relative;
+  -webkit-app-region: no-drag;
+}
+
+.bundle-selector-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--accent-mauve, #cba6f7);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+  user-select: none;
+  outline: none;
+}
+.bundle-selector-trigger:hover,
+.bundle-selector-trigger.is-open {
+  background: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.1);
+  border-color: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.28);
+}
+.bundle-selector-trigger:focus-visible {
+  outline: 1px solid var(--accent-mauve, #cba6f7);
+  outline-offset: 1px;
+}
+.bundle-selector-trigger:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+.bundle-selector-icon {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.bundle-selector-label {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bundle-selector-chevron {
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+  opacity: 0.7;
+}
+.bundle-selector-chevron.is-open {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* Popover: drops below the trigger, aligned left. Width is bounded so
+   long Bundle names / descriptions wrap predictably. */
+.bundle-selector-popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 240px;
+  max-width: 360px;
+  background: var(--bg-overlay, var(--bg-surface1));
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+  padding: 4px;
+  /* z-index 2100 > titlebar-dropdown (2000) > ChatPanel (2),确保在
+     chat-centric 等 ChatPanel 铺满场景下 popover 不被任何下方组件
+     阴影遮住。 */
+  z-index: 2100;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  animation: bundle-selector-pop-in 0.12s ease-out;
+}
+
+@keyframes bundle-selector-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bundle-selector-option {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'main check'
+    'desc desc';
+  column-gap: 8px;
+  row-gap: 2px;
+  align-items: center;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-primary);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  transition: background var(--transition-fast);
+}
+.bundle-selector-option:hover {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.045);
+}
+.bundle-selector-option.is-active {
+  background: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.12);
+}
+
+.bundle-selector-option-main {
+  grid-area: main;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+
+.bundle-selector-option-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bundle-selector-option-domain {
+  font-size: 10px;
+  color: var(--accent-mauve, #cba6f7);
+  background: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.14);
+  padding: 0 5px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.bundle-selector-option-desc {
+  grid-area: desc;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.bundle-selector-option-check {
+  grid-area: check;
+  color: var(--accent-mauve, #cba6f7);
+  flex-shrink: 0;
+}
+
+.bundle-selector-errors {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  margin-top: 4px;
+  border-top: 1px solid var(--border-color);
+  font-size: 10.5px;
+  color: var(--accent-red, #f38ba8);
+}
+
+.titlebar-right {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  -webkit-app-region: no-drag;
+}
+
+.titlebar-window-btn {
+  width: 46px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+}
+
+.titlebar-window-btn:hover {
+  background: var(--hover-bg);
+}
+
+.titlebar-close-btn:hover {
+  background: #e81123 !important;
+}
+
+.titlebar-close-btn:hover svg path,
+.titlebar-close-btn:hover svg rect {
+  stroke: white !important;
+  stroke-width: 1.5;
+}

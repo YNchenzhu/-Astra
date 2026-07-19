@@ -1,0 +1,111 @@
+/* Visual language kept in line with AttachmentPreview's overlay treatment:
+   dim + blur backdrop, compact centered panel, subtle border. Button
+   styles mirror `chat-input-btn` weight so the dialog doesn't feel like
+   it drops in from a different design system. */
+
+.confirm-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  /* Must sit above every other overlay in the app — confirm dialogs can be
+     triggered from inside the settings modal (z-index 12000), so anything
+     lower gets buried under the settings backdrop. Keep this the highest
+     z-index in the codebase. */
+  z-index: 13000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  /* Allow pointer events to pass through back to the page when the
+     dialog is "closed but still in the DOM" mid-fade — not strictly
+     necessary since we unmount, but keeps behaviour robust if a caller
+     swaps in an animated wrapper later. */
+}
+
+.confirm-dialog-panel {
+  width: min(460px, 100%);
+  max-height: 80vh;
+  background: var(--bg-primary, var(--bg-base, #1e1e2e));
+  color: var(--text-primary, #cdd6f4);
+  border: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  border-radius: 10px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.confirm-dialog-header {
+  padding: 14px 18px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.06);
+}
+
+.confirm-dialog-body {
+  padding: 16px 18px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary, rgba(205, 214, 244, 0.88));
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-y: auto;
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 14px 14px;
+  border-top: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.04);
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.02);
+}
+
+.confirm-dialog-btn {
+  min-width: 72px;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+  font-family: inherit;
+}
+
+.confirm-dialog-btn:focus-visible {
+  outline: 2px solid var(--accent, #89b4fa);
+  outline-offset: 2px;
+}
+
+.confirm-dialog-btn-secondary {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.04);
+  color: var(--text-primary, #cdd6f4);
+  border-color: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+}
+
+.confirm-dialog-btn-secondary:hover {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  border-color: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.14);
+}
+
+.confirm-dialog-btn-primary {
+  background: var(--accent, #89b4fa);
+  color: var(--accent-contrast, #11111b);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.confirm-dialog-btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+.confirm-dialog-btn-danger {
+  background: var(--status-danger);
+  color: var(--text-on-accent, #ffffff);
+}
+
+.confirm-dialog-btn-danger:hover {
+  background: var(--status-danger-strong);
+}

@@ -1,0 +1,170 @@
+/**
+ * AgentWorkbench overlay + 3-column layout.
+ *
+ * Visual language follows the rest of the app (catppuccin-ish tokens,
+ * already bound in the root stylesheet). No new palette values —
+ * everything references `--bg-*`, `--text-*`, `--accent-*`, `--border-*`.
+ *
+ * Layout contract:
+ *   - Full-viewport overlay with backdrop click-to-close.
+ *   - Central surface maxes out at 1440x900 so 4K displays don't stretch
+ *     the workbench into useless whitespace.
+ *   - 3-column grid: 240px | 1fr | 320px, with a single shared gap.
+ *   - Header + body flex-column so the header stays put while the body
+ *     can grow/scroll.
+ */
+
+.workbench-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200; /* above Settings (1100) but below Command Palette (1300) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  /* Let animation handle the fade so the overlay isn't jarring. */
+  animation: workbench-overlay-in 0.14s ease-out;
+}
+
+.workbench-backdrop {
+  position: absolute;
+  inset: 0;
+  /* 原来有 backdrop-filter: blur(3px),但在 Windows 下 Electron 每次
+     鼠标移动都重新 GPU 合成全屏模糊,导致 hover "滞后半拍"。换成
+     稍深一点的半透明黑保留"遮罩"语义,性能提升一个数量级。 */
+  background: var(--bg-backdrop);
+}
+
+.workbench-surface {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* 尺寸按用户要求整体缩到 75%(1440×900 → 1080×680),更贴近 IDE
+     内嵌面板而不是"铺满全屏的大对话框"。 */
+  width: min(1080px, 100%);
+  height: min(680px, 100%);
+  background: var(--bg-base, #1e1e2e);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 7px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: workbench-surface-in 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes workbench-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes workbench-surface-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ─── Header ─────────────────────────────────────────────────────── */
+
+.workbench-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 11px;
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  flex-shrink: 0;
+  background: rgba(var(--surface-tint-rgb), 0.02);
+}
+
+.workbench-header-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.workbench-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.2px;
+}
+
+.workbench-subtitle {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.workbench-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast, 0.12s),
+    color var(--transition-fast, 0.12s);
+}
+.workbench-close:hover {
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.12);
+  color: var(--accent-red, #f38ba8);
+}
+.workbench-close:focus-visible {
+  outline: 1px solid var(--accent-red, #f38ba8);
+  outline-offset: 1px;
+}
+
+/* ─── Body (3 columns) ────────────────────────────────────────────── */
+
+.workbench-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  /* 列宽同步瘦身:原 240/320 → 180/240 */
+  grid-template-columns: 180px 1fr 240px;
+  overflow: hidden;
+}
+
+.workbench-left,
+.workbench-right {
+  border-right: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  overflow-y: auto;
+  min-width: 0;
+  background: rgba(var(--surface-tint-rgb), 0.015);
+}
+
+.workbench-right {
+  border-right: none;
+  border-left: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  position: relative; /* anchor TryRunDrawer (abs positioned within) */
+}
+
+.workbench-middle {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Shared placeholder for empty states across columns. */
+.workbench-empty-state {
+  padding: 18px 14px;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+  text-align: center;
+}

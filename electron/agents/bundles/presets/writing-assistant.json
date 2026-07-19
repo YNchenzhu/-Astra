@@ -1,0 +1,73 @@
+{
+  "meta": {
+    "id": "writing-assistant",
+    "name": "写作助手",
+    "description": "文档为主的写作工作台:左侧文档大纲、中间 Markdown 编辑器、右侧 AI 对话。适合博客、报告、长文写作、文档校对等场景。",
+    "icon": "PenLine",
+    "domain": "写作",
+    "author": "星构Astra",
+    "version": "1.0.0",
+    "source": "preset",
+    "createdAt": 0,
+    "updatedAt": 0
+  },
+
+  "agents": [
+    {
+      "agentType": "general-purpose",
+      "displayName": "写作助手",
+      "tagline": "大纲生成、润色改稿、语气调整、事实核查",
+      "icon": "PenLine",
+      "isPrimary": true,
+      "whenToUse": "Writing-focused assistant. Good at drafting outlines, rephrasing paragraphs, tightening prose, checking facts, and improving clarity."
+    },
+    {
+      "agentType": "Explore",
+      "displayName": "资料研究员",
+      "tagline": "在文档集合中检索、引用佐证",
+      "icon": "Search",
+      "whenToUse": "Read-only research over the current workspace documents. Useful for citing prior work, cross-referencing, or pulling quotes."
+    }
+  ],
+
+  "teams": [
+    {
+      "id": "solo",
+      "name": "单 Agent(默认)",
+      "description": "直接与写作助手对话",
+      "coordination": "solo",
+      "members": [
+        { "agentType": "general-purpose", "role": "worker" }
+      ]
+    },
+    {
+      "id": "research-then-write",
+      "name": "先研究→再写作",
+      "description": "先由研究员检索资料,再由写作助手成文",
+      "coordination": "sequential",
+      "members": [
+        { "agentType": "Explore", "role": "researcher", "parallelGroup": 0 },
+        { "agentType": "general-purpose", "role": "worker", "parallelGroup": 1 }
+      ]
+    }
+  ],
+
+  "defaultAgent": "general-purpose",
+
+  "capabilities": {
+    "enabledTools": "*",
+    "enabledSkills": [],
+    "enabledMcpServers": []
+  },
+
+  "layout": {
+    "type": "document-centric",
+    "options": {
+      "sidebar": "outline",
+      "secondaryPane": "chat",
+      "topBar": "breadcrumbs"
+    }
+  },
+
+  "welcomeMessage": "写作助手已就绪。打开一个 .md 文件,左侧会自动显示文档大纲——点击任意标题可跳转。编辑器顶部有预览/编辑/分屏三种模式切换。"
+}

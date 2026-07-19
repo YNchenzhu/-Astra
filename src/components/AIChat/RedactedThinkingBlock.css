@@ -1,0 +1,32 @@
+/* RedactedThinkingBlock — Anthropic 加密 chain-of-thought 占位
+   设计与 ThinkingBlock 系出同源：低饱和 + dim 字色 + 极简一行。
+   故意不可点击 / 不可展开 — `data` 加密 blob 没东西可读。 */
+
+.redacted-thinking-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 4px 10px;
+  margin: 6px 0;
+  border-radius: 6px;
+  background-color: rgba(127, 127, 127, 0.06);
+  color: var(--text-secondary, #888);
+  font-size: 0.85em;
+  font-style: italic;
+  user-select: none;
+  cursor: default;
+}
+
+.redacted-thinking-icon {
+  font-size: 0.95em;
+  opacity: 0.7;
+}
+
+.redacted-thinking-label {
+  font-weight: 500;
+}
+
+.redacted-thinking-hint {
+  opacity: 0.6;
+  font-size: 0.85em;
+}

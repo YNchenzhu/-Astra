@@ -1,0 +1,316 @@
+/*
+ * WriteEditProgressView — IDE-style live writing card body.
+ *
+ * Colors come from the global theme tokens defined in
+ * `src/styles/global.css` (catppuccin-mocha-derived dark + light
+ * variants), so the card respects user theme switching. Hardcoded
+ * fallbacks keep the look reasonable if a token is missing (defensive
+ * — we don't want a "no colors" card when global.css fails to load).
+ *
+ * The streaming caret is inline (an empty `<span class="wep-caret-inline">`
+ * appended after the code) so it visually sits at the tail of the
+ * last character — the IDE's typewriter-style cue. The older
+ * absolute-positioned bottom-right caret was a stop-gap that didn't
+ * communicate "writing here" precisely.
+ */
+
+.wep-root {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.wep-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(var(--bg-surface0-rgb, 49, 50, 68), 0.55);
+  color: var(--text-secondary, #a6adc8);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.wep-action {
+  flex: 0 0 auto;
+  color: var(--accent-blue, #89b4fa);
+  font-weight: 600;
+}
+
+.wep-filepath {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--text-primary, #cdd6f4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wep-meta {
+  flex: 0 0 auto;
+  color: var(--text-secondary, #a6adc8);
+  font-variant-numeric: tabular-nums;
+}
+
+.wep-code {
+  position: relative;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  border-radius: 6px;
+  background: rgba(var(--bg-overlay-rgb, 17, 17, 27), 0.7);
+  overflow: hidden;
+  max-height: 360px;
+  overflow-y: auto;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.wep-code-pre {
+  margin: 0;
+  padding: 8px 10px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-primary, #cdd6f4);
+  white-space: pre;
+  word-break: normal;
+  /*
+   * Monaco-colorize emits `<span class="mtkN">` with token colors set
+   * by Monaco's globally-injected stylesheet (we force its injection
+   * in `WriteEditProgressView.tsx::bootstrapMonacoThemeStyles`). When
+   * tokens still aren't colorized (Monaco load failed), the spans
+   * inherit `--text-primary` above — graceful degradation.
+   */
+}
+
+/* Subtle background tint to mimic the +/- columns of a diff. */
+.wep-variant-added {
+  background: linear-gradient(
+    to right,
+    rgba(var(--accent-green-rgb, 166, 227, 161), 0.06),
+    rgba(var(--bg-overlay-rgb, 17, 17, 27), 0.7) 12px
+  );
+  border-color: rgba(var(--accent-green-rgb, 166, 227, 161), 0.2);
+}
+
+.wep-variant-removed {
+  background: linear-gradient(
+    to right,
+    rgba(var(--accent-red-rgb, 243, 139, 168), 0.06),
+    rgba(var(--bg-overlay-rgb, 17, 17, 27), 0.7) 12px
+  );
+  border-color: rgba(var(--accent-red-rgb, 243, 139, 168), 0.2);
+  opacity: 0.85;
+}
+
+.wep-variant-plain {
+  background: rgba(var(--bg-overlay-rgb, 17, 17, 27), 0.7);
+}
+
+/*
+ * Inline streaming caret (P2-5): appended inside the `<pre>` AFTER the
+ * highlighted HTML so the browser lays it out at the end of the last
+ * line — visually identical to "the cursor stays where the model just
+ * typed". The width-0 zero-spacer + 2px box uses `inline-block` so
+ * line-flow keeps it on the same baseline as the surrounding text.
+ */
+.wep-caret-inline {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--accent-blue, #89b4fa);
+  vertical-align: text-bottom;
+  margin-left: 1px;
+  border-radius: 1px;
+  animation: wep-caret-blink 1s steps(2, end) infinite;
+}
+
+.wep-code.is-streaming {
+  /* Subtle pulsing ring while text is still being written. */
+  box-shadow: 0 0 0 1px rgba(var(--accent-blue-rgb, 137, 180, 250), 0.25);
+  animation: wep-pulse 2.2s ease-in-out infinite;
+}
+
+/*
+ * Single-card inline unified diff (replaces the old "two separate
+ * code blocks" layout for edit_file / multi_edit_file). Each row is
+ * a horizontal flex with a fixed-width marker column on the left
+ * and the Monaco-tokenized line content on the right.
+ */
+.wep-diff {
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  border-radius: 6px;
+  background: rgba(var(--bg-overlay-rgb, 17, 17, 27), 0.7);
+  overflow: hidden;
+  max-height: 480px;
+  overflow-y: auto;
+  user-select: text;
+  -webkit-user-select: text;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.wep-diff-line {
+  display: flex;
+  align-items: flex-start;
+  white-space: pre;
+  padding: 0;
+}
+
+.wep-diff-line.wep-diff-context {
+  background: transparent;
+  color: var(--text-secondary, #a6adc8);
+}
+
+.wep-diff-line.wep-diff-removed {
+  /*
+   * Tint matches `--accent-red-rgb` from the global theme so the
+   * card responds to user theme switching. Two layers because we
+   * want a visible left rail (saturated) plus a subtle row tint.
+   */
+  background: linear-gradient(
+    to right,
+    rgba(var(--accent-red-rgb, 243, 139, 168), 0.18) 0,
+    rgba(var(--accent-red-rgb, 243, 139, 168), 0.18) 4px,
+    rgba(var(--accent-red-rgb, 243, 139, 168), 0.08) 4px
+  );
+}
+
+.wep-diff-line.wep-diff-added {
+  background: linear-gradient(
+    to right,
+    rgba(var(--accent-green-rgb, 166, 227, 161), 0.22) 0,
+    rgba(var(--accent-green-rgb, 166, 227, 161), 0.22) 4px,
+    rgba(var(--accent-green-rgb, 166, 227, 161), 0.10) 4px
+  );
+}
+
+.wep-diff-marker {
+  flex: 0 0 22px;
+  padding: 0 6px 0 8px;
+  text-align: center;
+  color: var(--text-secondary, #a6adc8);
+  font-weight: 600;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.wep-diff-line.wep-diff-removed .wep-diff-marker {
+  color: var(--accent-red, #f38ba8);
+}
+
+.wep-diff-line.wep-diff-added .wep-diff-marker {
+  color: var(--accent-green, #a6e3a1);
+}
+
+.wep-diff-code {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 8px 0 0;
+  white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
+  color: var(--text-primary, #cdd6f4);
+}
+
+.wep-diff.is-streaming {
+  box-shadow: 0 0 0 1px rgba(var(--accent-blue-rgb, 137, 180, 250), 0.25);
+  animation: wep-pulse 2.2s ease-in-out infinite;
+}
+
+.wep-diff-elided {
+  padding: 4px 8px;
+  color: var(--text-secondary, #a6adc8);
+  font-style: italic;
+  border-top: 1px dashed var(--border-color, rgba(255, 255, 255, 0.08));
+}
+
+/*
+ * One mini-diff section per entry in `multi_edit_file.input.edits[]`.
+ * Stacked vertically with a thin label between them — same idiom as
+ * git diff's `@@ hunk @@` markers. Keeps the visual grouping clear
+ * when a single multi_edit_file call carries many small fixes.
+ */
+.wep-multi-edit-section {
+  display: grid;
+  grid-template-rows: 1fr;
+  transform-origin: top center;
+  animation: wep-multi-edit-enter 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.wep-multi-edit-section-inner {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: visible;
+  animation: wep-multi-edit-overflow 220ms step-end both;
+}
+
+.wep-multi-edit-section + .wep-multi-edit-section {
+  margin-top: 4px;
+}
+
+.wep-multi-edit-section-header {
+  padding: 2px 8px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 10.5px;
+  color: var(--text-secondary, #a6adc8);
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.08);
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@keyframes wep-caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes wep-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(var(--accent-blue-rgb, 137, 180, 250), 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(var(--accent-blue-rgb, 137, 180, 250), 0.4);
+  }
+}
+
+@keyframes wep-multi-edit-enter {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-5px) scale(0.995);
+  }
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes wep-multi-edit-overflow {
+  from {
+    overflow: hidden;
+  }
+  to {
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wep-multi-edit-section,
+  .wep-multi-edit-section-inner {
+    animation: none;
+  }
+}

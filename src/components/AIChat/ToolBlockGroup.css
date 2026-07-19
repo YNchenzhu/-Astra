@@ -1,0 +1,157 @@
+.tool-block-group {
+  margin: 6px 0;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, var(--bg-surface0));
+  background: rgba(var(--bg-surface0-rgb, 49, 50, 68), 0.25);
+  overflow: hidden;
+  animation: block-slide-in 0.3s ease-out;
+}
+
+.tool-block-group.is-active {
+  border-color: rgba(var(--accent-yellow-rgb), 0.4);
+  background: rgba(var(--accent-yellow-rgb), 0.03);
+}
+
+.tool-block-group.is-complete {
+  border-color: rgba(var(--accent-green-rgb), 0.25);
+}
+
+/* Header */
+.tool-group-header {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.tool-block-group.is-collapsed .tool-group-header {
+  padding: 4px 10px;
+  gap: 8px;
+}
+
+.tool-group-header:hover {
+  background: rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.3);
+}
+
+.tool-group-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.tool-group-wrench {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.tool-group-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-block-group.is-collapsed .tool-group-title {
+  font-size: 11px;
+}
+
+.tool-group-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.tool-group-count {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.tool-group-chevron {
+  transition: transform 0.2s ease;
+  color: var(--text-tertiary);
+}
+
+.tool-group-chevron.is-open {
+  transform: rotate(90deg);
+}
+
+/* Status icons */
+.tool-group-icon-running {
+  color: var(--accent-yellow);
+  animation: tool-spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+.tool-group-icon-success {
+  color: var(--accent-green);
+  flex-shrink: 0;
+}
+
+.tool-group-icon-error {
+  color: var(--accent-red);
+  flex-shrink: 0;
+}
+
+/* Body */
+.tool-group-body {
+  max-height: 300px;
+  overflow-y: auto;
+  border-top: 1px solid rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.4);
+  padding: 4px 0;
+  animation: block-expand 0.25s ease-out;
+}
+
+.tool-group-body > .tool-use-card {
+  margin: 2px 6px;
+  border-radius: 6px;
+}
+
+@keyframes block-expand {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 300px;
+  }
+}
+
+@keyframes tool-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Phase 3-cont: ActivityRow-based batch aggregation ──────────────
+   Every selector above here is kept for backwards compatibility with
+   any path that might still mount the legacy group chrome. The new
+   surface is driven entirely by the classes below.
+*/
+
+.tool-block-group-row {
+  margin: 2px 0;
+}
+
+/* Child tool list lives inside the ActivityRow's own `.activity-details`
+   drawer, which already provides left border + padding. We only need
+   to flatten the default gap so consecutive rows stack flush without
+   a noisy gutter. */
+.tool-block-group-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+

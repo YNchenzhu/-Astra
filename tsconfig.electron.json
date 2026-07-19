@@ -32,6 +32,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["electron", "src/data/providerRegistry.ts"],
+  "include": ["electron", "shared", "src/data/providerRegistry.ts"],
   "exclude": ["electron/**/*.test.ts", "electron/**/*.bak"]
 }

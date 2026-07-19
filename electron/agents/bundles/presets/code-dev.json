@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "id": "code-dev",
+    "name": "代码开发",
+    "description": "星构Astra 默认工作台：完整的 AI 辅助代码开发环境——文件树、编辑器、终端、Git、LSP、调试、和所有内置 Agent。等价于升级前的 IDE 体验。",
+    "icon": "Code",
+    "domain": "编程",
+    "author": "星构Astra",
+    "version": "1.0.0",
+    "source": "preset",
+    "createdAt": 0,
+    "updatedAt": 0
+  },
+
+  "agents": [
+    {
+      "agentType": "general-purpose",
+      "displayName": "通用助手",
+      "tagline": "复杂问题研究、代码搜索、多步任务执行",
+      "icon": "Bot",
+      "isPrimary": true,
+      "whenToUse": "General-purpose agent for researching complex questions, searching for code, and executing multi-step tasks."
+    },
+    {
+      "agentType": "Explore",
+      "displayName": "探索者",
+      "tagline": "只读的文件/代码快速探索",
+      "icon": "Search",
+      "whenToUse": "Fast agent specialized for exploring codebases. Quick find files by patterns, search code for keywords, answer questions about the codebase."
+    },
+    {
+      "agentType": "Plan",
+      "displayName": "规划者",
+      "tagline": "软件架构师：设计实施方案、梳理架构取舍",
+      "icon": "Map",
+      "whenToUse": "Software architect agent for designing implementation plans, identifies critical files, considers architectural trade-offs."
+    },
+    {
+      "agentType": "Coordinator",
+      "displayName": "协调者",
+      "tagline": "并行编排多个 Sub-Agent，适合大型复合任务",
+      "icon": "Network",
+      "whenToUse": "Orchestration agent that splits complex tasks into parallel work streams and delegates to specialized sub-agents."
+    },
+    {
+      "agentType": "Debug",
+      "displayName": "调试专家",
+      "tagline": "结构化调试：假设-证据-最小修复",
+      "icon": "Bug",
+      "whenToUse": "Structured debugging: hypothesis, evidence (logs/tests), minimal fix. Can nest REPL for tight inner loops."
+    },
+    {
+      "agentType": "Verification",
+      "displayName": "验证者",
+      "tagline": "只读验证：跑构建/测试、确认行为",
+      "icon": "ShieldCheck",
+      "whenToUse": "Read-only verification: run builds/tests, capture logs, confirm behavior. Use before marking work complete."
+    },
+    {
+      "agentType": "claude-code-guide",
+      "displayName": "代码文档助手",
+      "tagline": "回答关于本项目 / Claude CLI / SDK 的用法问题",
+      "icon": "BookOpen",
+      "whenToUse": "Answer questions about Claude Code, Anthropic CLI/SDK patterns, and how agent tools behave in this codebase."
+    },
+    {
+      "agentType": "statusline-setup",
+      "displayName": "状态栏配置助手",
+      "tagline": "配置 CLI status line / 会话 footer",
+      "icon": "LayoutTemplate",
+      "whenToUse": "Configure CLI status lines, session footers, or prompt-adjacent UI for this app."
+    }
+  ],
+
+  "teams": [
+    {
+      "id": "solo",
+      "name": "单 Agent（默认）",
+      "description": "不启用 Team 协作，只使用当前选中的 Agent",
+      "coordination": "solo",
+      "members": [
+        { "agentType": "general-purpose", "role": "worker" }
+      ]
+    },
+    {
+      "id": "research-plan-verify",
+      "name": "研究→规划→验证",
+      "description": "Explore 先做研究 → Plan 生成方案 → Verification 最后验证实施结果",
+      "coordination": "sequential",
+      "members": [
+        { "agentType": "Explore", "role": "researcher", "parallelGroup": 0 },
+        { "agentType": "Plan", "role": "planner", "parallelGroup": 1 },
+        { "agentType": "Verification", "role": "verifier", "parallelGroup": 2 }
+      ]
+    },
+    {
+      "id": "coordinator-led",
+      "name": "协调者主导",
+      "description": "Coordinator 拆任务并并行分派给专业 sub-agent",
+      "coordination": "coordinator",
+      "members": [
+        { "agentType": "Coordinator", "role": "coordinator" },
+        { "agentType": "Explore", "role": "researcher" },
+        { "agentType": "general-purpose", "role": "worker" },
+        { "agentType": "Verification", "role": "verifier" }
+      ]
+    }
+  ],
+
+  "defaultAgent": "general-purpose",
+
+  "capabilities": {
+    "enabledTools": "*",
+    "enabledSkills": [],
+    "enabledMcpServers": []
+  },
+
+  "executionPolicy": {
+    "verification": { "kind": "code" },
+    "stepGranularity": "model-decides"
+  },
+
+  "layout": {
+    "type": "code-workspace",
+    "options": {
+      "sidebar": "files",
+      "secondaryPane": "chat",
+      "topBar": "breadcrumbs"
+    }
+  },
+
+  "welcomeMessage": "代码开发工作台已就绪。你可以直接开始使用 AI Chat、打开文件、执行终端命令——和升级前一样。"
+}

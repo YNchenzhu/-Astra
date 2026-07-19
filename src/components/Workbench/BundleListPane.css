@@ -1,0 +1,499 @@
+/**
+ * BundleListPane — workbench left column.
+ *
+ * Hierarchy:
+ *   .bundle-list-pane
+ *     .bundle-list-group
+ *       .bundle-list-bundle         // top-level bundle row
+ *       .bundle-list-children
+ *         .bundle-list-subsection   // Agents / Teams group
+ *           .bundle-list-entry      // individual agent / team
+ */
+
+.bundle-list-pane {
+  padding: 0 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+/* ─── Toolbar（顶部新建按钮） ─────────────────────────────────── */
+
+.bundle-list-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 6px 3px;
+  /* 去掉 backdrop-filter blur:本身是局部 sticky header,但和
+     父级 modal 的 overlay 叠加时每次 layout 都要重新采样,鼠标
+     悬停工作台时 GPU 压力大。用不透明背景替代。
+     注意必须用 var(--bg-base) 而不是写死颜色 —— 否则浅色/米白
+     主题下 sticky header 会变成一条与下方面板不一致的深色条带。 */
+  background: var(--bg-base);
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.04));
+  margin-bottom: 3px;
+  display: grid;
+  /* 三件套:新建 / 导入 / 导出当前 */
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3px;
+}
+
+.bundle-list-create-btn,
+.bundle-list-import-btn,
+.bundle-list-export-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 6px;
+  font: inherit;
+  font-size: 10.5px;
+  font-weight: 500;
+  border-radius: 3px;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    border-color 0.12s,
+    opacity 0.12s;
+  outline: none;
+}
+.bundle-list-create-btn:disabled,
+.bundle-list-import-btn:disabled,
+.bundle-list-export-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.bundle-list-create-btn {
+  color: var(--accent-mauve, #cba6f7);
+  background: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.1);
+  border: 1px dashed rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.4);
+}
+.bundle-list-create-btn:hover {
+  background: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.18);
+  border-color: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.6);
+}
+.bundle-list-create-btn:focus-visible {
+  outline: 1px solid var(--accent-mauve, #cba6f7);
+  outline-offset: 1px;
+}
+
+.bundle-list-import-btn {
+  color: var(--accent-blue, #89b4fa);
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.08);
+  border: 1px dashed rgba(var(--accent-blue-rgb, 137, 180, 250), 0.35);
+}
+.bundle-list-import-btn:hover:not(:disabled) {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.16);
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.55);
+}
+.bundle-list-import-btn:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: 1px;
+}
+
+.bundle-list-export-btn {
+  color: var(--accent-green, #a6e3a1);
+  background: rgba(var(--accent-green-rgb, 166, 227, 161), 0.08);
+  border: 1px dashed rgba(var(--accent-green-rgb, 166, 227, 161), 0.35);
+}
+.bundle-list-export-btn:hover:not(:disabled) {
+  background: rgba(var(--accent-green-rgb, 166, 227, 161), 0.16);
+  border-color: rgba(var(--accent-green-rgb, 166, 227, 161), 0.55);
+}
+.bundle-list-export-btn:focus-visible {
+  outline: 1px solid var(--accent-green, #a6e3a1);
+  outline-offset: 1px;
+}
+
+.bundle-list-import-notice {
+  margin: 3px 3px 6px;
+  padding: 5px 7px;
+  border: 1px solid rgba(var(--accent-green-rgb, 166, 227, 161), 0.28);
+  border-radius: 4px;
+  color: var(--accent-green, #a6e3a1);
+  background: rgba(var(--accent-green-rgb, 166, 227, 161), 0.08);
+  font-size: 11px;
+  line-height: 1.4;
+  /* Messages may contain newlines (e.g. "已导出到:\n<path>"). */
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.bundle-list-import-notice[data-kind='error'] {
+  border-color: rgba(var(--accent-red-rgb, 243, 139, 168), 0.32);
+  color: var(--accent-red, #f38ba8);
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.08);
+}
+
+.bundle-list-group {
+  display: flex;
+  flex-direction: column;
+  padding: 0 3px;
+}
+
+/* ─── Bundle 行(包含标题按钮 + 右侧"⋯") ──────────────────── */
+
+.bundle-list-bundle-row {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  border-radius: 4px;
+  transition: background 0.12s;
+}
+.bundle-list-bundle-row:hover {
+  background: rgba(var(--surface-tint-rgb), 0.03);
+}
+.bundle-list-bundle-row.is-selected {
+  background: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.14);
+}
+
+.bundle-list-bundle {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 7px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  font: inherit;
+  font-weight: 500;
+  text-align: left;
+  outline: none;
+}
+.bundle-list-bundle-row.is-selected .bundle-list-bundle {
+  color: var(--accent-mauve, #cba6f7);
+}
+.bundle-list-bundle:focus-visible {
+  outline: 1px solid var(--accent-mauve, #cba6f7);
+  outline-offset: -1px;
+  border-radius: 3px;
+}
+
+/* ─── "⋯" 菜单触发 ─────────────────────────────────────────── */
+
+.bundle-list-row-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: auto;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  /* 从"悬停才出现"改成"默认半透明 + 悬停全亮"。避免用户找不到入口,
+     同时保留视觉克制。 */
+  opacity: 0.55;
+  transition:
+    opacity 0.12s,
+    background 0.12s,
+    color 0.12s;
+  outline: none;
+  flex-shrink: 0;
+  border-radius: 3px;
+  margin-right: 2px;
+}
+.bundle-list-bundle-row:hover .bundle-list-row-menu-trigger,
+.bundle-list-row-menu-trigger.is-open,
+.bundle-list-row-menu-trigger:focus-visible {
+  opacity: 1;
+}
+.bundle-list-row-menu-trigger:hover {
+  background: rgba(var(--surface-tint-rgb), 0.08);
+  color: var(--text-primary);
+}
+.bundle-list-row-menu-trigger:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: 1px;
+}
+
+/* ─── 悬停菜单弹出 ─────────────────────────────────────────── */
+
+.bundle-list-row-menu {
+  position: absolute;
+  top: 100%;
+  right: 2px;
+  z-index: 10;
+  min-width: 160px;
+  margin-top: 2px;
+  background: rgba(var(--bg-base-rgb, 30, 30, 46), 0.98);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: blp-menu-in 0.1s ease-out;
+}
+@keyframes blp-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bundle-list-row-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 11.5px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s;
+  outline: none;
+}
+.bundle-list-row-menu-item:hover:not(:disabled),
+.bundle-list-row-menu-item:focus-visible {
+  background: rgba(var(--surface-tint-rgb), 0.06);
+}
+.bundle-list-row-menu-item:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.bundle-list-row-menu-item-danger {
+  color: var(--accent-red, #f38ba8);
+}
+.bundle-list-row-menu-item-danger:hover:not(:disabled) {
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.14);
+}
+
+.bundle-list-caret {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+.bundle-list-caret.is-open {
+  transform: rotate(90deg);
+}
+
+.bundle-list-icon {
+  flex-shrink: 0;
+  color: var(--accent-mauve, #cba6f7);
+  opacity: 0.85;
+}
+
+.bundle-list-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.bundle-list-domain {
+  flex-shrink: 0;
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.14);
+  color: var(--accent-mauve, #cba6f7);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* Children indentation + subtle guideline. */
+.bundle-list-children {
+  padding-left: 10px;
+  margin-left: 8px;
+  border-left: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.06));
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+  margin-bottom: 3px;
+}
+
+.bundle-list-subsection {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.bundle-list-subsection-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 4px 2px 6px;
+}
+
+.bundle-list-subsection-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+}
+
+.bundle-list-subsection-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  color: var(--text-muted);
+  opacity: 0;
+  cursor: pointer;
+  transition:
+    opacity 0.12s,
+    background 0.12s,
+    color 0.12s;
+  outline: none;
+  flex-shrink: 0;
+}
+.bundle-list-subsection:hover .bundle-list-subsection-add,
+.bundle-list-subsection-add:focus-visible {
+  opacity: 1;
+}
+.bundle-list-subsection-add:hover {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.2);
+  color: var(--accent-blue, #89b4fa);
+}
+
+.bundle-list-subsection-empty {
+  padding: 4px 8px 6px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* 行容器：包含条目按钮 + 悬停显示的 × 删除 */
+.bundle-list-entry-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
+  transition: background 0.12s;
+}
+.bundle-list-entry-row:hover {
+  background: rgba(var(--surface-tint-rgb), 0.025);
+}
+.bundle-list-entry-row.is-selected {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.14);
+}
+
+.bundle-list-entry {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 5px 3px 7px;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 11px;
+  text-align: left;
+  transition: color var(--transition-fast, 0.12s);
+  outline: none;
+}
+.bundle-list-entry:hover {
+  color: var(--text-primary);
+}
+.bundle-list-entry.is-selected {
+  color: var(--accent-blue, #89b4fa);
+}
+.bundle-list-entry:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: -1px;
+}
+
+/* 行末的 × 删除按钮 —— 行悬停时浮现 */
+.bundle-list-entry-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 2px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 0.12s,
+    background 0.12s,
+    color 0.12s;
+  outline: none;
+  flex-shrink: 0;
+}
+.bundle-list-entry-row:hover .bundle-list-entry-remove,
+.bundle-list-entry-remove:focus-visible {
+  opacity: 1;
+}
+.bundle-list-entry-remove:hover:not(:disabled) {
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.16);
+  color: var(--accent-red, #f38ba8);
+}
+.bundle-list-entry-remove:disabled {
+  opacity: 0;
+  cursor: not-allowed;
+}
+/* disabled 状态 hover 仍要能看到,表明用户意图 */
+.bundle-list-entry-row:hover .bundle-list-entry-remove:disabled {
+  opacity: 0.35;
+}
+.bundle-list-entry-remove:focus-visible {
+  outline: 1px solid var(--accent-red, #f38ba8);
+  outline-offset: 1px;
+}
+
+.bundle-list-entry-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+.bundle-list-entry.is-selected .bundle-list-entry-icon {
+  color: var(--accent-blue, #89b4fa);
+  opacity: 1;
+}
+
+.bundle-list-entry-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.bundle-list-entry-primary {
+  flex-shrink: 0;
+  color: var(--accent-yellow, #f9e2af);
+  opacity: 0.9;
+}
+
+.bundle-list-entry-badge {
+  flex-shrink: 0;
+  font-size: 10px;
+  padding: 0 5px;
+  border-radius: 8px;
+  background: rgba(var(--surface-tint-rgb), 0.06);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}

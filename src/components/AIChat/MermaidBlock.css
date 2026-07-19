@@ -1,0 +1,181 @@
+.chat-mermaid-block {
+  margin: 8px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-elevated, rgba(30, 30, 46, 0.6));
+  overflow: hidden;
+}
+
+.chat-mermaid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: var(--active-bg);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 11px;
+}
+
+.chat-mermaid-lang {
+  color: var(--text-secondary);
+  font-family: var(--font-mono, monospace);
+  text-transform: lowercase;
+}
+
+.chat-mermaid-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chat-mermaid-tab,
+.chat-mermaid-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+.chat-mermaid-tab:hover,
+.chat-mermaid-iconbtn:hover {
+  background: rgba(var(--accent-blue-rgb), 0.12);
+  color: var(--text-primary);
+}
+
+.chat-mermaid-tab.active {
+  background: rgba(var(--accent-blue-rgb), 0.15);
+  color: var(--accent-blue);
+  border-color: rgba(var(--accent-blue-rgb), 0.3);
+}
+
+.chat-mermaid-preview {
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  background: radial-gradient(
+    circle at 1px 1px,
+    rgba(var(--accent-blue-rgb), 0.08) 1px,
+    transparent 0
+  );
+  background-size: 16px 16px;
+}
+
+.chat-mermaid-preview svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.chat-mermaid-source {
+  margin: 0;
+  padding: 12px;
+  background: var(--bg-primary, var(--bg-surface));
+  color: var(--text-primary);
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  line-height: 1.55;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.chat-mermaid-loading {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.chat-mermaid-error {
+  padding: 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.chat-mermaid-error-title {
+  color: var(--accent-red, var(--accent-red));
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.chat-mermaid-error-msg {
+  margin: 0 0 8px;
+  padding: 8px;
+  background: rgba(var(--accent-red-rgb), 0.08);
+  border-radius: 4px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11.5px;
+  white-space: pre-wrap;
+  color: var(--text-secondary);
+}
+
+.chat-mermaid-error details {
+  font-size: 11.5px;
+}
+
+.chat-mermaid-error summary {
+  cursor: pointer;
+  color: var(--accent-blue);
+  padding: 4px 0;
+}
+
+.chat-mermaid-zoom-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.15s ease;
+}
+
+.chat-mermaid-zoom-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-elevated, rgba(30, 30, 46, 0.85));
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.chat-mermaid-zoom-close:hover {
+  background: rgba(var(--accent-red-rgb), 0.2);
+}
+
+.chat-mermaid-zoom-content {
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow: auto;
+  background: var(--bg-elevated, rgba(30, 30, 46, 0.85));
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px;
+}
+
+.chat-mermaid-zoom-content svg {
+  max-width: none;
+  height: auto;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+

@@ -1,0 +1,3 @@
+npm run clean:electron
+npm run bundled-lsp:install
+npm run electron:build

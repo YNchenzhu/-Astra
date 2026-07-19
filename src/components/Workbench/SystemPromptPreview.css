@@ -1,0 +1,126 @@
+/**
+ * SystemPromptPreview — workbench right column.
+ *
+ * Narrow column (320px) so the prompt renders mostly full-width
+ * monospace. Uses `<pre>` for faithful whitespace + click-to-select
+ * (the developer can copy the whole prompt for a sanity check).
+ */
+
+.prompt-preview {
+  padding: 14px 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-primary);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.prompt-preview-header {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.06));
+  flex-shrink: 0;
+}
+
+.prompt-preview-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 11.5px;
+  padding: 8px 0;
+}
+
+.prompt-preview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(var(--surface-tint-rgb), 0.03);
+}
+.prompt-preview-section:last-child {
+  border-bottom: none;
+}
+
+.prompt-preview-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.prompt-preview-sublabel {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  padding-left: 2px;
+}
+
+.prompt-preview-value {
+  font-size: 11.5px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.prompt-preview-value.mono,
+.prompt-preview .mono {
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  font-size: 11px;
+}
+
+.prompt-preview-dim {
+  color: var(--text-muted);
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.prompt-preview-pre {
+  margin: 0;
+  padding: 8px 10px;
+  background: var(--bg-input-soft);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  font-size: 11px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* The main prompt body gets the full remaining height for readability. */
+.prompt-preview-prompt {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.prompt-preview-builtin {
+  padding: 12px 12px;
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.08);
+  border-left: 2px solid var(--accent-yellow, #f9e2af);
+  border-radius: 0 4px 4px 0;
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+.prompt-preview-builtin p {
+  margin: 0;
+}
+.prompt-preview-builtin p + p {
+  margin-top: 8px;
+}
+.prompt-preview-builtin code {
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  font-size: 11px;
+  background: rgba(var(--surface-tint-rgb), 0.06);
+  padding: 1px 4px;
+  border-radius: 3px;
+}

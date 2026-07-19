@@ -1,0 +1,19 @@
+{
+  "name": "astra-im-adapters",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "wechat": "bun run wechat/index.ts",
+    "test": "bun test",
+    "test:common": "bun test common/",
+    "test:wechat": "bun test wechat/"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.0",
+    "bun-types": "latest"
+  }
+}

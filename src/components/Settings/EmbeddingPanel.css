@@ -1,0 +1,356 @@
+/* ==========================================================================
+   Settings → 向量模型
+   两栏布局: 左侧 section 导航 (≈200px) + 右侧当前 section 内容
+   ========================================================================== */
+
+.epanel-root {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ---------- Left rail (section nav) ---------- */
+.epanel-rail {
+  border-right: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 8px 8px 0;
+  overflow-y: auto;
+}
+
+.epanel-rail-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+.epanel-rail-item:hover {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.04);
+}
+.epanel-rail-item.active {
+  background: rgba(var(--accent-blue-rgb), 0.12);
+  border-color: rgba(var(--accent-blue-rgb), 0.35);
+  color: var(--accent-blue);
+}
+.epanel-rail-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.epanel-rail-label {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.epanel-rail-hint {
+  font-size: 10.5px;
+  color: var(--text-overlay);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+}
+
+/* ---------- Right body (active section) ---------- */
+.epanel-body {
+  padding: 18px 24px;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.epanel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 720px;
+}
+
+.epanel-section-header {
+  margin-bottom: 4px;
+}
+.epanel-section-header h3 {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.epanel-section-header p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-overlay);
+  line-height: 1.55;
+}
+
+.epanel-subsection-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-overlay);
+  margin-top: 4px;
+}
+
+/* ---------- Tip strip ---------- */
+.epanel-tip {
+  font-size: 11.5px;
+  color: var(--text-overlay);
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.03);
+  border: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.06);
+  border-radius: 6px;
+  padding: 8px 10px;
+  line-height: 1.55;
+}
+
+.epanel-empty {
+  font-size: 12px;
+  color: var(--text-overlay);
+  padding: 16px;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.02);
+  border: 1px dashed rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* ---------- Mode picker (grid of 3 cards) ---------- */
+.epanel-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.epanel-mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.02);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-primary);
+  text-align: left;
+  transition: all 0.15s;
+}
+.epanel-mode-card:hover {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.05);
+  border-color: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.15);
+}
+.epanel-mode-card.active {
+  background: rgba(var(--accent-blue-rgb), 0.12);
+  border-color: rgba(var(--accent-blue-rgb), 0.45);
+  color: var(--accent-blue);
+}
+.epanel-mode-card strong {
+  font-size: 13px;
+  font-weight: 700;
+}
+.epanel-mode-card span {
+  font-size: 11px;
+  color: var(--text-overlay);
+  line-height: 1.4;
+}
+.epanel-mode-card.active span {
+  color: rgba(var(--accent-blue-rgb), 0.85);
+}
+
+/* ---------- Form fields ---------- */
+.epanel-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.epanel-field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.epanel-field-row {
+  display: flex;
+  gap: 10px;
+}
+.epanel-input {
+  padding: 7px 10px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.03);
+  border: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.1);
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.epanel-input:focus {
+  border-color: rgba(var(--accent-blue-rgb), 0.6);
+}
+.epanel-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ---------- Rows (model / cache list items) ---------- */
+.epanel-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.02);
+  border: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.06);
+  border-radius: 6px;
+}
+.epanel-row.active {
+  border-color: rgba(var(--accent-blue-rgb), 0.4);
+  background: rgba(var(--accent-blue-rgb), 0.06);
+}
+.epanel-row-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.epanel-row-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-primary);
+  flex-wrap: wrap;
+}
+.epanel-row-hint {
+  font-size: 11px;
+  color: var(--text-overlay);
+  line-height: 1.4;
+}
+.epanel-row-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ---------- Buttons ---------- */
+.epanel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  color: var(--text-primary);
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.04);
+  border: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.1);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.epanel-btn:hover:not(:disabled) {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  border-color: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.2);
+}
+.epanel-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.epanel-btn-primary {
+  background: rgba(var(--accent-blue-rgb), 0.2);
+  border-color: rgba(var(--accent-blue-rgb), 0.4);
+  color: var(--accent-blue);
+}
+.epanel-btn-primary:hover:not(:disabled) {
+  background: rgba(var(--accent-blue-rgb), 0.3);
+}
+
+.epanel-btn-danger:hover:not(:disabled) {
+  background: rgba(var(--accent-red-rgb), 0.15);
+  border-color: rgba(var(--accent-red-rgb), 0.4);
+  color: var(--accent-red);
+}
+
+.epanel-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* ---------- Badges ---------- */
+.epanel-badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 500;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  color: var(--text-secondary);
+}
+.epanel-badge-ok   { background: rgba(var(--accent-green-rgb), 0.15); color: var(--accent-green); }
+.epanel-badge-warn { background: rgba(var(--accent-red-rgb), 0.15); color: var(--accent-red); }
+.epanel-badge-info { background: rgba(var(--accent-blue-rgb), 0.15); color: var(--accent-blue); }
+
+/* ---------- Inline status notes ---------- */
+.epanel-inline-note {
+  font-size: 11.5px;
+  color: var(--text-overlay);
+}
+.epanel-inline-ok {
+  font-size: 11.5px;
+  color: var(--accent-green);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.epanel-inline-err {
+  font-size: 11.5px;
+  color: var(--accent-red);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ---------- Download progress ---------- */
+.epanel-progress {
+  position: relative;
+  height: 14px;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.06);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.epanel-progress-bar {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal));
+  transition: width 0.2s ease-out;
+}
+.epanel-progress-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-on-accent);
+  text-shadow: 0 0 2px rgba(var(--surface-tint-rgb, 255, 255, 255), 0.35);
+}
+
+/* Reused by the workspace-index build button. Scoped to .epanel-* so it
+   doesn't leak into other panels that define their own .spinning rule. */
+.epanel-body .spinning {
+  animation: epanel-spin 1s linear infinite;
+}
+
+@keyframes epanel-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

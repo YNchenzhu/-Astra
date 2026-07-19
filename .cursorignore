@@ -1,0 +1,25 @@
+﻿# Audit fix (A-2) — stop the Cursor IDE from surfacing AGENTS.md / SOUL.md /
+# USER.md from inactive git worktrees as `always_applied_workspace_rules`.
+#
+# Each worktree under `.claude/worktrees/` carries its own copy of the
+# proactive-agent skill files (SOUL.md / USER.md / AGENTS.md). The host
+# IDE walks the entire workspace looking for rule files and injects every
+# match — so the main agent ends up reading 3-5 conflicting identity /
+# workflow declarations pointing at paths that don't exist in the active
+# checkout. We had no `.cursorignore` before; this file scopes rule
+# discovery (and search indexing) to the active working tree.
+
+.claude/worktrees/**
+
+# Defense-in-depth: never let `.git/**` leak into rules / indexing.
+.git/**
+
+# Build artifacts — also not interesting for rule discovery.
+dist/**
+dist-electron/**
+release/**
+node_modules/**
+
+# Bundled language servers / large model assets are not source rules.
+bundled-lsp/**
+resources/embeddings/**

@@ -1,0 +1,93 @@
+.activity-bar {
+  width: var(--activitybar-width);
+  background: var(--bg-overlay);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-right: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.activity-bar-top,
+.activity-bar-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.activity-bar-item {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.activity-bar-item:hover {
+  color: var(--text-primary);
+}
+
+.activity-bar-item.active {
+  color: var(--text-primary);
+}
+
+.activity-bar-item.active::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--accent-blue);
+  border-radius: 1px;
+}
+
+/* Sparkles icon 特殊处理 */
+.activity-bar-item.active:not(:has([data-lucide="sparkles"]))::before {
+  background: var(--accent-blue);
+}
+
+.activity-bar-item:has([data-lucide="sparkles"]).active::before {
+  background: var(--accent-mauve);
+}
+
+/* ─── Bundle entry-point cluster (Phase 1 stub) ───────────────────────
+   Groups the three Bundle-scoped actions (Bundle Gallery / Workbench /
+   Running Agents) above the legacy sidebar switchers. Draws a thin
+   divider beneath the group so the two zones are visually separated
+   without drawing attention. The stubs themselves look exactly like
+   other activity-bar items; they're slightly smaller icons (22 vs 24)
+   to hint at a secondary grouping. */
+
+.activity-bar-bundle-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--border-color);
+  width: 100%;
+  position: relative;
+}
+
+.activity-bar-bundle-stub {
+  /* 与 .activity-bar-item 完全一致的视觉反馈节奏:只过渡 color;
+     原先 opacity:0.75→1 的 100ms 过渡让 hover 感觉"滞后一拍",
+     用户以为 UI 卡顿。去掉后瞬时响应。 */
+  transition: color var(--transition-fast);
+}
+
+.activity-bar-bundle-stub:hover {
+  /* Subtle mauve tint on hover — same accent family used by the Bundle
+     label in StatusBar, so the two "bundle-related" surfaces feel
+     connected without being shouty. */
+  color: var(--accent-mauve, #cba6f7);
+}

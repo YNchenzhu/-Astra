@@ -1,0 +1,140 @@
+.statusbar {
+  height: var(--statusbar-height);
+  background: var(--bg-overlay);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.statusbar-left,
+.statusbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.statusbar-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  height: 100%;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.statusbar-item:hover {
+  background: var(--hover-bg);
+}
+
+.statusbar-item svg {
+  flex-shrink: 0;
+}
+
+.statusbar-branch {
+  color: var(--accent-blue);
+}
+
+.statusbar-branch:hover {
+  background: rgba(var(--accent-blue-rgb), 0.1);
+}
+
+/* Bundle identifier — read-only in Phase 1. Uses the mauve accent to
+   set it apart from git / diagnostics / workspace-index items. Mirrors
+   the agentType badge colour used inside AgentBlock. */
+.statusbar-bundle {
+  color: var(--accent-mauve, #cba6f7);
+  font-weight: 500;
+}
+
+.statusbar-clickable {
+  background: none;
+  border: none;
+  font: inherit;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+/* LSP badge: neutral by default, amber if any language server is quarantined / crashing. */
+.statusbar-lsp {
+  color: var(--text-secondary);
+}
+.statusbar-lsp.statusbar-lsp-warning {
+  color: var(--accent-yellow, var(--text-warning));
+}
+.statusbar-lsp.statusbar-lsp-warning:hover {
+  background: rgba(var(--accent-yellow-rgb), 0.1);
+}
+
+/* Workspace semantic-index indicator. Sits on the left half of the status
+   bar (next to diagnostics) so the user always sees build progress even
+   while navigating between Settings panels. */
+.statusbar-wsindex {
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+.statusbar-wsindex:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.statusbar-wsindex-active {
+  color: var(--accent-blue);
+  background: rgba(var(--accent-blue-rgb), 0.08);
+}
+.statusbar-wsindex-active:hover {
+  background: rgba(var(--accent-blue-rgb), 0.15);
+}
+.statusbar-wsindex-error {
+  color: var(--accent-red, #f38ba8);
+}
+.statusbar-wsindex-error:hover {
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.12);
+}
+.statusbar-wsindex-spin {
+  animation: statusbar-wsindex-rotate 1s linear infinite;
+}
+@keyframes statusbar-wsindex-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Background task pill — upstream parity for the spinner pill. */
+.statusbar-task-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+.statusbar-task-pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-blue, #74c7ec);
+  animation: statusbar-task-pill-pulse 1.6s ease-in-out infinite;
+}
+.statusbar-task-pill-cta .statusbar-task-pill-dot {
+  background: var(--accent-yellow, #f9e2af);
+}
+.statusbar-task-pill-input .statusbar-task-pill-dot {
+  background: var(--accent-red, #f38ba8);
+  animation-duration: 0.9s;
+}
+.statusbar-task-pill-badge {
+  background: var(--accent-red, #f38ba8);
+  color: white;
+  border-radius: 8px;
+  padding: 0 5px;
+  font-size: 10px;
+  line-height: 14px;
+  font-weight: 600;
+}
+@keyframes statusbar-task-pill-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}

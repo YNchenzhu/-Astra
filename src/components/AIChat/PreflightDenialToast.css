@@ -1,0 +1,113 @@
+/**
+ * Stage 4.3 — Preflight denial toast strip styling.
+ *
+ * Positioned absolutely in the bottom-right of the chat panel; stacks new
+ * denials downward. Uses red accent (theme-aware via tokens, with safe
+ * fallback) for "denied by policy" visual semantics.
+ */
+
+.preflight-denial-toast-stack {
+  position: absolute;
+  bottom: 96px; /* leave room for the input bar */
+  right: 16px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 360px;
+  pointer-events: none;
+}
+
+.preflight-denial-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--ui-bg-elevated, #2a2a2a);
+  border: 1px solid rgba(var(--accent-red-rgb), 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  font-size: 12px;
+  color: var(--ui-fg-primary, #fff);
+  pointer-events: auto;
+  animation: preflight-denial-toast-in 180ms ease-out;
+}
+
+@keyframes preflight-denial-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Audit P1 §5.2 — amber accent for `tool_preempted` info toasts. */
+.preflight-denial-toast--warn {
+  border-color: rgba(230, 170, 60, 0.5);
+}
+
+.preflight-denial-toast--warn .preflight-denial-toast-icon {
+  color: rgb(230, 170, 60);
+}
+
+/* Audit P2-1 — strong red accent for `hitl_persistence_failed` error toasts. */
+.preflight-denial-toast--error {
+  border-color: rgba(var(--accent-red-rgb), 0.8);
+}
+
+.preflight-denial-toast-icon {
+  color: rgb(240, 100, 100);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.preflight-denial-toast-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.preflight-denial-toast-title {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.preflight-denial-toast-title code {
+  font-family: var(--ui-font-mono, monospace);
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+.preflight-denial-toast-reason {
+  color: var(--ui-fg-secondary, #aaa);
+  font-size: 11px;
+  margin-top: 2px;
+  word-break: break-word;
+}
+
+.preflight-denial-toast-rule {
+  color: var(--ui-fg-tertiary, #777);
+  font-size: 10px;
+  margin-top: 4px;
+  font-family: var(--ui-font-mono, monospace);
+}
+
+.preflight-denial-toast-close {
+  background: transparent;
+  border: none;
+  color: var(--ui-fg-tertiary, #888);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.preflight-denial-toast-close:hover {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  color: var(--ui-fg-primary, #fff);
+}

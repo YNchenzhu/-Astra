@@ -1,0 +1,356 @@
+/* Anchored to full-width .chat-panel-header; width is chat column, not viewport */
+.conversation-list-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 16px;
+  z-index: 400;
+  width: min(380px, calc(100% - 32px));
+  max-height: min(420px, 72vh);
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeIn 0.12s ease;
+}
+
+.conversation-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.conversation-list-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.conversation-list-header-btn {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-base);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.conversation-list-header-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.conversation-list-header-btn--danger {
+  border-color: rgba(var(--accent-red-rgb), 0.35);
+  color: var(--accent-red, var(--accent-red));
+}
+
+.conversation-list-header-btn--danger:hover {
+  background: rgba(var(--accent-red-rgb), 0.12);
+  color: var(--accent-red, var(--accent-red));
+}
+
+.conversation-list-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.conversation-list-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: rgba(var(--bg-surface1-rgb, 69, 71, 90), 0.3);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.conversation-list-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.conversation-list-empty {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.conversation-list-group {
+  margin-bottom: 6px;
+}
+
+.conversation-list-group:last-child {
+  margin-bottom: 0;
+}
+
+.conversation-list-group-label {
+  padding: 6px 10px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.conversation-list-group-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.conversation-list-check {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+.conversation-list-check input {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--accent-blue, var(--accent-blue));
+}
+
+.conversation-list-drag-handle {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: transparent;
+  cursor: grab;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.conversation-list-item:hover .conversation-list-drag-handle {
+  color: var(--text-muted);
+}
+
+.conversation-list-drag-handle:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.conversation-list-drag-handle:active {
+  cursor: grabbing;
+}
+
+.conversation-list-item--drop-target.conversation-list-item--drop-before {
+  box-shadow: inset 0 2px 0 0 var(--accent-blue, var(--accent-blue));
+}
+
+.conversation-list-item--drop-target.conversation-list-item--drop-after {
+  box-shadow: inset 0 -2px 0 0 var(--accent-blue, var(--accent-blue));
+}
+
+.conversation-list-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.conversation-list-item:hover {
+  background: var(--hover-bg);
+}
+
+.conversation-list-item.active {
+  background: rgba(var(--accent-blue-rgb), 0.1);
+}
+
+.conversation-list-item-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.conversation-list-item-title {
+  font-size: 12px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+
+.conversation-list-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.conversation-list-item-dot {
+  color: var(--text-muted);
+}
+
+.conversation-list-item-delete {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: transparent;
+  transition: all 0.15s;
+}
+
+.conversation-list-item:hover .conversation-list-item-delete {
+  color: var(--text-muted);
+}
+
+.conversation-list-item-delete:hover {
+  background: rgba(var(--accent-red-rgb), 0.15);
+  color: var(--accent-red, var(--accent-red)) !important;
+}
+
+/* ── Actions container (rename + delete) ── */
+
+.conversation-list-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.conversation-list-item-action {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: transparent;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.conversation-list-item:hover .conversation-list-item-action {
+  color: var(--text-muted);
+}
+
+.conversation-list-item-action:hover {
+  background: rgba(var(--accent-blue-rgb), 0.15);
+  color: var(--accent-blue) !important;
+}
+
+/* ── Rename input ── */
+
+.conversation-list-item-rename-input {
+  width: 100%;
+  height: 22px;
+  padding: 2px 6px;
+  font-size: 12px;
+  color: var(--text-primary);
+  background: var(--bg-base);
+  border: 1px solid var(--accent-blue);
+  border-radius: 4px;
+  outline: none;
+  font-family: inherit;
+}
+
+.conversation-list-item-rename-input:focus {
+  border-color: var(--accent-blue);
+}
+
+/* ── Active streaming indicator ── */
+
+.conversation-list-item--streaming {
+  background: rgba(var(--accent-green-rgb), 0.06);
+}
+
+.conversation-list-item--streaming:hover {
+  background: rgba(var(--accent-green-rgb), 0.10);
+}
+
+.conversation-list-pulse {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-green, var(--accent-green));
+  margin-right: 5px;
+  flex-shrink: 0;
+  vertical-align: middle;
+  animation: conv-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes conv-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.conversation-list-running-badge {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(var(--accent-green-rgb), 0.15);
+  color: var(--accent-green, var(--accent-green));
+  line-height: 1.3;
+}
+
+/* Sprint 4.3: 对话列表顶部的工作包上下文提示 */
+.conversation-list-bundle-hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  background: rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.06);
+  border-bottom: 1px solid rgba(var(--accent-mauve-rgb, 203, 166, 247), 0.18);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.conversation-list-bundle-hint > svg {
+  color: var(--accent-mauve, #cba6f7);
+  flex-shrink: 0;
+}
+
+.conversation-list-bundle-hint strong {
+  color: var(--accent-mauve, #cba6f7);
+  font-weight: 600;
+}
+
+.conversation-list-bundle-hint-dim {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 10px;
+  margin-left: auto;
+  opacity: 0.75;
+}
+
+ 

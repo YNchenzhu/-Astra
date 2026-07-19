@@ -1,0 +1,275 @@
+.attachment-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.attachment-preview-panel {
+  width: min(900px, 100%);
+  max-height: 85vh;
+  background: var(--bg-primary, var(--bg-base));
+  color: var(--text-primary, var(--text-primary));
+  border: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  border-radius: 10px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.attachment-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.06);
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.02);
+}
+
+.attachment-preview-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.attachment-preview-title-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.attachment-preview-name {
+  font-weight: 600;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-preview-subtitle {
+  font-size: 11px;
+  color: var(--text-muted, var(--text-overlay));
+  line-height: 1.3;
+}
+
+.attachment-preview-close {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-muted, var(--text-overlay));
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.attachment-preview-close:hover {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  color: var(--text-primary, var(--text-primary));
+}
+
+.attachment-preview-body {
+  padding: 16px;
+  overflow: auto;
+  flex: 1;
+}
+
+.attachment-preview-note {
+  font-size: 12px;
+  color: var(--text-muted, var(--text-overlay));
+  padding: 40px 0;
+  text-align: center;
+}
+
+.attachment-preview-error {
+  padding: 16px;
+  background: rgba(var(--accent-red-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-red-rgb), 0.3);
+  border-radius: 8px;
+  color: var(--accent-red);
+  font-size: 12px;
+}
+
+.attachment-preview-error pre {
+  margin: 8px 0 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+}
+
+.attachment-preview-image-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.attachment-preview-image-wrap img {
+  max-width: 100%;
+  max-height: 72vh;
+  border-radius: 6px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+
+.attachment-preview-pages {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.attachment-preview-page {
+  margin: 0;
+  max-width: 100%;
+}
+
+.attachment-preview-page img {
+  max-width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+  display: block;
+}
+
+.attachment-preview-page figcaption {
+  text-align: center;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-muted, var(--text-overlay));
+}
+
+.attachment-preview-text {
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.attachment-preview-code {
+  margin: 0;
+  padding: 12px;
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.03);
+  border-radius: 6px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  color: var(--text-secondary, var(--text-secondary));
+}
+
+.attachment-preview-markdown {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.attachment-preview-markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 11.5px;
+  margin: 8px 0;
+}
+
+.attachment-preview-markdown th,
+.attachment-preview-markdown td {
+  border: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+  padding: 4px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.attachment-preview-markdown th {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.04);
+  font-weight: 600;
+}
+
+.attachment-preview-markdown pre {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.03);
+  padding: 10px;
+  border-radius: 6px;
+  overflow: auto;
+}
+
+.attachment-preview-markdown code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11.5px;
+}
+
+.attachment-preview-trunc-note {
+  margin-top: 12px;
+  padding: 8px 10px;
+  font-size: 11px;
+  color: var(--accent-yellow);
+  background: rgba(var(--accent-yellow-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-yellow-rgb), 0.25);
+  border-radius: 6px;
+}
+
+.attachment-preview-iframe {
+  width: 100%;
+  height: 72vh;
+  border: none;
+  /* iframe content (PDF / HTML) renders against white internally —
+     keep the fallback background white so the canvas matches the
+     document, regardless of the surrounding chat theme. */
+  background: #fff;
+  border-radius: 6px;
+}
+
+.attachment-preview-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  font-size: 11.5px;
+  color: var(--text-muted, var(--text-overlay));
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.03);
+  border: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.06);
+  border-radius: 6px;
+}
+.attachment-preview-note-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.5;
+}
+.attachment-preview-note-item svg {
+  margin-top: 2px;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+.attachment-preview-sheet-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.attachment-preview-sheet-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: var(--accent-yellow, #e5c07b);
+  background: rgba(var(--accent-yellow-rgb, 229, 192, 123), 0.08);
+  border: 1px solid rgba(var(--accent-yellow-rgb, 229, 192, 123), 0.25);
+  border-radius: 999px;
+}
+.attachment-preview-sheet-chip .attachment-preview-sheet-name {
+  font-weight: 600;
+}
+.attachment-preview-sheet-chip .attachment-preview-sheet-bits {
+  opacity: 0.85;
+}
+

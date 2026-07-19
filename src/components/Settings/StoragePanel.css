@@ -1,0 +1,131 @@
+/* 与 MemoryPanel / global 主题变量一致；勿使用未定义的 --bg-secondary 浅色 fallback */
+
+.storage-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 12px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.storage-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface, var(--bg-base));
+}
+
+.storage-card-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.storage-description {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-muted, var(--text-secondary));
+}
+
+.storage-path-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.storage-path-field {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md, 8px);
+  font-size: 12px;
+  background: var(--bg-input, var(--bg-base));
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: border-color var(--transition-fast, 0.1s ease),
+    box-shadow var(--transition-fast, 0.1s ease);
+}
+
+.storage-path-field::placeholder {
+  color: var(--text-muted);
+}
+
+.storage-path-field:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-blue) 18%, transparent);
+}
+
+.storage-select-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md, 8px);
+  background: var(--bg-base);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background var(--transition-fast, 0.1s ease),
+    border-color var(--transition-fast, 0.1s ease),
+    color var(--transition-fast, 0.1s ease);
+}
+
+.storage-select-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+  border-color: var(--accent-blue);
+}
+
+.storage-select-btn:active {
+  background: var(--active-bg, var(--hover-bg));
+}
+
+.storage-info {
+  padding: 10px 12px;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid color-mix(in srgb, var(--accent-blue) 22%, var(--border-color));
+  background: color-mix(in srgb, var(--accent-blue) 8%, var(--bg-surface));
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.storage-info p {
+  margin: 0;
+}
+
+.storage-info p + p {
+  margin-top: 8px;
+}
+
+.storage-info strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.storage-info code {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--bg-overlay);
+  color: var(--accent-teal);
+  word-break: break-all;
+}

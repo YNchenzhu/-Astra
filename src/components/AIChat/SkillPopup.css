@@ -1,0 +1,126 @@
+.skill-popup {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin-bottom: 4px;
+  background: var(--color-bg-primary, var(--bg-base));
+  border: 1px solid var(--color-border, var(--bg-surface0));
+  border-radius: 8px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  max-height: 320px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.skill-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary, var(--text-secondary));
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--color-border, var(--bg-surface0));
+}
+
+.skill-popup-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 4px;
+}
+
+.skill-popup-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.1s;
+}
+
+.skill-popup-item:hover,
+.skill-popup-item.selected {
+  background: var(--color-bg-hover, var(--bg-surface0));
+}
+
+.skill-popup-item-main {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.skill-popup-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary, var(--text-primary));
+  font-family: var(--font-mono, monospace);
+}
+
+.skill-popup-item-args {
+  font-size: 11px;
+  color: var(--color-text-secondary, var(--text-secondary));
+  font-family: var(--font-mono, monospace);
+}
+
+.skill-popup-item-desc {
+  font-size: 12px;
+  color: var(--color-text-secondary, var(--text-secondary));
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skill-popup-item-source {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--color-bg-secondary, var(--bg-surface1));
+  color: var(--color-text-secondary, var(--text-secondary));
+}
+
+.skill-popup-item-source.project {
+  background: rgba(var(--accent-green-rgb), 0.18);
+  color: var(--accent-green);
+}
+
+.skill-popup-item-source.user {
+  background: rgba(var(--accent-blue-rgb), 0.18);
+  color: var(--accent-blue);
+}
+
+.skill-popup-item-source.manual-only {
+  background: rgba(var(--accent-yellow-rgb), 0.18);
+  color: var(--accent-yellow);
+  right: 60px;
+}
+
+.skill-popup-footer {
+  display: flex;
+  gap: 12px;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: var(--color-text-secondary, var(--text-secondary));
+  border-top: 1px solid var(--color-border, var(--bg-surface0));
+}
+
+.skill-popup-footer kbd {
+  display: inline-block;
+  padding: 0 4px;
+  font-size: 10px;
+  font-family: var(--font-mono, monospace);
+  background: var(--color-bg-secondary, var(--bg-surface1));
+  border-radius: 3px;
+  border: 1px solid var(--color-border, var(--text-subtext));
+}
+

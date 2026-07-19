@@ -1,0 +1,196 @@
+.permission-prompt-card {
+  margin: 10px 12px;
+  border: 1px solid rgba(var(--accent-yellow-rgb), 0.35);
+  background: rgba(var(--bg-surface0-rgb, 49, 50, 68), 0.65);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.permission-prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(var(--accent-yellow-rgb), 0.18);
+}
+
+.permission-prompt-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-yellow);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.permission-prompt-mode {
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 2px 6px;
+}
+
+.permission-prompt-body {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.permission-prompt-description {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.permission-prompt-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.permission-prompt-tool {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.permission-prompt-danger {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--accent-red);
+  border: 1px solid rgba(var(--accent-red-rgb), 0.4);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.permission-prompt-input {
+  margin: 0;
+  max-height: 220px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 1.45;
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.permission-prompt-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(var(--accent-yellow-rgb), 0.18);
+}
+
+.permission-prompt-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.permission-prompt-btn.deny {
+  background: rgba(var(--accent-red-rgb), 0.14);
+  color: var(--accent-red);
+}
+
+.permission-prompt-btn.allow {
+  background: rgba(var(--accent-green-rgb), 0.14);
+  color: var(--accent-green);
+}
+
+.permission-prompt-btn:hover {
+  opacity: 0.9;
+}
+
+/* ── Diff preview section ── */
+
+.permission-diff-section {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.permission-diff-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: rgba(var(--bg-surface-rgb, 24, 24, 37), 0.6);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+
+.permission-diff-header:hover {
+  background: rgba(var(--bg-base-rgb, 30, 30, 46), 0.8);
+}
+
+.permission-diff-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.permission-diff-file {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.permission-diff-stats {
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.diff-stat-added {
+  color: var(--accent-green);
+}
+
+.diff-stat-removed {
+  color: var(--accent-red);
+}
+
+.permission-diff-toggle {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.permission-diff-toggle:hover {
+  background: rgba(var(--bg-surface0-rgb, 49, 50, 68), 0.8);
+  color: var(--text-primary);
+}
+
+.permission-diff-editor {
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.permission-diff-editor .monaco-editor {
+  background: var(--bg-base) !important;
+}
+
+.permission-diff-editor .monaco-editor .margin {
+  background: var(--bg-base) !important;
+}
+

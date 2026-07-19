@@ -1,0 +1,786 @@
+/**
+ * AgentEditor — middle column layout + tab chrome + field rows.
+ *
+ * Sprint 1 is read-only, so field values render as `<span>`s. Sprint 2
+ * will swap these for `<input>` / `<textarea>` without changing the
+ * outer `.agent-editor-field` row structure — the visual weight stays
+ * identical between read and write modes.
+ */
+
+.agent-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.agent-editor-header {
+  padding: 7px 12px 6px;
+  border-bottom: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.06));
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.agent-editor-header-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.agent-editor-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.agent-editor-dirty-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-yellow, #f9e2af);
+  margin-left: 2px;
+  box-shadow: 0 0 0 2px rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.22);
+}
+
+/* ─── Buttons ─────────────────────────────────────────────────────── */
+
+.agent-editor-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font: inherit;
+  font-size: 11px;
+  line-height: 1.3;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast, 0.12s),
+    border-color var(--transition-fast, 0.12s),
+    color var(--transition-fast, 0.12s),
+    opacity var(--transition-fast, 0.12s);
+  outline: none;
+}
+.agent-editor-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.agent-editor-btn:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: 1px;
+}
+
+.agent-editor-btn-ghost {
+  border-color: var(--border-color, rgba(255, 255, 255, 0.08));
+  color: var(--text-secondary);
+}
+.agent-editor-btn-ghost:hover:not(:disabled) {
+  background: rgba(var(--surface-tint-rgb), 0.04);
+  color: var(--text-primary);
+}
+.agent-editor-btn-ghost.is-active {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.14);
+  color: var(--accent-blue, #89b4fa);
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.3);
+}
+
+.agent-editor-btn-primary {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.18);
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.35);
+  color: var(--accent-blue, #89b4fa);
+  font-weight: 500;
+}
+.agent-editor-btn-primary:hover:not(:disabled) {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.28);
+  border-color: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.5);
+}
+
+.is-spinning {
+  animation: agent-editor-spin 0.9s linear infinite;
+}
+@keyframes agent-editor-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ─── Inline feedback (toast + error banner) ───────────────────────── */
+
+.agent-editor-toast {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 16px;
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  line-height: 1.4;
+  animation: agent-editor-toast-in 0.18s ease-out;
+  flex-shrink: 0;
+}
+.agent-editor-toast.is-ok {
+  background: rgba(var(--accent-green-rgb, 166, 227, 161), 0.12);
+  border: 1px solid rgba(var(--accent-green-rgb, 166, 227, 161), 0.28);
+  color: var(--accent-green, #a6e3a1);
+}
+.agent-editor-toast.is-error {
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.14);
+  border: 1px solid rgba(var(--accent-red-rgb, 243, 139, 168), 0.3);
+  color: var(--accent-red, #f38ba8);
+}
+.agent-editor-toast-dismiss {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 4px;
+}
+
+.agent-editor-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 16px 0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  color: var(--accent-red, #f38ba8);
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.12);
+  border: 1px solid rgba(var(--accent-red-rgb, 243, 139, 168), 0.25);
+  flex-shrink: 0;
+}
+
+@keyframes agent-editor-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.agent-editor-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.agent-editor-type {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  background: rgba(var(--surface-tint-rgb), 0.04);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.agent-editor-primary-badge {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.16);
+  color: var(--accent-yellow, #f9e2af);
+}
+
+.agent-editor-tagline {
+  padding: 2px 12px 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ─── Tabs ────────────────────────────────────────────────────────── */
+
+.agent-editor-tabs {
+  display: flex;
+  gap: 1px;
+  padding: 4px 10px 0;
+  border-bottom: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.06));
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+
+.agent-editor-tab {
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 11px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast, 0.12s),
+    border-color var(--transition-fast, 0.12s);
+  white-space: nowrap;
+  outline: none;
+}
+.agent-editor-tab:hover {
+  color: var(--text-primary);
+}
+.agent-editor-tab.is-active {
+  color: var(--accent-blue, #89b4fa);
+  border-bottom-color: var(--accent-blue, #89b4fa);
+}
+.agent-editor-tab:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: -1px;
+}
+
+/* ─── Panel body (scroll region) ──────────────────────────────────── */
+
+.agent-editor-panels {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.agent-editor-panel {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ─── Field row (read-only) ───────────────────────────────────────── */
+
+.agent-editor-field {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 10px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(var(--surface-tint-rgb), 0.03);
+  align-items: baseline;
+}
+
+.agent-editor-field-label {
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.agent-editor-field-value {
+  color: var(--text-primary);
+  font-size: 11.5px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.agent-editor-field-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.agent-editor-field-locked {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(var(--surface-tint-rgb), 0.025);
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+/* ─── Form controls ───────────────────────────────────────────────── */
+
+.agent-editor-input {
+  display: block;
+  width: 100%;
+  padding: 4px 7px;
+  font: inherit;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-primary);
+  background: var(--bg-input-soft);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 4px;
+  box-sizing: border-box;
+  outline: none;
+  transition:
+    border-color var(--transition-fast, 0.12s),
+    background var(--transition-fast, 0.12s);
+}
+.agent-editor-input:hover {
+  border-color: var(--border-hover);
+}
+.agent-editor-input:focus {
+  border-color: var(--accent-blue, #89b4fa);
+  background: var(--bg-input-soft-strong);
+}
+
+.agent-editor-input-number {
+  max-width: 200px;
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+}
+
+.agent-editor-textarea {
+  resize: vertical;
+  min-height: 48px;
+  line-height: 1.5;
+}
+
+.agent-editor-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 13px) 50%,
+    calc(100% - 8px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 22px;
+  max-width: 260px;
+}
+
+.agent-editor-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text-secondary);
+  font-size: 11.5px;
+}
+.agent-editor-checkbox input[type='checkbox'] {
+  accent-color: var(--accent-blue, #89b4fa);
+  cursor: pointer;
+  margin: 0;
+}
+.agent-editor-checkbox:hover {
+  color: var(--text-primary);
+}
+
+.agent-editor-readonly-notice {
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.08);
+  border-left: 2px solid var(--accent-yellow, #f9e2af);
+  border-radius: 0 3px 3px 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-style: italic;
+}
+
+.agent-editor-field-value.mono,
+.agent-editor .mono {
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  font-size: 11.5px;
+}
+
+.agent-editor-field-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.agent-editor-multiline {
+  display: block;
+  white-space: pre-wrap;
+  line-height: 1.55;
+}
+
+/* ─── Bundle-meta view ────────────────────────────────────────────── */
+
+.agent-editor-bundle-meta {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.agent-editor-meta-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(var(--surface-tint-rgb), 0.03);
+  align-items: baseline;
+  font-size: 12px;
+}
+
+.agent-editor-meta-label {
+  color: var(--text-muted);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.agent-editor-meta-value {
+  color: var(--text-primary);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.agent-editor-meta-value.mono {
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  font-size: 11.5px;
+}
+
+.agent-editor-meta-hint {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.08);
+  border-left: 2px solid var(--accent-blue, #89b4fa);
+  border-radius: 0 4px 4px 0;
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+/* ─── Team summary ────────────────────────────────────────────────── */
+
+.agent-editor-team-summary {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.agent-editor-section-title {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.agent-editor-section {
+  margin-top: 12px;
+}
+
+.agent-editor-section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.agent-editor-team-members {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.agent-editor-team-member {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(var(--surface-tint-rgb), 0.025);
+  border-radius: 3px;
+  font-size: 11.5px;
+}
+
+.agent-editor-team-role {
+  font-size: 10.5px;
+  color: var(--accent-blue, #89b4fa);
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.12);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.agent-editor-team-stage {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+/* ─── Prompt tab ──────────────────────────────────────────────────── */
+
+.agent-editor-prompt-header {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(var(--surface-tint-rgb), 0.04);
+  margin-bottom: 4px;
+}
+
+.agent-editor-prompt-section {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(var(--surface-tint-rgb), 0.03);
+}
+
+.agent-editor-prompt-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.agent-editor-prompt-required {
+  font-size: 9.5px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(var(--accent-red-rgb, 243, 139, 168), 0.12);
+  color: var(--accent-red, #f38ba8);
+  font-weight: 500;
+}
+
+.agent-editor-prompt-hint {
+  margin-bottom: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.agent-editor-prompt-body {
+  margin: 0;
+  padding: 8px 10px;
+  background: var(--bg-input-soft);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  font-size: 11px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 320px;
+  overflow-y: auto;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.agent-editor-builtin-notice {
+  padding: 12px 14px;
+  border-radius: 5px;
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.08);
+  border-left: 2px solid var(--accent-yellow, #f9e2af);
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.agent-editor-builtin-notice p {
+  margin: 0;
+}
+.agent-editor-builtin-notice p + p {
+  margin-top: 6px;
+}
+
+.agent-editor-builtin-notice code {
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  font-size: 11px;
+  background: rgba(var(--surface-tint-rgb), 0.06);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+/* ─── 提示词 Tab 工具栏与自由文本 ─────────────────────────────────── */
+
+.agent-editor-prompt-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 0 6px;
+  border-bottom: 1px solid rgba(var(--surface-tint-rgb), 0.04);
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+/* 模式切换器：引导填空 / 段落编辑 / 自由文本 */
+
+.agent-editor-prompt-mode-switch {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 6px;
+  background: rgba(var(--surface-tint-rgb), 0.04);
+  border: 1px solid var(--border-color, rgba(var(--surface-tint-rgb), 0.06));
+}
+
+.agent-editor-prompt-mode-btn {
+  padding: 3px 9px;
+  font: inherit;
+  font-size: 11px;
+  line-height: 1.3;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast, 0.12s),
+    color var(--transition-fast, 0.12s);
+  outline: none;
+}
+
+.agent-editor-prompt-mode-btn:hover:not(.is-active) {
+  color: var(--text-primary);
+  background: rgba(var(--surface-tint-rgb), 0.05);
+}
+
+.agent-editor-prompt-mode-btn.is-active {
+  background: rgba(var(--accent-blue-rgb, 137, 180, 250), 0.2);
+  color: var(--accent-blue, #89b4fa);
+  font-weight: 500;
+}
+
+.agent-editor-prompt-mode-btn:focus-visible {
+  outline: 1px solid var(--accent-blue, #89b4fa);
+  outline-offset: 1px;
+}
+
+.agent-editor-prompt-toolbar-title {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.agent-editor-prompt-toolbar-actions {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.agent-editor-prompt-raw {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-input-soft);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 4px;
+  outline: none;
+  resize: vertical;
+  min-height: 240px;
+  transition: border-color 0.12s;
+}
+.agent-editor-prompt-raw:hover {
+  border-color: rgba(var(--surface-tint-rgb), 0.14);
+}
+.agent-editor-prompt-raw:focus {
+  border-color: var(--accent-blue, #89b4fa);
+}
+
+.agent-editor-prompt-init-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+/* 团队成员字段占用较宽的右列,标题放在上方而非左列。 */
+.agent-editor-field-members .agent-editor-field-label {
+  align-self: flex-start;
+  padding-top: 6px;
+}
+.agent-editor-field-members .agent-editor-field-value {
+  min-width: 0;
+}
+
+.agent-editor-mcp-inline-warn {
+  margin-top: 6px;
+  padding: 6px 9px;
+  background: rgba(var(--accent-yellow-rgb, 249, 226, 175), 0.08);
+  border-left: 2px solid var(--accent-yellow, #f9e2af);
+  border-radius: 0 3px 3px 0;
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.agent-editor-mcp-inline-warn code {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  background: rgba(var(--surface-tint-rgb), 0.06);
+  padding: 0 3px;
+  border-radius: 2px;
+}
+
+/* ─── Hooks tab ───────────────────────────────────────────────────── */
+
+.agent-editor-hook-row {
+  padding: 8px 10px;
+  background: rgba(var(--surface-tint-rgb), 0.025);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.agent-editor-hook-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--text-primary);
+}
+
+.agent-editor-hook-sep {
+  color: var(--text-muted);
+}
+
+.agent-editor-hook-cmd {
+  margin: 0;
+  padding: 5px 8px;
+  background: var(--bg-input-soft);
+  border-radius: 3px;
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: var(--text-primary);
+}
+
+.agent-editor-hook-meta {
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+/* ─── Misc ────────────────────────────────────────────────────────── */
+
+.agent-editor-empty-block {
+  padding: 14px 12px;
+  border-radius: 4px;
+  background: rgba(var(--surface-tint-rgb), 0.02);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  line-height: 1.55;
+  font-style: italic;
+}

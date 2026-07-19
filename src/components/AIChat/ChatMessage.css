@@ -1,0 +1,622 @@
+/*
+ * Compact-boundary divider — rendered when host-side context
+ * management ran (snip / micro / auto / reactive / stripped image).
+ * Minimal, non-interactive: a centered dim line with the action label
+ * (and optional "freed Nt") in the middle, flanked by 1px hairlines.
+ * Matches upstream-main's `✻ Conversation compacted` terminal divider
+ * style. Fixed-ish height keeps the virtual-scroll measurer happy.
+ */
+.chat-compact-boundary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 24px;
+  min-height: 22px;
+  color: var(--text-tertiary, var(--text-secondary));
+  opacity: 0.65;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  user-select: none;
+  pointer-events: none;
+}
+
+.chat-compact-boundary::before,
+.chat-compact-boundary::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color, rgba(127, 127, 127, 0.18));
+}
+
+.chat-compact-boundary-text {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 用户消息内嵌的引用卡片（与输入区共用 ChatInput.css 中的 .chat-ref-*） */
+.chat-ref-card--in-message {
+  margin-bottom: 10px;
+  max-width: 100%;
+}
+
+.chat-ref-tag--message {
+  cursor: pointer;
+}
+
+.chat-ref-tag--message:hover {
+  border-color: rgba(var(--accent-blue-rgb), 0.35);
+}
+
+.chat-message {
+  display: flex;
+  gap: 12px;
+  padding: 16px 16px;
+  animation: slideUp 0.2s ease;
+}
+
+.chat-message.assistant {
+  background: rgba(var(--accent-blue-rgb), 0.03);
+}
+
+/* Sub-agent-only standalone message: same subtle tint as assistant bubbles
+   so the card visually belongs to the conversation area, not the input area
+   (both share --bg-surface background; the tint is what distinguishes them). */
+.chat-message.agent-only {
+  background: rgba(var(--accent-blue-rgb), 0.03);
+}
+
+.chat-message-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.chat-message.user .chat-message-avatar {
+  background: var(--active-bg);
+  color: var(--text-primary);
+}
+
+.chat-message.assistant .chat-message-avatar {
+  background: rgba(var(--accent-blue-rgb), 0.15);
+  color: var(--accent-blue);
+}
+
+.chat-assistant-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.chat-message-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-message-header {
+  margin-bottom: 6px;
+}
+
+.chat-message-role {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.chat-message-content {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  word-break: break-word;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.chat-inline-code {
+  background: var(--active-bg);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--accent-peach);
+}
+
+.chat-streaming-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--accent-blue);
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  animation: cursor-blink 1s steps(2) infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ===== Markdown Rendered Content ===== */
+
+.chat-message-text {
+  white-space: pre-wrap;
+}
+
+.chat-markdown-body {
+  overflow-x: auto;
+}
+
+.chat-markdown-body p {
+  margin: 0 0 8px 0;
+}
+
+.chat-markdown-body p:last-child {
+  margin-bottom: 0;
+}
+
+.chat-markdown-body h1,
+.chat-markdown-body h2,
+.chat-markdown-body h3,
+.chat-markdown-body h4 {
+  margin: 12px 0 6px 0;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.chat-markdown-body h1 { font-size: 18px; }
+.chat-markdown-body h2 { font-size: 16px; }
+.chat-markdown-body h3 { font-size: 14px; }
+.chat-markdown-body h4 { font-size: 13px; }
+
+.chat-markdown-body ul,
+.chat-markdown-body ol {
+  margin: 4px 0;
+  padding-left: 20px;
+}
+
+.chat-markdown-body li {
+  margin: 2px 0;
+}
+
+.chat-markdown-body li::marker {
+  color: var(--accent-blue);
+}
+
+.chat-markdown-body blockquote {
+  margin: 8px 0;
+  padding: 4px 12px;
+  border-left: 3px solid var(--accent-blue);
+  color: var(--text-secondary);
+  background: rgba(var(--accent-blue-rgb), 0.05);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.chat-markdown-body blockquote p {
+  margin: 0;
+}
+
+.chat-proactive-text .chat-markdown-body blockquote {
+  border-left-color: var(--accent-green);
+  background: rgba(var(--accent-green-rgb), 0.08);
+}
+
+.chat-markdown-body hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 12px 0;
+}
+
+.chat-markdown-body strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.chat-markdown-body em {
+  color: var(--text-secondary);
+}
+
+.chat-link,
+.chat-markdown-link {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
+.chat-link:hover,
+.chat-markdown-link:hover {
+  text-decoration: underline;
+}
+
+.chat-markdown-body img {
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  margin: 4px 0;
+}
+
+.chat-table-wrapper {
+  overflow-x: auto;
+  margin: 8px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.chat-markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.chat-markdown-body th {
+  background: var(--active-bg);
+  padding: 6px 10px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chat-markdown-body td {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.chat-markdown-body tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===== KaTeX math ===== */
+
+.chat-markdown-body .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 0;
+  margin: 8px 0;
+}
+
+.chat-markdown-body .katex {
+  font-size: 1.05em;
+}
+
+.chat-tool-uses {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-sub-agents {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ===== Animated Block Entry — Cherry Studio style ===== */
+
+.animated-block-wrapper {
+  animation: block-slide-in 0.3s ease-out;
+}
+
+@keyframes block-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Rewind Button ===== */
+
+.chat-message-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chat-rewind-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-left: auto;
+}
+
+.chat-message:hover .chat-rewind-btn {
+  display: flex;
+}
+
+.chat-rewind-btn:hover {
+  background: var(--active-bg);
+  color: var(--accent-blue);
+}
+
+/* When two header action buttons coexist (edit + rewind), only the first
+   should carry the auto margin that pushes the group to the right edge —
+   two auto margins would split the free space and float the first button
+   mid-header. */
+.chat-rewind-btn--sibling {
+  margin-left: 0;
+}
+
+/* ========== Inline user-message editing ========== */
+
+.chat-message-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-message-edit-input {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  padding: 8px 10px;
+  border: 1px solid rgba(var(--accent-blue-rgb), 0.4);
+  border-radius: var(--radius-md);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+  outline: none;
+}
+
+.chat-message-edit-input:focus {
+  border-color: var(--accent-blue);
+}
+
+.chat-message-edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-message-edit-send:not(:disabled) {
+  color: var(--accent-blue);
+  border-color: rgba(var(--accent-blue-rgb), 0.35);
+}
+
+.chat-message-edit-send:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ========== Message Timestamp (header) ========== */
+
+/* Compact, low-emphasis time chip rendered in the message header next to
+   the role name. Uses a `<time>` element so screen readers + the
+   `dateTime` ISO attribute give assistive tech the canonical timestamp,
+   while the visible text stays compact and locale-friendly. */
+.chat-message-time {
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--text-tertiary, var(--text-secondary));
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  padding: 2px 0 0;
+  cursor: default;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ========== Message Footer Actions (copy) ========== */
+
+.chat-message-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  /* Subtle entry — invisible until the message is hovered so it doesn't
+     compete visually with the content text. The bubble already has its
+     own background tint; tying visibility to :hover keeps the chrome
+     out of the way during quiet reading. */
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.chat-message:hover .chat-message-actions,
+.chat-message-actions:focus-within {
+  opacity: 1;
+}
+
+.chat-message-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--border-color, rgba(127, 127, 127, 0.18));
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-family: inherit;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+/* Icon-only variant (copy / regenerate) — square hit target, no label. */
+.chat-message-icon-btn {
+  width: 22px;
+  padding: 0;
+  justify-content: center;
+}
+
+.chat-message-copy:hover {
+  background: var(--active-bg);
+  color: var(--accent-blue);
+  border-color: rgba(var(--accent-blue-rgb), 0.35);
+}
+
+.chat-message-copy:active {
+  transform: translateY(0.5px);
+}
+
+.chat-message-copy:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 1px;
+}
+
+/* Success state — short-lived (~1.8s, gated by component state) so the
+   user gets unambiguous feedback without persistent visual noise. */
+.chat-message-copy--copied,
+.chat-message-copy--copied:hover {
+  color: var(--accent-green, var(--accent-blue));
+  border-color: rgba(var(--accent-blue-rgb), 0.35);
+  background: rgba(var(--accent-blue-rgb), 0.06);
+}
+
+/* ========== Message Attachments ========== */
+
+.chat-msg-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.chat-msg-attachment-item {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--surface-tint-rgb, 255, 255, 255), 0.08);
+}
+
+.chat-msg-attachment-img {
+  max-width: 200px;
+  max-height: 150px;
+  object-fit: contain;
+  border-radius: 4px;
+  display: block;
+}
+
+.chat-msg-attachment-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.05);
+  /* 2026-07 审计修复:span → button(可点击预览),重置按钮默认样式 */
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.chat-msg-attachment-file:hover {
+  background: rgba(var(--surface-tint-rgb, 255, 255, 255), 0.12);
+  color: var(--text-primary);
+}
+
+.chat-msg-attachment-file.is-error {
+  color: var(--accent-red, #e5534b);
+}
+
+.chat-msg-attachment-err {
+  font-size: 10px;
+  opacity: 0.85;
+}
+
+.chat-msg-attachment-spin {
+  animation: chat-msg-attachment-spin 1.2s linear infinite;
+}
+
+@keyframes chat-msg-attachment-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Memory citation */
+
+.memory-citation {
+  margin-left: 8px;
+}
+
+.memory-citation-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: none;
+  background: rgba(var(--accent-mauve-rgb), 0.1);
+  color: var(--accent-mauve);
+  font-size: 10px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.memory-citation-toggle:hover {
+  background: rgba(var(--accent-mauve-rgb), 0.18);
+}
+
+.memory-citation-list {
+  margin-top: 4px;
+  padding: 6px 8px;
+  background: rgba(var(--accent-mauve-rgb), 0.06);
+  border-radius: 6px;
+  border: 1px solid rgba(var(--accent-mauve-rgb), 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.memory-citation-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.memory-citation-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.memory-citation-type {
+  font-size: 10px;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: rgba(var(--accent-mauve-rgb), 0.15);
+  color: var(--accent-mauve);
+}
+
+.memory-citation-snippet {
+  color: var(--text-muted);
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+

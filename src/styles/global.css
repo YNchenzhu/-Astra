@@ -1,0 +1,683 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* the IDE Catppuccin Mocha 配色 */
+  --bg-base: #1e1e2e;
+  --bg-surface: #181825;
+  --bg-overlay: #11111b;
+  --bg-mantle: #181825;
+  --bg-crust: #11111b;
+  /* Surface layers — progressively lighter panels / inputs / hover states.
+     Kept as dedicated variables so individual component CSS can reference
+     them (no more hard-coded #313244 / #45475a scattered across the app). */
+  --bg-surface0: #313244;
+  --bg-surface1: #45475a;
+
+  --text-primary: #cdd6f4;
+  --text-secondary: #a6adc8;
+  --text-muted: #6c7086;
+  --text-subtext: #585b70;
+  /* Overlay2 (decorative disabled / very low-emphasis text) */
+  --text-overlay: #9399b2;
+
+  --text-error: #f38ba8;
+  --text-warning: #f9e2af;
+  --text-info: #89dceb;
+
+  --accent-blue: #89b4fa;
+  --accent-green: #a6e3a1;
+  --accent-red: #f38ba8;
+  --accent-yellow: #f9e2af;
+  --accent-peach: #fab387;
+  --accent-mauve: #cba6f7;
+  --accent-teal: #94e2d5;
+  --accent-pink: #f5c2e7;
+  --accent-lavender: #b4befe;
+
+  /* Semantic status (kept distinct from accents for cross-theme consistency) */
+  --status-success: #22c55e;
+  --status-success-strong: #16a34a;
+  --status-danger: #ef4444;
+  --status-danger-strong: #c62828;
+  --status-warning: #f59e0b;
+  --status-info: #3b82f6;
+
+  --bg-input: #1e1e2e;
+  --border-color: #383b50;
+  --hover-bg: #35384c;
+  --active-bg: #4a4d66;
+  --selection-bg: #4d506a;
+
+  --scrollbar-thumb: #45475a;
+  --scrollbar-track: transparent;
+
+  /* Readable shadow / focus glow color expressed with RGB components so
+     component CSS can do rgba(var(--shadow-rgb), 0.3). */
+  --shadow-rgb: 0, 0, 0;
+  --accent-blue-rgb:     137, 180, 250;
+  --accent-green-rgb:    166, 227, 161;
+  --accent-red-rgb:      243, 139, 168;
+  --accent-yellow-rgb:   249, 226, 175;
+  --accent-peach-rgb:    250, 179, 135;
+  --accent-mauve-rgb:    203, 166, 247;
+  --accent-teal-rgb:     148, 226, 213;
+  --accent-pink-rgb:     245, 194, 231;
+  --accent-lavender-rgb: 180, 190, 254;
+
+  /* RGB triplets for the surface palette. Mirrored per-theme below so
+     any component can do `rgba(var(--bg-surface0-rgb), 0.X)` and have it
+     follow theme switches. Previously only the hex versions existed, so
+     every `rgba(var(--bg-surface0-rgb, …), …)` call site silently fell
+     back to the Catppuccin-dark literal regardless of active theme. */
+  --bg-base-rgb:     30,  30,  46;
+  --bg-surface-rgb:  24,  24,  37;
+  --bg-overlay-rgb:  17,  17,  27;
+  --bg-surface0-rgb: 49,  50,  68;
+  --bg-surface1-rgb: 69,  71,  90;
+
+  --titlebar-height: 38px;
+  --activitybar-width: 48px;
+  --statusbar-height: 26px;
+  --tabbar-height: 36px;
+  --breadcrumb-height: 26px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+
+  /* 面板层次感阴影 — 让侧面板"浮"在编辑器上方 */
+  --panel-shadow: 2px 0 8px -2px rgba(0, 0, 0, 0.3);
+  --panel-shadow-right: 2px 0 8px -2px rgba(0, 0, 0, 0.3);
+  --panel-shadow-left: -2px 0 8px -2px rgba(0, 0, 0, 0.3);
+  --panel-shadow-terminal: 0 -2px 8px -2px rgba(0, 0, 0, 0.28);
+  --editor-inset-shadow: inset 0 0 20px rgba(0, 0, 0, 0.13);
+
+  --font-mono: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --transition-fast: 100ms ease;
+  --transition-normal: 200ms ease;
+
+  /* ---------------------------------------------------------------
+   * Compatibility aliases
+   * Several older panels (RulesPanel, SkillsPanel, ToolsPanel, …)
+   * were written against a VSCode-style variable scheme. Aliasing
+   * them here means those panels follow the theme automatically
+   * instead of falling back to hard-coded VSCode dark colours.
+   * --------------------------------------------------------------- */
+  --color-primary: var(--accent-blue);
+  --color-primary-hover: var(--accent-lavender);
+  --color-bg: var(--bg-base);
+  --color-bg-secondary: var(--bg-surface);
+  --color-bg-tertiary: var(--bg-surface0);
+  --color-border: var(--border-color);
+  --color-border-hover: var(--hover-bg);
+  --color-text: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-muted);
+
+  --bg-tertiary: var(--bg-surface0);
+  /* Foreground used on solid accent buttons. Overridden per-theme so
+     the contrast against `--accent-blue` / status fills always meets
+     WCAG AA. Default `#ffffff` is tuned for the light theme (5.4:1 on
+     `#3b5fe0`); dark + cursor themes flip it to near-black below. */
+  --text-on-accent: #ffffff;
+
+  /* Default tint tokens (mirrored to each :root[data-theme='*'] block). */
+  --surface-tint-rgb: 255, 255, 255;
+  --bg-input-soft: rgba(24, 24, 37, 0.6);
+  --bg-input-soft-strong: rgba(24, 24, 37, 0.8);
+  --bg-backdrop: rgba(17, 17, 27, 0.82);
+  --border-hover: rgba(255, 255, 255, 0.18);
+
+  /* ---------------------------------------------------------------
+   * `--ui-*` + `--bg-elevated` + `--text-tertiary` aliases.
+   *
+   * Several panels (OrchestrationTimeline, ArtifactDrawer,
+   * ReasoningTimeline, PreflightDenialToast …) were authored against
+   * a VS Code-ish variable scheme that was never wired up — every
+   * call site reads `var(--ui-bg-hover, #2a2a2a)` and falls back to
+   * the hard-coded dark literal, so they stay dark no matter which
+   * theme is active.
+   *
+   * Aliasing them here means those panels now follow the active
+   * theme automatically. Each alias points at a real semantic
+   * token (which is itself theme-overridden), so light / milk /
+   * cursor inherit correctly without any per-file edits.
+   * --------------------------------------------------------------- */
+  --ui-bg:           var(--bg-surface0);
+  --ui-bg-hover:     rgba(var(--surface-tint-rgb), 0.08);
+  --ui-bg-elevated:  var(--bg-overlay);
+  --ui-border:       var(--border-color);
+  --ui-fg-primary:   var(--text-primary);
+  --ui-fg-secondary: var(--text-secondary);
+  --ui-fg-tertiary:  var(--text-muted);
+  --ui-accent-bg:    rgba(var(--accent-blue-rgb), 0.18);
+  --ui-accent-fg:    var(--accent-blue);
+  --ui-font-mono:    var(--font-mono);
+  --bg-elevated:     var(--bg-overlay);
+  --bg-secondary:    var(--bg-surface);
+  --border-primary:  var(--border-color);
+  --text-tertiary:   var(--text-muted);
+
+  /* ---------------------------------------------------------------
+   * Additional compat aliases discovered during the theme audit.
+   * Components reference these names (without fallback) so they
+   * must resolve here — otherwise the property silently falls back
+   * to `initial` and the styling vanishes.
+   * --------------------------------------------------------------- */
+  --bg-primary:        var(--bg-base);
+  --bg-hover:          var(--hover-bg);
+  --accent:            var(--accent-blue);
+  --accent-contrast:   var(--text-on-accent);
+  --text-color:        var(--text-primary);
+  --panel-border:      var(--border-color);
+  --settings-badge-bg: rgba(var(--surface-tint-rgb), 0.08);
+  --red:               var(--accent-red);
+  --danger:            var(--status-danger-strong);
+}
+
+:root[data-theme='dark'] {
+  --bg-base: #1e1e2e;
+  --bg-surface: #181825;
+  --bg-overlay: #11111b;
+  --bg-mantle: #181825;
+  --bg-crust: #11111b;
+  --bg-surface0: #313244;
+  --bg-surface1: #45475a;
+
+  --text-primary: #cdd6f4;
+  --text-secondary: #a6adc8;
+  --text-muted: #6c7086;
+  --text-subtext: #585b70;
+  --text-overlay: #9399b2;
+
+  --accent-blue: #89b4fa;
+  --accent-green: #a6e3a1;
+  --accent-red: #f38ba8;
+  --accent-yellow: #f9e2af;
+  --accent-peach: #fab387;
+  --accent-mauve: #cba6f7;
+  --accent-teal: #94e2d5;
+  --accent-pink: #f5c2e7;
+  --accent-lavender: #b4befe;
+
+  --bg-input: #1e1e2e;
+  --border-color: #383b50;
+  --hover-bg: #35384c;
+  --active-bg: #4a4d66;
+  --selection-bg: #4d506a;
+
+  --scrollbar-thumb: #45475a;
+
+  --shadow-rgb: 0, 0, 0;
+  --accent-blue-rgb:     137, 180, 250;
+  --accent-green-rgb:    166, 227, 161;
+  --accent-red-rgb:      243, 139, 168;
+  --accent-yellow-rgb:   249, 226, 175;
+  --accent-peach-rgb:    250, 179, 135;
+  --accent-mauve-rgb:    203, 166, 247;
+  --accent-teal-rgb:     148, 226, 213;
+  --accent-pink-rgb:     245, 194, 231;
+  --accent-lavender-rgb: 180, 190, 254;
+
+  --bg-base-rgb:     30,  30,  46;
+  --bg-surface-rgb:  24,  24,  37;
+  --bg-overlay-rgb:  17,  17,  27;
+  --bg-surface0-rgb: 49,  50,  68;
+  --bg-surface1-rgb: 69,  71,  90;
+
+  /* White on #89b4fa only reaches 2.1:1 → fails AA. Use near-black on
+     the pastel accent so `.ask-submit` and friends are readable. */
+  --text-on-accent: #11111b;
+
+  /* ---------------------------------------------------------------
+   * Surface tinting / input / backdrop tokens (consumed by panels
+   * that previously hard-coded rgba(255,255,255,*) or rgba(24,24,37,*)
+   * — e.g. the Agent Workbench). Centralising them here means each
+   * theme can flip the tint direction (light overlay on dark, dark
+   * overlay on light) instead of every component shipping a
+   * `theme === 'light'` branch.
+   * --------------------------------------------------------------- */
+  --surface-tint-rgb: 255, 255, 255;
+  --bg-input-soft: rgba(24, 24, 37, 0.6);
+  --bg-input-soft-strong: rgba(24, 24, 37, 0.8);
+  --bg-backdrop: rgba(17, 17, 27, 0.82);
+  --border-hover: rgba(255, 255, 255, 0.18);
+}
+
+:root[data-theme='light'] {
+  /* Core surfaces — light neutrals with a cool hint for pages/panels */
+  --bg-base: #f6f7fb;
+  --bg-surface: #ffffff;
+  --bg-overlay: #eef1f7;
+  --bg-mantle: #f0f3fa;
+  --bg-crust: #e8ecf5;
+  --bg-surface0: #e4e9f3;
+  --bg-surface1: #d2d9e8;
+
+  --text-primary: #1d2433;
+  --text-secondary: #374155;
+  --text-muted: #5a6578;
+  --text-subtext: #7b8598;
+  --text-overlay: #98a1b5;
+
+  --text-error: #c53030;
+  --text-warning: #b7791f;
+  --text-info: #1e5cc5;
+
+  --accent-blue: #3b5fe0;
+  --accent-green: #16a34a;
+  --accent-red: #c53030;
+  --accent-yellow: #b7791f;
+  --accent-peach: #c2410c;
+  --accent-mauve: #6d28d9;
+  --accent-teal: #0f766e;
+  --accent-pink: #b83280;
+  --accent-lavender: #4f46e5;
+
+  --status-success: #16a34a;
+  --status-success-strong: #15803d;
+  --status-danger: #dc2626;
+  --status-danger-strong: #b91c1c;
+  --status-warning: #d97706;
+  --status-info: #2563eb;
+
+  --bg-input: #ffffff;
+  --border-color: #d0d7e3;
+  --hover-bg: #eef2fa;
+  --active-bg: #dfe6f4;
+  --selection-bg: #c8d3ec;
+
+  --scrollbar-thumb: #c0c8d8;
+  --scrollbar-track: transparent;
+
+  --shadow-rgb: 60, 80, 120;
+  --accent-blue-rgb:     59,  95, 224;
+  --accent-green-rgb:    22, 163,  74;
+  --accent-red-rgb:     197,  48,  48;
+  --accent-yellow-rgb:  183, 121,  31;
+  --accent-peach-rgb:   194,  65,  12;
+  --accent-mauve-rgb:   109,  40, 217;
+  --accent-teal-rgb:     15, 118, 110;
+  --accent-pink-rgb:    184,  50, 128;
+  --accent-lavender-rgb: 79,  70, 229;
+
+  --bg-base-rgb:    246, 247, 251;
+  --bg-surface-rgb: 255, 255, 255;
+  --bg-overlay-rgb: 238, 241, 247;
+  --bg-surface0-rgb: 228, 233, 243;
+  --bg-surface1-rgb: 210, 217, 232;
+
+  /* White on #3b5fe0 = 5.39:1 ✓ AA */
+  --text-on-accent: #ffffff;
+
+  --panel-shadow: 2px 0 8px -2px rgba(60, 80, 120, 0.12);
+  --panel-shadow-right: 2px 0 8px -2px rgba(60, 80, 120, 0.12);
+  --panel-shadow-left: -2px 0 8px -2px rgba(60, 80, 120, 0.12);
+  --panel-shadow-terminal: 0 -2px 8px -2px rgba(60, 80, 120, 0.1);
+  --editor-inset-shadow: inset 0 0 20px rgba(60, 80, 120, 0.05);
+
+  /* Light theme flips tint direction: a desaturated cool-gray is overlaid
+     on already-light surfaces to create depth (cards, hover, dividers).
+     Inputs become solid white because translucent dark overlays on a
+     light panel read as muddy gray. */
+  --surface-tint-rgb: 60, 80, 120;
+  --bg-input-soft: #ffffff;
+  --bg-input-soft-strong: #ffffff;
+  --bg-backdrop: rgba(40, 50, 70, 0.4);
+  --border-hover: rgba(60, 80, 120, 0.35);
+}
+
+/* ---------------------------------------------------------------------------
+ * `milk` — 米白 (warm off-white).
+ *
+ * Tuning note: originally this theme leaned hard into "cream / paper"
+ * territory (#faf6ec, ~47% saturation). User feedback was that it
+ * read distinctly *yellow* rather than "softer than light". This pass
+ * pulls everything ~halfway back to white — saturation roughly halved,
+ * lightness pushed up — so the surface still feels warmer than the
+ * cool blue-tinted `light` theme but no longer looks like aged paper.
+ * ------------------------------------------------------------------------- */
+:root[data-theme='milk'] {
+  --bg-base: #fbf9f4;
+  --bg-surface: #fefdfa;
+  --bg-overlay: #f4f1ea;
+  --bg-mantle: #f7f4ee;
+  --bg-crust: #efebe1;
+  --bg-surface0: #ece8dc;
+  --bg-surface1: #d8d2c4;
+
+  --text-primary: #2a2820;
+  --text-secondary: #4a4538;
+  --text-muted: #6f6856;
+  --text-subtext: #8d866f;
+  --text-overlay: #aca48a;
+
+  --text-error: #b8332e;
+  --text-warning: #a16718;
+  --text-info: #1d5bbf;
+
+  --accent-blue: #3a5ecf;
+  --accent-green: #4a8a3a;
+  --accent-red: #b8332e;
+  --accent-yellow: #a16718;
+  --accent-peach: #b04c10;
+  --accent-mauve: #6a2cc4;
+  --accent-teal: #1d6e64;
+  --accent-pink: #a83274;
+  --accent-lavender: #4a3fc4;
+
+  --status-success: #4a8a3a;
+  --status-success-strong: #3a6f2d;
+  --status-danger: #c0392b;
+  --status-danger-strong: #9c2a1f;
+  --status-warning: #b8731f;
+  --status-info: #2563eb;
+
+  --bg-input: #fefdfa;
+  --border-color: #ddd5c2;
+  --hover-bg: #f3eee2;
+  --active-bg: #e9e2cf;
+  --selection-bg: #ddd3b9;
+
+  --scrollbar-thumb: #ccc2a8;
+  --scrollbar-track: transparent;
+
+  --shadow-rgb: 90, 75, 45;
+  --accent-blue-rgb:     58,  94, 207;
+  --accent-green-rgb:    74, 138,  58;
+  --accent-red-rgb:     184,  51,  46;
+  --accent-yellow-rgb:  161, 103,  24;
+  --accent-peach-rgb:   176,  76,  16;
+  --accent-mauve-rgb:   106,  44, 196;
+  --accent-teal-rgb:     29, 110, 100;
+  --accent-pink-rgb:    168,  50, 116;
+  --accent-lavender-rgb: 74,  63, 196;
+
+  --bg-base-rgb:    251, 249, 244;
+  --bg-surface-rgb: 254, 253, 250;
+  --bg-overlay-rgb: 244, 241, 234;
+  --bg-surface0-rgb: 236, 232, 220;
+  --bg-surface1-rgb: 216, 210, 196;
+
+  --text-on-accent: #ffffff;
+
+  --panel-shadow: 2px 0 8px -2px rgba(90, 75, 45, 0.12);
+  --panel-shadow-right: 2px 0 8px -2px rgba(90, 75, 45, 0.12);
+  --panel-shadow-left: -2px 0 8px -2px rgba(90, 75, 45, 0.12);
+  --panel-shadow-terminal: 0 -2px 8px -2px rgba(90, 75, 45, 0.1);
+  --editor-inset-shadow: inset 0 0 20px rgba(90, 75, 45, 0.05);
+
+  /* Tint — desaturated warm gray instead of brown/olive. */
+  --surface-tint-rgb: 100, 85, 55;
+  --bg-input-soft: #fefdfa;
+  --bg-input-soft-strong: #fefdfa;
+  --bg-backdrop: rgba(70, 55, 30, 0.38);
+  --border-hover: rgba(100, 85, 55, 0.32);
+}
+
+/* ---------------------------------------------------------------------------
+ * `cursor` — the IDE / VS Code inspired neutral-gray dark theme.
+ * Neutral grays (no purple cast), cool blue accent, VS Code semantic tones.
+ * ------------------------------------------------------------------------- */
+:root[data-theme='cursor'] {
+  --bg-base: #1e1e1e;
+  --bg-surface: #181818;
+  --bg-overlay: #141414;
+  --bg-mantle: #1a1a1a;
+  --bg-crust: #121212;
+  --bg-surface0: #2a2a2a;
+  --bg-surface1: #37373d;
+
+  --text-primary: #e4e4e4;
+  --text-secondary: #b8b8b8;
+  --text-muted: #858585;
+  --text-subtext: #6a6a6a;
+  --text-overlay: #9c9c9c;
+
+  --text-error: #f48771;
+  --text-warning: #cca700;
+  --text-info: #3794ff;
+
+  --accent-blue: #4a9eff;
+  --accent-green: #89d185;
+  --accent-red: #f48771;
+  --accent-yellow: #dcdcaa;
+  --accent-peach: #ce9178;
+  --accent-mauve: #c586c0;
+  --accent-teal: #4ec9b0;
+  --accent-pink: #d16d9e;
+  --accent-lavender: #9cdcfe;
+
+  --status-success: #4caf50;
+  --status-success-strong: #388e3c;
+  --status-danger: #f44747;
+  --status-danger-strong: #c62828;
+  --status-warning: #cca700;
+  --status-info: #3794ff;
+
+  --bg-input: #1e1e1e;
+  --border-color: #3c3c3c;
+  --hover-bg: #2a2a2a;
+  --active-bg: #37373d;
+  --selection-bg: #264f78;
+
+  --scrollbar-thumb: #424242;
+  --scrollbar-track: transparent;
+
+  --shadow-rgb: 0, 0, 0;
+  --accent-blue-rgb:     74, 158, 255;
+  --accent-green-rgb:   137, 209, 133;
+  --accent-red-rgb:     244, 135, 113;
+  --accent-yellow-rgb:  220, 220, 170;
+  --accent-peach-rgb:   206, 145, 120;
+  --accent-mauve-rgb:   197, 134, 192;
+  --accent-teal-rgb:     78, 201, 176;
+  --accent-pink-rgb:    209, 109, 158;
+  --accent-lavender-rgb:156, 220, 254;
+
+  --bg-base-rgb:     30,  30,  30;
+  --bg-surface-rgb:  24,  24,  24;
+  --bg-overlay-rgb:  20,  20,  20;
+  --bg-surface0-rgb: 42,  42,  42;
+  --bg-surface1-rgb: 55,  55,  61;
+
+  /* White on #4a9eff = 2.75:1 (fails). Use near-black for 7:1 AAA. */
+  --text-on-accent: #0e0e0e;
+
+  --panel-shadow: 2px 0 6px -2px rgba(0, 0, 0, 0.25);
+  --panel-shadow-right: 2px 0 6px -2px rgba(0, 0, 0, 0.25);
+  --panel-shadow-left: -2px 0 6px -2px rgba(0, 0, 0, 0.25);
+  --panel-shadow-terminal: 0 -2px 6px -2px rgba(0, 0, 0, 0.22);
+  --editor-inset-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+
+  /* the IDE is a dark theme so tint stays white-on-dark, but inputs use
+     the cursor palette's deeper neutrals to keep contrast aligned. */
+  --surface-tint-rgb: 255, 255, 255;
+  --bg-input-soft: rgba(20, 20, 20, 0.6);
+  --bg-input-soft-strong: rgba(20, 20, 20, 0.8);
+  --bg-backdrop: rgba(0, 0, 0, 0.78);
+  --border-hover: rgba(255, 255, 255, 0.18);
+}
+
+/* Global safety net: `color-scheme` hints native controls (scrollbars,
+   inputs, option menus) to pick matching foreground colours. */
+:root[data-theme='dark']   { color-scheme: dark; }
+:root[data-theme='cursor'] { color-scheme: dark; }
+:root[data-theme='light']  { color-scheme: light; }
+:root[data-theme='milk']   { color-scheme: light; }
+
+:root[data-reduced-motion='true'] *,
+:root[data-reduced-motion='true'] *::before,
+:root[data-reduced-motion='true'] *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+  scroll-behavior: auto !important;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-base);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* 选中文字颜色 */
+::selection {
+  background: var(--selection-bg);
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.fadeIn-target { will-change: opacity; }
+.slideInRight-target { will-change: transform, opacity; }
+.slideUp-target { will-change: transform, opacity; }
+
+/* 工具提示 */
+.tooltip {
+  position: relative;
+}
+
+/* 通用按钮重置 */
+button {
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+button:focus-visible {
+  outline: 1px solid var(--accent-blue);
+  outline-offset: -1px;
+}
+
+input {
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+
+/* ===== 应用布局 ===== */
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  align-items: stretch;
+  background: var(--bg-base);
+  gap: 0;
+}
+
+.app-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.app-editor-composer-row {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.app-composer-column {
+  width: min(44vw, 520px);
+  min-width: 280px;
+  max-width: min(60vw, 640px);
+  flex-shrink: 0;
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.app-editor-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ===== Z-index layering ===== */
+.tree-dialog-overlay  { z-index: 100; }
+.tree-context-menu    { z-index: 110; }
+.tab-context-menu     { z-index: 110; }
+.command-palette      { z-index: 200; }
+.settings-dialog      { z-index: 200; }
+.inline-edit-overlay  { z-index: 50; }
+.inline-diff-risk-banner { z-index: 50; }

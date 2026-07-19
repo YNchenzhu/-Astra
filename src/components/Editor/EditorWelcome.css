@@ -1,0 +1,108 @@
+/*
+ * Welcome screen styles — owned by `EditorWelcome.tsx`, the synchronous
+ * cold-start path. Previously these rules lived in `EditorArea.css`,
+ * which is only loaded when the lazy-imported `EditorArea` chunk
+ * resolves (i.e. on first file open). Once `CodeWorkspaceLayout` switched
+ * to `EditorShell`, the welcome screen rendered before that chunk ever
+ * loaded, so `.editor-welcome` had no `flex: 1` / center alignment and
+ * collapsed into a small unstyled block in the top-left corner.
+ *
+ * Keeping welcome styles in their own CSS file (imported directly by the
+ * welcome component) means the cold-start visual is correct without
+ * pulling Monaco's chunk in. `EditorArea.tsx` also imports this file so
+ * its inline welcome fallback path keeps working when the lazy chunk is
+ * already mounted.
+ */
+
+.editor-welcome {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-base);
+}
+
+.welcome-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 0.5s ease;
+}
+
+.welcome-icon {
+  color: var(--accent-blue);
+  opacity: 0.4;
+  margin-bottom: 8px;
+}
+
+.welcome-title {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--text-primary);
+  letter-spacing: 4px;
+}
+
+.welcome-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.welcome-shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.shortcut-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.shortcut-item kbd {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+
+.welcome-recent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 280px;
+}
+
+.welcome-recent-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.welcome-recent-item {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.welcome-recent-item:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
