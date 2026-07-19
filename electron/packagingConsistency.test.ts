@@ -165,5 +165,6 @@ describe('CI runtime contract', () => {
     const unitTestsAt = workflow.indexOf('npx vitest run')
     expect(electronInstallAt).toBeGreaterThan(-1)
     expect(unitTestsAt).toBeGreaterThan(electronInstallAt)
+    expect(workflow).toContain('--reporter=github-actions')
   })
 })

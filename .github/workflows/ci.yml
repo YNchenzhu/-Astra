@@ -50,4 +50,4 @@ jobs:
         run: npm run lint
 
       - name: Unit tests (vitest run)
-        run: npx vitest run --reporter=default
+        run: npx vitest run --reporter=default --reporter=github-actions
