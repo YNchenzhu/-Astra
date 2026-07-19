@@ -146,3 +146,24 @@ describe('MCP presets ↔ bundled-mcp vendoring contract', () => {
     }
   })
 })
+
+describe('CI runtime contract', () => {
+  it('uses an Electron-compatible Node version and installs its binary before tests', () => {
+    const manifest = JSON.parse(
+      fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'),
+    ) as { engines?: { node?: string }; devDependencies?: { electron?: string } }
+    const workflow = fs.readFileSync(
+      path.join(repoRoot, '.github', 'workflows', 'ci.yml'),
+      'utf8',
+    )
+
+    expect(manifest.engines?.node).toBe('>=22.12.0')
+    expect(manifest.devDependencies?.electron).toBe('^43.0.0')
+    expect(workflow).toMatch(/node-version:\s*['"]24['"]/)
+
+    const electronInstallAt = workflow.indexOf('node node_modules/electron/install.js')
+    const unitTestsAt = workflow.indexOf('npx vitest run')
+    expect(electronInstallAt).toBeGreaterThan(-1)
+    expect(unitTestsAt).toBeGreaterThan(electronInstallAt)
+  })
+})

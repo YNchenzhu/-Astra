@@ -93,7 +93,7 @@ npm run test:e2e
 npm run lint
 ```
 
-> 环境要求：Node ≥ 20。本仓库使用 TypeScript **Project References**，根 `tsconfig.json` 仅作 solution 调度器，因此必须用 `tsc -b`（`npm run typecheck`）而非裸 `tsc`，否则会产生大量伪报错。
+> 环境要求：Node ≥ 22.12，推荐 Node 24。本仓库使用 TypeScript **Project References**，根 `tsconfig.json` 仅作 solution 调度器，因此必须用 `tsc -b`（`npm run typecheck`）而非裸 `tsc`，否则会产生大量伪报错。
 
 ---
 

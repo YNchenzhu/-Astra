@@ -8,8 +8,10 @@
 #   1. `tsc -b` — surfaces type errors AND, now that `noUnusedLocals` is
 #       on in tsconfig.{app,electron}.json, every dead import.
 #   2. `eslint .` — the same rules people use locally, now enforced.
-#   3. `vitest run` — unit tests (kept non-blocking behaviour out of CI;
-#       these are pure, fast, no network).
+#   3. `vitest run` — unit tests (kept non-blocking behaviour out of CI).
+#
+# Electron 43 downloads its platform binary lazily on first import. Preinstall
+# it once before Vitest so parallel workers never race multiple downloads.
 #
 # Electron packaging (`npm run electron:build`) is *not* in CI: it downloads
 # large native binaries and is a release-time artefact, not a per-PR gate.
@@ -32,11 +34,14 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: npm
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Install Electron binary once
+        run: node node_modules/electron/install.js
 
       - name: Typecheck (tsc -b)
         run: npm run typecheck
