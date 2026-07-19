@@ -1,7 +1,7 @@
-# 星构Astra — AI-First Code Editor
+# 星构Astra 
 
 基于 **Electron 41 + React 19 + Vite 8 + TypeScript 5.9** 构建的 AI 驱动桌面代码编辑器。内置多模型统一接入、Agentic 工具循环、编排内核（OrchestrationKernel）、多智能体协作、LSP 代码智能、MCP 协议、本地向量检索，并支持通过 H5 / 即时通讯（微信、钉钉、Telegram、飞书）远程驱动 Agent。
-
+注：支持智能体工作包上传、导入、切换，可用于其他领域的工作，作者不是程序员，无力后续开发工作
 > 应用内部代号 / 包名为 `astra`（`appId: com.taichu.app`），当前版本 `0.4.0`。
 
 ---
