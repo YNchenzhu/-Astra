@@ -33,6 +33,7 @@ import {
   findReadReceiptByReadId,
   hashFileContent,
   importReceipts,
+  normalizeReadStatePathKey,
   recordSelfMutationReadReceipt,
   recordSuccessfulRead,
   type ReadFileRecord,
@@ -544,9 +545,7 @@ describe('SA-5 — tool_request carries main-process read receipts', () => {
     expect(req.readReceipts).toBeDefined()
     expect(req.readReceipts!.length).toBeGreaterThanOrEqual(1)
     const receipt = req.readReceipts![0]
-    expect(receipt.pathKey).toBe(
-      resolved.resolved.replace(/\\/g, '/').toLowerCase(),
-    )
+    expect(receipt.pathKey).toBe(normalizeReadStatePathKey(resolved.resolved))
     expect(receipt.record.readId).toBe(readId)
     expect(receipt.record.contentHash).toBe(hashFileContent('hello world\n'))
     w.emitFromWorker({
@@ -599,7 +598,7 @@ describe('SA-5 — tool_request carries main-process read receipts', () => {
     expect(request.readReceipts).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          pathKey: resolvedB.resolved.replace(/\\/g, '/').toLowerCase(),
+          pathKey: normalizeReadStatePathKey(resolvedB.resolved),
           record: expect.objectContaining({ readId: currentIdForB }),
         }),
       ]),
@@ -662,7 +661,7 @@ describe('SA-5 — worker-side importReceipts feeds the read-before-write gate',
     record: ReadFileRecord
   } {
     return {
-      pathKey: filePath.replace(/\\/g, '/').toLowerCase(),
+      pathKey: normalizeReadStatePathKey(filePath),
       record: {
         mtimeMs: fs.statSync(filePath).mtimeMs,
         readAt: Date.now(),
