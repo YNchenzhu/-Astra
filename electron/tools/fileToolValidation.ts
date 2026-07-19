@@ -70,7 +70,11 @@ function pathSegmentsForDangerCheck(resolvedPath: string): string[] {
 }
 
 export function isDangerousSensitiveFileBasename(filePath: string): boolean {
-  const base = normalizeCaseForComparison(path.basename(filePath))
+  // `path.basename` follows the host OS. A Windows path can still arrive in
+  // tests, migrated settings, or remote tool input while the host is POSIX,
+  // where backslashes are ordinary characters. Normalize separators first so
+  // the security decision is based on the path's syntax, not the runner OS.
+  const base = normalizeCaseForComparison(path.posix.basename(filePath.replace(/\\/g, '/')))
   return DANGEROUS_FILE_BASENAMES.has(base)
 }
 

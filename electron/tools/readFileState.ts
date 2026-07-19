@@ -57,13 +57,13 @@ export type ReadFileRecord = {
   /**
    * The ORIGINAL OS-cased resolved absolute path as passed to
    * {@link recordSuccessfulRead}. The Map keys this record by a
-   * lowercased + forward-slash-normalised variant for cross-platform
-   * lookup, but a few downstream consumers — notably the
+   * platform-aware comparison key: Windows syntax is slash-normalised and
+   * case-folded, while POSIX syntax preserves its original case. A few
+   * downstream consumers — notably the
    * `edit_file` / `multi_edit_file` "missing filePath but baseReadId
    * provided" fallback — need to feed a real on-disk path back into
-   * `resolvePathForTool()`. On case-sensitive filesystems (Linux) the
-   * lowercased key won't resolve; this field preserves the agent-
-   * supplied form so the round-trip works.
+   * `resolvePathForTool()`. This field preserves the agent-supplied form
+   * so every on-disk round-trip uses the original path spelling.
    */
   absPath?: string
 }
@@ -97,6 +97,20 @@ function scopeKey(): string {
   const conv = ctx?.streamConversationId?.trim() || 'default'
   const agent = ctx?.agentId?.trim() || 'main'
   return `${conv}::${agent}`
+}
+
+/**
+ * Build the receipt-map key using the path syntax itself. Windows paths are
+ * case-insensitive even when processed on a POSIX CI/remote host; POSIX paths
+ * must retain case or `/tmp/Foo` will be mistaken for `/tmp/foo` and later
+ * disk verification will report a real file as missing.
+ */
+export function normalizeReadStatePathKey(resolvedPath: string): string {
+  const isWindowsSyntax =
+    /^[a-z]:[\\/]/i.test(resolvedPath) ||
+    resolvedPath.startsWith('\\\\') ||
+    resolvedPath.startsWith('//')
+  return isWindowsSyntax ? resolvedPath.replace(/\\/g, '/').toLowerCase() : resolvedPath
 }
 
 const byScope = new Map<string, Map<string, ReadFileRecord>>()
@@ -269,7 +283,7 @@ export function recordSuccessfulRead(
     source?: 'read' | 'self_mutation'
   },
 ): { readId: string; contentHash?: string } {
-  const key = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const key = normalizeReadStatePathKey(resolvedPath)
   const scope = scopeKey()
   const scopedMap = mapForScope()
 
@@ -323,7 +337,7 @@ const MAX_TOTAL_DEDUP_STRIKES = 12
 const dedupStrikeCount = new Map<string, number>()
 
 function dedupStrikeKey(resolvedPath: string): string {
-  return `${scopeKey()}::${resolvedPath.replace(/\\/g, '/').toLowerCase()}`
+  return `${scopeKey()}::${normalizeReadStatePathKey(resolvedPath)}`
 }
 
 function bumpDedupStrike(resolvedPath: string): number {
@@ -381,7 +395,7 @@ export function tryConsumeReadDedup(
   limit: number,
 ): ReadDedupResult {
   if (process.env.DISABLE_READ_DEDUP === '1') return { dedup: false }
-  const key = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const key = normalizeReadStatePathKey(resolvedPath)
   const currentScope = scopeKey()
   const rec = mapForScope().get(key)
   if (rec) {
@@ -509,7 +523,7 @@ function adoptReadReceiptForCurrentScope(
   rec: ReadFileRecord,
   resolvedPath: string,
 ): { readId?: string } {
-  const key = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const key = normalizeReadStatePathKey(resolvedPath)
   const scopedMap = mapForScope()
   const existing = scopedMap.get(key)
   if (existing?.mtimeMs === rec.mtimeMs && existing.contentSnapshot === rec.contentSnapshot) {
@@ -561,7 +575,7 @@ function findReadReceiptInSameConversationWithScope(
 
 /** After successful write/edit/notebook: require a fresh read_file before the next mutate */
 export function invalidateReadAfterMutation(resolvedPath: string): void {
-  const key = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const key = normalizeReadStatePathKey(resolvedPath)
   const m = mapForScope()
   unregisterReadIdForReceipt(m.get(key))
   m.delete(key)
@@ -621,7 +635,7 @@ export function hasCurrentScopeReceiptMatchingDisk(
   mtimeMs: number,
   diskContent: string,
 ): boolean {
-  const key = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const key = normalizeReadStatePathKey(resolvedPath)
   const rec = byScope.get(scopeKey())?.get(key)
   if (!rec) return false
   if (rec.mtimeMs !== mtimeMs) return false
@@ -747,7 +761,7 @@ export function assertReadBeforeWrite(
   resolvedPath: string,
   currentContentForCompare?: string,
 ): ReadBeforeWriteGate {
-  const key = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const key = normalizeReadStatePathKey(resolvedPath)
   // upstream-style: new paths cannot be read first; allow create / edit with empty old_string without a receipt.
   if (!fs.existsSync(resolvedPath)) {
     return { ok: true }
@@ -799,7 +813,7 @@ export function assertReadBeforeStructuredEdit(
   resolvedPath: string,
   currentContentForCompare?: string,
 ): ReadBeforeWriteGate {
-  const key = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const key = normalizeReadStatePathKey(resolvedPath)
   if (!fs.existsSync(resolvedPath)) {
     return { ok: true }
   }
@@ -867,7 +881,7 @@ export function findReadReceiptByReadId(
 export function findCurrentReadIdForPath(
   resolvedPath: string,
 ): string | undefined {
-  const wantKey = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const wantKey = normalizeReadStatePathKey(resolvedPath)
   let best:
     | { readId: string; readAt: number }
     | undefined
@@ -885,7 +899,7 @@ export function findCurrentReadIdForPath(
 function findCurrentReadIdForPathInCurrentScope(
   resolvedPath: string,
 ): string | undefined {
-  const key = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const key = normalizeReadStatePathKey(resolvedPath)
   return mapForScope().get(key)?.readId
 }
 
@@ -1033,7 +1047,7 @@ export function exportReceiptsForPath(
   resolvedPath: string,
   opts?: { baseReadId?: string },
 ): ExportedReadReceipt[] {
-  const key = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const key = normalizeReadStatePathKey(resolvedPath)
   const out: ExportedReadReceipt[] = []
   const seen = new Set<string>()
   const push = (pathKey: string, rec: ReadFileRecord | undefined): void => {
@@ -1080,7 +1094,7 @@ export function importReceipts(
   const m = mapForScope()
   for (const entry of receipts) {
     if (!entry || typeof entry.pathKey !== 'string' || !entry.record) continue
-    const key = entry.pathKey.replace(/\\/g, '/').toLowerCase()
+    const key = normalizeReadStatePathKey(entry.pathKey)
     if (!key) continue
     const rec = entry.record
     const existing = m.get(key)
@@ -1194,7 +1208,7 @@ export function assertReadBeforeEditByReadId(
   replaceAll?: boolean,
   options?: { allowExpiredReadIdRebind?: boolean },
 ): ReadIdGateResult {
-  const wantKey = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const wantKey = normalizeReadStatePathKey(resolvedPath)
   let effectiveReadId = baseReadId
   let reboundFromReadId: string | undefined
   let hit = findReadReceiptByReadId(baseReadId)
@@ -1367,7 +1381,7 @@ export function assertReadBeforeEdit(
   newString: string,
   replaceAll?: boolean,
 ): ReadBeforeWriteGate {
-  const key = resolvedPath.replace(/\\/g, '/').toLowerCase()
+  const key = normalizeReadStatePathKey(resolvedPath)
   if (!fs.existsSync(resolvedPath)) {
     return { ok: true }
   }

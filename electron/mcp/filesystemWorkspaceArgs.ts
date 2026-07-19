@@ -22,6 +22,14 @@ export function isFilesystemMcpStdioConfig(config: MCPServerConfig): boolean {
   return !!(parsed && isFilesystemMcpPackageName(parsed.pkgName))
 }
 
+/** Resolve using the path grammar carried by the value, not the host OS. */
+function resolvePortableAbsolutePath(candidate: string): string {
+  if (/^[a-z]:[\\/]/i.test(candidate) || candidate.startsWith('\\\\')) {
+    return path.win32.resolve(candidate)
+  }
+  return path.resolve(candidate)
+}
+
 /** True if `p` is under the packaged app's install/resources tree (not a user project). */
 export function isLikelyPackagedAppPath(candidate: string): boolean {
   if (!app.isPackaged) return false
@@ -46,13 +54,13 @@ export function resolveFilesystemMcpAllowedRoot(
 
   const hint = (workspaceHint && workspaceHint.trim()) || getWorkspacePath()?.trim() || ''
   if (hint) {
-    return path.resolve(hint)
+    return resolvePortableAbsolutePath(hint)
   }
 
   // No synced workspace yet (e.g. startup auto-reconnect before renderer calls memory:set-workspace):
   // keep saved path if it is not the install directory.
   if (forwardedFirst) {
-    const existing = path.resolve(forwardedFirst)
+    const existing = resolvePortableAbsolutePath(forwardedFirst)
     if (!isLikelyPackagedAppPath(existing)) {
       return existing
     }

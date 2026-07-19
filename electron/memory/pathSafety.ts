@@ -91,6 +91,13 @@ export function validateMemoryPath(memPath: string): PathValidationResult {
     return { valid: false, reason: 'Path contains null byte' }
   }
 
+  // Detect UNC syntax before the host-native absolute-path check. On POSIX,
+  // `path.isAbsolute('\\\\server\\share')` is false, but the input is still a
+  // Windows UNC path and must receive the stricter, stable rejection reason.
+  if (memPath.startsWith('\\\\') || memPath.startsWith('//')) {
+    return { valid: false, reason: 'UNC paths are not allowed' }
+  }
+
   // Audit M5: reject a real `..` PATH SEGMENT (traversal) rather than any
   // `..` substring. The old `includes('..')` false-rejected legitimate
   // directory names like `a..b` or files like `notes..md`, while still being
@@ -115,10 +122,6 @@ export function validateMemoryPath(memPath: string): PathValidationResult {
 
   if (normalized === '/' || normalized === '\\') {
     return { valid: false, reason: 'Filesystem root is not allowed' }
-  }
-
-  if (normalized.startsWith('\\\\')) {
-    return { valid: false, reason: 'UNC paths are not allowed' }
   }
 
   return { valid: true }
